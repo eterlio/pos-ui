@@ -52,7 +52,8 @@ export const menuSidebarRoutes: MenuSidebarRoutes = {
 
         {
           title: "List users",
-          url: "/users"
+          url: "/users",
+          isDisabled: true
         }
       ]
     },
