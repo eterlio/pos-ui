@@ -1,13 +1,9 @@
-import React, { ElementType } from "react";
+import React from "react";
 import SidebarMenuItem from "./SidebarMenuItem";
-interface RouteDataProps {
-  title: string;
-  url: string;
-  icon: ElementType;
-}
+import { MenuSidebarRoute } from "@/route/sidebar";
 interface SidebarMenuProps {
   title: string;
-  routesData: RouteDataProps[];
+  routesData: MenuSidebarRoute[];
 }
 const SidebarMenu: React.FC<SidebarMenuProps> = ({ title, routesData }) => {
   return (
@@ -16,13 +12,16 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({ title, routesData }) => {
       <ul>
         {routesData &&
           routesData.length &&
-          routesData.map((data) => {
+          routesData.map((data, index) => {
             return (
               <SidebarMenuItem
                 icon={<data.icon size={19} />}
-                text={data.title}
+                title={data.title}
                 url={data.url}
-                key={data.url}
+                key={index}
+                subLinks={data.subLinks}
+                isDisabled={data.isDisabled}
+                isVisible={data.isVisible}
               />
             );
           })}

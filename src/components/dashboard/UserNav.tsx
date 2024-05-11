@@ -47,7 +47,7 @@ const UserNav = memo(() => {
     try {
       await axiosInstance.get('/auth/logout');
       clearAuthUser();
-      navigate('/auth/login', { replace: true });
+      navigate('/auth/login', { replace: true,  });
     } catch (error) {
       toast.error('Error', {
         description: getErrorMessageFromApi(error)

@@ -13,7 +13,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>
     <StoreProvider>
         <App />
-      <Toaster expand={true} richColors />
+      <Toaster expand={true} richColors closeButton theme="dark" visibleToasts={3} />
     </StoreProvider>
     </QueryClientProvider>
   </Router>

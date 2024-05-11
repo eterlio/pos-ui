@@ -10,7 +10,7 @@ export const AUTH_ROUTES: RoutesProps[] = [
 {
     component:  LoginScreen,
     url: "/auth/login",
-    routeName:"LoginScreen"
+    routeName:"login",
 },
 {
     component: ForgotPasswordScreen,
