@@ -13,7 +13,7 @@ const Dashboard = () => {
       </div>
 
       <div className="grid grid-cols-3">
-      <div className="p-2 bg-red-200 col-span-2">SIDE 1</div>
+      <div className="p-2 bg-red-200 col-span-2">SIDE 123456</div>
       <div className="p-3 bg-green-200">SIDE 2</div>
       </div>
     </DashboardLayout>
