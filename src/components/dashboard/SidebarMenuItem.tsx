@@ -58,7 +58,7 @@ const SidebarMenuItem: React.FC<MenuSidebarRoute> = ({
             <ul className={`bg-[#131c36] overflow-hidden ${isSubMenuOpen ? "h-full" : "h-0"}`}>
               {subLinks.map(({ title, url, isDisabled = false, isVisible = true }: SubLink, index: number) => (
                 <span key={index}>
-                  ({isVisible && (
+                  {isVisible && (
                     <li>
                       <Link
                         to={isDisabled ? "#" : url}
@@ -72,7 +72,7 @@ const SidebarMenuItem: React.FC<MenuSidebarRoute> = ({
                         <span>{title}</span>
                       </Link>
                     </li>
-                  )})
+                  )}
                 </span>
               ))}
             </ul>
