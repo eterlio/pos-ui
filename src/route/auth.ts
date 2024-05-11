@@ -22,7 +22,7 @@ export const AUTH_ROUTES: RoutesProps[] = [
 },
 {
     component: Dashboard,
-    url: "/admin",
+    url: "/dashboard/:role",
     requireAuth: true
 },
 {

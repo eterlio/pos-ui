@@ -32,12 +32,12 @@ export interface MenuSidebarRoutes {
   title: string;
   routeLinks: MenuSidebarRoute[];
 }
-export const menuSidebarRoutes: MenuSidebarRoutes = {
+export const menuSidebarRoutes = (userRole?: string): MenuSidebarRoutes => ({
   title: "Menu",
   routeLinks: [
     {
       title: "Dashboard",
-      url: "",
+      url: `/dashboard/${userRole}`,
       icon: LayoutDashboard
     },
     {
@@ -239,8 +239,8 @@ export const menuSidebarRoutes: MenuSidebarRoutes = {
       ]
     }
   ]
-};
-export const generalSidebarRoutes: MenuSidebarRoutes = {
+});
+export const generalSidebarRoutes = (): MenuSidebarRoutes => ({
   title: "General",
   routeLinks: [
     {
@@ -250,4 +250,4 @@ export const generalSidebarRoutes: MenuSidebarRoutes = {
       icon: SettingsIcon
     }
   ]
-};
+});

@@ -1,14 +1,18 @@
 import SidebarMenu from "./SidebarMenu";
-import { MouseEventHandler, memo } from "react";
+import { MouseEventHandler, memo, useContext } from "react";
 import { generalSidebarRoutes, menuSidebarRoutes } from "@/route/sidebar";
 import { ChevronsLeft } from "lucide-react";
+import { StoreContext, StoreContextProps } from "@/utils/store";
 const DashboardSidebar = ({
   displaySidebar,
-  handleDisplaySidebar,
+  handleDisplaySidebar
 }: {
   displaySidebar: boolean;
   handleDisplaySidebar: MouseEventHandler;
 }) => {
+  const { authUser } = useContext(StoreContext) as StoreContextProps;
+  const menuSidebarRoutesLinks = menuSidebarRoutes(authUser?.role || "");
+  const generalSidebarRoutesLinks = generalSidebarRoutes();
   return (
     <div
       className={`flex-shrink-0 overflow-x-hidden dark ${
@@ -21,20 +25,15 @@ const DashboardSidebar = ({
             <div className="sidebar-main__content flex-grow w-full">
               <div className="logo mb-10 flex items-center justify-between">
                 {/* <img src=Logo} alt="Logo" className="w-[120px]" /> */}
-                <span>
-                Logo
-                </span>
-                <ChevronsLeft  onClick={handleDisplaySidebar} className=" cursor-pointer" size={19}/>
+                <span>Logo</span>
+                <ChevronsLeft onClick={handleDisplaySidebar} className=" cursor-pointer" size={19} />
               </div>
               <div className="menu-items">
-                <SidebarMenu
-                  title={menuSidebarRoutes.title}
-                  routesData={menuSidebarRoutes.routeLinks}
-                />
+                <SidebarMenu title={menuSidebarRoutesLinks.title} routesData={menuSidebarRoutesLinks.routeLinks} />
                 <hr />
                 <SidebarMenu
-                  title={generalSidebarRoutes.title}
-                  routesData={generalSidebarRoutes.routeLinks}
+                  title={generalSidebarRoutesLinks.title}
+                  routesData={generalSidebarRoutesLinks.routeLinks}
                 />
               </div>
             </div>

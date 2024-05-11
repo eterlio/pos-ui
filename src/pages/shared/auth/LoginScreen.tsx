@@ -32,7 +32,7 @@ const LoginScreen = () => {
   useEffect(() => {
     verifyUserIsAuthenticated();
     if (authUser && authUser.role) {
-      navigate(`/${authUser?.role}`);
+      navigate(`/dashboard/${authUser?.role}`);
     }
   }, [authUser]);
 
@@ -64,7 +64,7 @@ const LoginScreen = () => {
       saveAuthUser(data.response);
       dispatch({ type: "RESET_FIELDS" });
 
-      navigate("/admin");
+      navigate(`/dashboard/${data.response.role}`);
 
       toast.success("Success", {
         description: "Login successful. Redirecting user"
