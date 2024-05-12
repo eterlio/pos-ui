@@ -64,6 +64,10 @@ export const menuSidebarRoutes = (userRole?: string): MenuSidebarRoutes => ({
       isDisabled: true,
       subLinks: [
         {
+          title: "Add Product",
+          url: "/users",
+          isDisabled: true
+        }, {
           title: "Import Products",
           url: "/users",
           isDisabled: true

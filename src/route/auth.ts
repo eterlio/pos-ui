@@ -1,5 +1,5 @@
 import { RoutesProps } from "@/interfaces/route";
-import Dashboard from "@/pages/admin/Dashboard";
+import Dashboard from "@/pages/dashboard/Dashboard";
 import Home from "@/pages/shared/Home";
 import ForgotPasswordScreen from "@/pages/shared/auth/ForgotPasswordScreen";
 import LoginScreen from "@/pages/shared/auth/LoginScreen";

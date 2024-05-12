@@ -11,7 +11,7 @@ const DashboardCard: FC<DashboardCardProps> = ({ amount, percentageDifference, t
   return (
     <div
       className="space-y-2 relative p-6 bg-white  rounded-sm border-gray-100 border"
-      style={{ boxShadow: "rgba(33, 35, 38, 0.3) 0px 10px 10px -10px" }}
+      style={{ boxShadow: "#2123260a 0px 8px 16px" }}
     >
       <div className="heading flex gap-3 items-center">
         <div className="icon-container w-8 h-8 bg-red-50 flex items-center justify-center">
