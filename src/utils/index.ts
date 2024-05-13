@@ -1,3 +1,5 @@
+import { PERMISSIONS_LIST, PermissionString } from "@/helpers/permission";
+
 export const getErrorMessageFromApi = (error: any) => {
   return error?.response?.data?.response?.message || error.message;
 };
@@ -37,3 +39,53 @@ export const formReducer =
         return state;
     }
   };
+
+export const ROLE_OPTIONS = [
+  {
+    label: "Admin",
+    value: "admin"
+  },
+  {
+    label: "Manager",
+    value: "manager"
+  },
+  {
+    label: "Sales Personnel",
+    value: "salesPersonnel"
+  }
+];
+
+export const GENDER_OPTIONS = [
+  {
+    label: "Male",
+    value: "male"
+  },
+  {
+    label: "Female",
+    value: "female"
+  }
+];
+
+export const USER_STATUS_OPTIONS = [
+  {
+    label: "Active",
+    value: "active"
+  },
+  {
+    label: "Suspended",
+    value: "suspended"
+  },
+  {
+    label: "Pending Approval",
+    value: "pendingApproval"
+  },
+  {
+    label: "Inactive",
+    value: "inactive"
+  }
+];
+
+const notValidPermission = ["settings", "faqs", "calendar"];
+export const permissionResources: PermissionString[] = PERMISSIONS_LIST.filter((resource) => {
+  return !notValidPermission.includes(resource);
+});

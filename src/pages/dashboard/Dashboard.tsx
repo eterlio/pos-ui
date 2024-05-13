@@ -92,7 +92,7 @@ const Dashboard = () => {
           />
         </div>
         <div className="order-first md:order-last">
-          <div className="card min-h-[200px] bg-[#013239] w-full rounded-md flex flex-col justify-between px-8 text-white mb-8">
+          <div className="card min-h-[200px] bg-primary w-full rounded-md flex flex-col justify-between px-8 text-white mb-8">
             <div className="flex flex-1 items-center justify-between">
               <div className="space-y-3">
                 <p className="text-[12px]">Yearly Portfolio value</p>
@@ -120,7 +120,7 @@ const Dashboard = () => {
           </div>
           <div className="p-5 bg-white">
             <div className="flex mb-4 justify-between items-center">
-              <h1 className="font-medium text-[#013239]">Profit Per month</h1>
+              <h1 className="font-medium text-primary">Profit Per month</h1>
               <Button size={"sm"} className="h-8 bg-green-100 text-green-500 text-sm font-light">
                 View All
               </Button>
@@ -142,7 +142,7 @@ const Dashboard = () => {
                 tooltip: {
                   custom: function ({ seriesIndex, dataPointIndex, w }) {
                     const data = w.globals.initialSeries[seriesIndex].data[dataPointIndex];
-                    return `<div style="padding:0.3rem; background:#013239; color:#4ade80; font-size:12px;">$${data.toFixed(
+                    return `<div style="padding:0.3rem; background:#002b31; color:#4ade80; font-size:12px;">$${data.toFixed(
                       2
                     )}</div>`;
                   }
@@ -156,7 +156,7 @@ const Dashboard = () => {
                 stroke: {
                   curve: "smooth",
                   width: 2,
-                  colors: ["#013239"],
+                  colors: ["#002b31"],
                   show: true
                 },
                 grid: {

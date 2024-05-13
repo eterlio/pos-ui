@@ -20,11 +20,9 @@ const TextAreaField: FC<TextAreaFieldProps> = ({
   isRequired,
   ...props
 }) => {
-  const handleInputFieldChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleInputFieldChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const {
-      target: { value },
+      target: { value }
     } = event;
 
     if (handleInputChange && name) {
@@ -34,7 +32,9 @@ const TextAreaField: FC<TextAreaFieldProps> = ({
   return (
     <div>
       {label && (
-        <InputLabel id={id} required={isRequired || false} label={label} />
+        <div className="my-1">
+          <InputLabel id={id} required={isRequired || false} label={label} />
+        </div>
       )}
       <Textarea
         name={name}

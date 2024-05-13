@@ -3,21 +3,11 @@ import { AddressProps, IDefaultPlugin, PhoneProps } from ".";
 
 export type UserRole =
   | "admin"
-  | "teacher"
-  | "accountant"
-  | "director"
-  | "administrator"
-  | "verifier"
   | "support";
 
 export const userRoles: UserRole[] = [
   "admin",
-  "support",
-  "accountant",
-  "administrator",
-  "director",
-  "teacher",
-  "verifier",
+  "support"
 ];
 
 export const specialRoles: UserRole[] = userRoles.filter((role: UserRole) =>
