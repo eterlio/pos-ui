@@ -1,4 +1,3 @@
-
 import { ColumnDef, Row } from "@tanstack/react-table";
 import { MouseEventHandler } from "react";
 
@@ -12,7 +11,7 @@ export interface DataFilterProps {
   title: string;
   options: {
     label: string;
-    value: string;
+    value: string | boolean;
     icon?: IconType;
   }[];
   isNumber?: boolean;
@@ -32,7 +31,7 @@ export interface DataTableProps<TData, TValue> {
   actionButtons?: ActionButton[];
   filters?: DataFilterProps[];
   fetchQuery?: any;
-  selectedDocuments?: Record<string, any>;
+  selectedDocuments?: TData[];
   allowRowSelect?: boolean;
   data: TData[];
   paginator?: Paginator;
@@ -53,7 +52,7 @@ export interface Paginator {
   totalPages: number;
 }
 
-export interface OptionsProps{
+export interface OptionsProps {
   value: any;
   label: string;
 }

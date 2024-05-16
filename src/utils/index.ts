@@ -1,40 +1,28 @@
 import { PERMISSIONS_LIST, PermissionString } from "@/helpers/permission";
+import { PhoneProps } from "@/interfaces";
 
 export const getErrorMessageFromApi = (error: any) => {
   return error?.response?.data?.response?.message || error.message;
 };
+
 // Define action types
-type ActionType =
-  | { type: "UPDATE_FIELD"; fieldName: string; value: string }
-  | { type: "RESET_FIELDS" }
-  | { type: "MAKE_REQUEST" }
-  | { type: "REQUEST_DONE" }
-  | { type: "FIELD_HAS_ERRORS"; errorMessages: { [key: string]: string } }
-  | { type: "RESET_ERROR_FIELDS" };
+type ActionType = { type: "UPDATE_FIELD"; fieldName: string; value: any } | { type: "RESET_FIELDS" };
 
 // Define initial state
-interface FormState {
-  [key: string]: any;
-}
+type FormState = {
+  [P in string]: any;
+};
 
 // Reducer function
 export const formReducer =
   (initialData: FormState) =>
   (state: FormState, action: ActionType): FormState => {
-    const data = { ...initialData, isLoading: false, errors: {} };
+    const data = { ...initialData };
     switch (action.type) {
       case "UPDATE_FIELD":
         return { ...state, [action.fieldName]: action.value };
-      case "MAKE_REQUEST":
-        return { ...state, isLoading: true };
-      case "REQUEST_DONE":
-        return { ...state, isLoading: false };
       case "RESET_FIELDS":
         return data;
-      case "FIELD_HAS_ERRORS":
-        return { ...state, errors: action.errorMessages };
-      case "RESET_ERROR_FIELDS":
-        return { ...state, errors: {} };
       default:
         return state;
     }
@@ -77,7 +65,7 @@ export const USER_STATUS_OPTIONS = [
   },
   {
     label: "Pending Approval",
-    value: "pendingApproval"
+    value: "pending"
   },
   {
     label: "Inactive",
@@ -89,3 +77,16 @@ const notValidPermission = ["settings", "faqs", "calendar"];
 export const permissionResources: PermissionString[] = PERMISSIONS_LIST.filter((resource) => {
   return !notValidPermission.includes(resource);
 });
+export const isActualObject = (obj: Record<string, any>): boolean =>
+  !!(!Array.isArray(obj) && obj && Object.keys(obj).length);
+
+export const hasValidPhone = (phone: PhoneProps): boolean => {
+  return !!(
+    isActualObject(phone) &&
+    phone.number &&
+    phone.number.length === 9 &&
+    phone.prefix &&
+    phone.prefix.length === 3 &&
+    ["233"].includes(phone.prefix)
+  );
+};

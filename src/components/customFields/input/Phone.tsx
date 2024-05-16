@@ -4,6 +4,7 @@ import { FC, FocusEventHandler } from "react";
 import { PhoneInput, defaultCountries, parseCountry } from "react-international-phone";
 import "react-international-phone/style.css";
 import InputLabel from "../FieldLabel";
+import InputError from "./InputError";
 
 interface InputPhoneProps {
   value?: PhoneProps;
@@ -16,6 +17,7 @@ interface InputPhoneProps {
   onblur?: FocusEventHandler<HTMLInputElement>;
   name?: string;
   placeholder?: string;
+  errorMessage?: string;
 }
 const PhoneInputField: FC<InputPhoneProps> = ({
   value,
@@ -27,7 +29,8 @@ const PhoneInputField: FC<InputPhoneProps> = ({
   id,
   onblur,
   name,
-  placeholder
+  placeholder,
+  errorMessage
 }) => {
   const handleChange = ({}, meta: any) => {
     const fieldValue = meta?.inputValue?.split(" ")[1] || "";
@@ -63,6 +66,7 @@ const PhoneInputField: FC<InputPhoneProps> = ({
         name={name}
         placeholder={placeholder}
       />
+      {errorMessage && <InputError message={errorMessage} />}
     </div>
   );
 };

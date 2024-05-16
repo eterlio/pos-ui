@@ -19,13 +19,13 @@ export const genders: Gender[] = ["female", "male", "non-binary", "other"];
 export type UserStatus =
   | "active"
   | "suspended"
-  | "pendingApproval"
+  | "pending"
   | "inactive";
 
 export const userStatuses: UserStatus[] = [
   "active",
   "suspended",
-  "pendingApproval",
+  "pending",
   "inactive",
 ];
 

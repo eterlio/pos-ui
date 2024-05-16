@@ -7,6 +7,7 @@ import Loader from "@/components/Loader";
 import SingleOption from "./SingleOption";
 import { FormIconProps, HandlerProps } from "../type";
 import InputLabel from "../FieldLabel";
+import InputError from "../input/InputError";
 
 interface SelectProp<T = any> {
   isMulti?: boolean;
@@ -24,6 +25,7 @@ interface SelectProp<T = any> {
   id?: string;
   searchFieldChanged?: (data: HandlerProps) => void;
   fieldKey: string;
+  errorMessage?: string;
 }
 const SelectField: FC<SelectProp> = ({
   isClearable,
@@ -40,7 +42,8 @@ const SelectField: FC<SelectProp> = ({
   isRequired,
   id,
   searchFieldChanged,
-  fieldKey
+  fieldKey,
+  errorMessage
 }) => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [selectedValues, setSelectedValues] = React.useState(new Set<string>());
@@ -91,7 +94,7 @@ const SelectField: FC<SelectProp> = ({
     }
   }
 
-  useEffect(() => {
+  useEffect(() => {    
     if (selectValue) {
       if (!Array.isArray(selectValue)) {
         setSelectedValues(() => new Set([selectValue]));
@@ -123,7 +126,7 @@ const SelectField: FC<SelectProp> = ({
         )}
       </div>
       <Popover open={isPopoverOpen} onOpenChange={() => setIsPopoverOpen(!isPopoverOpen)}>
-        <PopoverTrigger disabled={isDisabled} className="w-full">
+        <PopoverTrigger disabled={isDisabled} className="w-full disabled:opacity-75">
           <div
             className="cursor-pointer relative flex min-h-10 items-center justify-end rounded-[3px] border data-[state=open]:border-ring"
             aria-disabled={isDisabled}
@@ -201,6 +204,7 @@ const SelectField: FC<SelectProp> = ({
           </Command>
         </PopoverContent>
       </Popover>
+      {errorMessage && <InputError message={errorMessage} />}
     </div>
   );
 };

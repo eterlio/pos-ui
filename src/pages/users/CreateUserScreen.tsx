@@ -1,14 +1,12 @@
-import Container from "@/components/Container";
-import SelectField from "@/components/customFields/Select/Select";
-import InputField from "@/components/customFields/input/InputField";
-import PasswordInput from "@/components/customFields/input/Password";
-import PhoneInputField from "@/components/customFields/input/Phone";
-import Permission from "@/components/customFields/permission/Permission";
 import { HandlerProps } from "@/components/customFields/type";
 import DashboardLayout from "@/components/dashboard/Layout";
-import { Button } from "@/components/ui/button";
-import { GENDER_OPTIONS, ROLE_OPTIONS, USER_STATUS_OPTIONS, formReducer, permissionResources } from "@/utils";
-import { useReducer } from "react";
+import { useCreateMutation } from "@/hooks/request/useUserRequest";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+import EditUserFields from "./EditUserFields";
+import { useHandlerUserFormFieldValidation } from "@/hooks/useHandlerUserFormFieldValidation";
+import { useError } from "@/hooks/useError";
+import { useFormFieldUpdate } from "@/hooks/useFormFieldUpdate";
 
 const CreateUserScreen = () => {
   const userDefaultObj = {
@@ -22,109 +20,63 @@ const CreateUserScreen = () => {
       number: "",
       country: ""
     },
-    status: "pendingApproval",
-    permission: null,
+    status: "pending",
+    userPermission: null,
     confirmPassword: "",
     gender: ""
   };
-  const [state, dispatch] = useReducer(formReducer(userDefaultObj), userDefaultObj);
+  const { isPending, mutate } = useCreateMutation();
+  const { validate } = useHandlerUserFormFieldValidation();
+  const navigate = useNavigate();
+  const { errors, resetError, addErrors } = useError<typeof userDefaultObj>();
+  const { formValues, updateFormFieldValue } = useFormFieldUpdate(userDefaultObj);
 
   const handleFormFieldChange = (data: HandlerProps) => {
-    dispatch({ type: "UPDATE_FIELD", fieldName: data.key, value: data.value });
+    const { key, value } = data;
+    if (data.key === "role") {
+      if (data.value === "admin") {
+        updateFormFieldValue(key, "*");
+      } else {
+        updateFormFieldValue(key, value);
+      }
+    }
+    updateFormFieldValue(key, value);
+  };
+  const createUserHandler = async () => {
+    const { errorObj, formIsValid } = validate<typeof formValues>(formValues);
+
+    console.log({ errorObj, formIsValid });
+
+    if (!formIsValid) {
+      return addErrors(errorObj);
+    } else {
+      resetError();
+    }
+
+    mutate(
+      { payload: formValues as any },
+      {
+        onSuccess: () => {
+          toast.success("Success", {
+            description: "User created"
+          });
+          navigate("/users");
+        }
+      }
+    );
   };
   return (
     <DashboardLayout pageTitle="Create User">
-      <Container className="border border-gray-100">
-        <h1>User Information</h1>
-
-        <div className="relative">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
-            <InputField
-              name="firstName"
-              handleInputChange={handleFormFieldChange}
-              label={"First Name"}
-              placeholder="First Name"
-              id="firstName"
-              isRequired
-              value={state.firstName}
-            />
-            <InputField
-              name="lastName"
-              handleInputChange={handleFormFieldChange}
-              label={"Last Name"}
-              placeholder="Last Name"
-              id="lastName"
-              isRequired
-              value={state.lastName}
-            />
-            <InputField
-              name="email"
-              handleInputChange={handleFormFieldChange}
-              label={"Email"}
-              placeholder="Email"
-              id="email"
-              isRequired
-              value={state.email}
-            />
-            <PhoneInputField
-              fieldKey="phone"
-              handleInputChange={handleFormFieldChange}
-              label={"Phone"}
-              id="phone"
-              value={state.phone}
-            />
-            <SelectField
-              options={ROLE_OPTIONS}
-              closeOnSelect
-              isRequired
-              onChange={handleFormFieldChange}
-              label={"Role"}
-              fieldKey={"role"}
-              selectValue={state.role}
-            />
-            <SelectField
-              options={GENDER_OPTIONS}
-              closeOnSelect
-              isRequired
-              onChange={handleFormFieldChange}
-              label={"Gender"}
-              fieldKey={"gender"}
-              selectValue={state.gender}
-            />
-            <SelectField
-              options={USER_STATUS_OPTIONS}
-              closeOnSelect
-              isRequired
-              onChange={handleFormFieldChange}
-              label={"Status"}
-              fieldKey={"status"}
-              selectValue={state.status}
-            />
-            <PasswordInput
-              handleInputChange={handleFormFieldChange}
-              name="password"
-              placeholder="Password"
-              label={"Password"}
-              value={state.password}
-            />
-            <PasswordInput
-              handleInputChange={handleFormFieldChange}
-              name="confirmPassword"
-              placeholder="Confirm Password"
-              label={"Confirm Password"}
-              value={state.confirmPassword}
-            />
-          </div>
-          <Permission
-            onChange={handleFormFieldChange}
-            fieldKey="permission"
-            permissionResources={permissionResources}
-          />
-          <div className="flex items-center justify-end">
-            <Button className="w-[200px]">Create</Button>
-          </div>
-        </div>
-      </Container>
+      <EditUserFields
+        buttonTitle="Create"
+        formFields={formValues}
+        handleFormFieldChange={handleFormFieldChange}
+        onSubmitHandler={createUserHandler}
+        errors={errors as any}
+        isLoading={isPending}
+        isNew
+        pageTitle="Create user information"
+      />
     </DashboardLayout>
   );
 };

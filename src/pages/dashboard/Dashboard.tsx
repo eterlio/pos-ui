@@ -34,7 +34,7 @@ const Dashboard = () => {
     labels: ["Total Debtors", "Total Creditors"]
   };
   return (
-    <DashboardLayout pageTitle="Dashboard" pageDescription="Here is the analysis for your store">
+    <DashboardLayout pageTitle="Dashboard" pageDescription="Here is the analysis for your store" showScrollToTopButton>
       <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-4">
         <DashboardCard amount={20} percentageDifference={10} title="May Total Sales" isAmount />
         <DashboardCard amount={280} percentageDifference={18} title="May Total Expenditure" />

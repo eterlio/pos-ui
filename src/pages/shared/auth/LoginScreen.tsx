@@ -4,6 +4,7 @@ import InputField from "@/components/customFields/input/InputField";
 import PasswordInput from "@/components/customFields/input/Password";
 import { HandlerProps } from "@/components/customFields/type";
 import { useBaseRequestService } from "@/hooks/request/useAxiosPrivate";
+import { useError } from "@/hooks/useError";
 import { formReducer, getErrorMessageFromApi } from "@/utils";
 import { StoreContext, StoreContextProps } from "@/utils/store";
 import { Validator } from "@/validator";
@@ -21,7 +22,7 @@ const LoginScreen = () => {
   const [state, dispatch] = useReducer(formReducer(initialData), initialData);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-
+  const { addErrors, errors, resetError } = useError();
   const verifyUserIsAuthenticated = async () => {
     try {
       await getAuth();
@@ -98,7 +99,7 @@ const LoginScreen = () => {
                   value={state.email}
                   isRequired
                   label={{ text: "Email" }}
-                  errorMessage={state.errors?.email}
+                  errorMessage={errors?.email}
                 />
               </div>
               <div>
@@ -108,7 +109,7 @@ const LoginScreen = () => {
                   value={state.password}
                   isRequired
                   label={{ text: "Password" }}
-                  errorMessage={state.errors?.password}
+                  errorMessage={errors?.password}
                 />
                 <div className="flex items-center justify-end text-sm mb-8 mt-3">
                   <Link to="/auth/forgot-password">Forgot Password</Link>
