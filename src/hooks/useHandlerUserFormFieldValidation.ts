@@ -33,9 +33,6 @@ export const useHandlerUserFormFieldValidation = (isNew: boolean = true) => {
       }
     });
     validator.validate();
-
-    console.log(validator.passed(), validator.errors());
-
     return {
       formIsValid: validator.passed(),
       errorObj: validator.getValidationErrorsByIndex() as T

@@ -126,8 +126,6 @@ export const usersTableSchema: ColumnDef<UserProps>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
     cell: ({ row }) => {
       const status: UserStatus = row.getValue("status");
-      console.log({ status });
-
       const statusFiltered = USER_STATUS_OPTIONS.find((stat) => stat.value === status)?.label;
       return (
         <div className="flex items-center justify-center">
