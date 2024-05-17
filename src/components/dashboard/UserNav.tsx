@@ -1,5 +1,5 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,51 +9,48 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { memo, useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useBaseRequestService } from '@/hooks/request/useAxiosPrivate';
-import { StoreContext, StoreContextProps } from '@/utils/store';
-import { toast } from 'sonner';
-import { getErrorMessageFromApi } from '@/utils';
+} from "@/components/ui/dropdown-menu";
+import { memo, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useBaseRequestService } from "@/hooks/request/useAxiosPrivate";
+import { StoreContext, StoreContextProps } from "@/utils/store";
+import { toast } from "sonner";
+import { getErrorMessageFromApi } from "@/utils";
 // import Preloader from '../Preloader';
 
 const UserNav = memo(() => {
   const navLinks = [
     {
-      name: 'Profile',
-      route: '/profile',
+      name: "Profile",
+      route: "/profile",
       allowedRoles: [],
-      shortcut: '⇧⌘P'
+      shortcut: "⇧⌘P"
     },
     {
-      name: 'Settings',
-      route: '/settings',
+      name: "Settings",
+      route: "/settings",
       allowedRoles: [],
-      shortcut: '⌘S'
+      shortcut: "⌘S"
     }
   ];
-  const { axiosInstance } = useBaseRequestService({ useToken: true, tokenType: 'accessToken' });
+  const { axiosInstance } = useBaseRequestService({ useToken: true, tokenType: "accessToken" });
   const { authUser: userDetails, clearAuthUser } = useContext(StoreContext) as StoreContextProps;
 
   const userNameExists = userDetails && (userDetails.firstName || userDetails?.lastName);
-  const fullName = userNameExists ? `${userDetails.firstName} ${userDetails.lastName}` : '';
-  const userAbbreviation = userNameExists ? `${userDetails?.firstName?.[0]}${userDetails?.lastName?.[0]}` : '';
-  // const [isLoading, setIsLoading] = useState(true);
+  const fullName = userNameExists ? `${userDetails.firstName} ${userDetails.lastName}` : "";
+  const userAbbreviation = userNameExists ? `${userDetails?.firstName?.[0]}${userDetails?.lastName?.[0]}` : "";
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    // setIsLoading(true);
     try {
-      await axiosInstance.get('/auth/logout');
+      await axiosInstance.get("/auth/logout");
       clearAuthUser();
-      navigate('/auth/login', { replace: true,  });
+      navigate("/auth/login", { replace: true });
     } catch (error) {
-      toast.error('Error', {
+      toast.error("Error", {
         description: getErrorMessageFromApi(error)
       });
     } finally {
-      // setIsLoading(false);
     }
   };
   return (

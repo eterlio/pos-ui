@@ -64,7 +64,7 @@ export const USER_STATUS_OPTIONS = [
     value: "suspended"
   },
   {
-    label: "Pending Approval",
+    label: "Pending",
     value: "pending"
   },
   {

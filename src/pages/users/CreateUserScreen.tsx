@@ -1,6 +1,6 @@
 import { HandlerProps } from "@/components/customFields/type";
 import DashboardLayout from "@/components/dashboard/Layout";
-import { useCreateMutation } from "@/hooks/request/useUserRequest";
+import { useCreateOrUpdateUserMutation } from "@/hooks/request/useUserRequest";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import EditUserFields from "./EditUserFields";
@@ -25,7 +25,7 @@ const CreateUserScreen = () => {
     confirmPassword: "",
     gender: ""
   };
-  const { isPending, mutate } = useCreateMutation();
+  const { isPending, mutate } = useCreateOrUpdateUserMutation();
   const { validate } = useHandlerUserFormFieldValidation();
   const navigate = useNavigate();
   const { errors, resetError, addErrors } = useError<typeof userDefaultObj>();
@@ -35,18 +35,13 @@ const CreateUserScreen = () => {
     const { key, value } = data;
     if (data.key === "role") {
       if (data.value === "admin") {
-        updateFormFieldValue(key, "*");
-      } else {
-        updateFormFieldValue(key, value);
+        updateFormFieldValue("userPermission", "*");
       }
     }
     updateFormFieldValue(key, value);
   };
   const createUserHandler = async () => {
     const { errorObj, formIsValid } = validate<typeof formValues>(formValues);
-
-    console.log({ errorObj, formIsValid });
-
     if (!formIsValid) {
       return addErrors(errorObj);
     } else {

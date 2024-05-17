@@ -1,6 +1,6 @@
 import { HandlerProps } from "@/components/customFields/type";
 import DashboardLayout from "@/components/dashboard/Layout";
-import { useCreateMutation, useFetchUserQuery } from "@/hooks/request/useUserRequest";
+import { useCreateOrUpdateUserMutation, useFetchUserQuery } from "@/hooks/request/useUserRequest";
 import { useNavigate, useParams } from "react-router-dom";
 import EditUserFields from "./EditUserFields";
 import { useHandlerUserFormFieldValidation } from "@/hooks/useHandlerUserFormFieldValidation";
@@ -8,14 +8,16 @@ import { useError } from "@/hooks/useError";
 import { useFormFieldUpdate } from "@/hooks/useFormFieldUpdate";
 import { useEffect } from "react";
 import { objectDifference } from "@/helpers";
+import { UserProps } from "@/interfaces/users";
+import { toast } from "sonner";
 
 const UpdateUserScreen = () => {
-  const { isPending, mutate } = useCreateMutation();
   const params = useParams<{ id: string }>();
+  const { isPending, mutate } = useCreateOrUpdateUserMutation(params.id);
   const { data, isFetching } = useFetchUserQuery(params.id as string);
   const { errors, resetError, addErrors } = useError<typeof data>();
 
-  const { validate } = useHandlerUserFormFieldValidation(true);
+  const { validate } = useHandlerUserFormFieldValidation(false);
   const navigate = useNavigate();
 
   const { formValues, updateFormFieldValue, setFormValues } = useFormFieldUpdate(data);
@@ -24,9 +26,7 @@ const UpdateUserScreen = () => {
     const { key, value } = data;
     if (data.key === "role") {
       if (data.value === "admin") {
-        updateFormFieldValue(key, "*");
-      } else {
-        updateFormFieldValue(key, value);
+        updateFormFieldValue("userPermission", "*");
       }
     }
     updateFormFieldValue(key, value);
@@ -34,28 +34,25 @@ const UpdateUserScreen = () => {
 
   const updateUserHandler = async () => {
     const { errorObj, formIsValid } = validate<typeof formValues>(formValues);
-    console.log("HELLO WORLD", { formIsValid });
-
     if (!formIsValid) {
       addErrors(errorObj);
       return;
     } else {
       resetError();
     }
-    const dd = objectDifference(data, formValues);
-    console.log({ dd });
+    const payload = objectDifference(data, formValues) as UserProps;
 
-    // mutate(
-    //   { payload: formValues as UserProps },
-    //   {
-    //     onSuccess: () => {
-    //       toast.success("Success", {
-    //         description: "User created"
-    //       });
-    //       navigate("/users");
-    //     }
-    //   }
-    // );
+    mutate(
+      { payload },
+      {
+        onSuccess: () => {
+          toast.success("Success", {
+            description: "User updated"
+          });
+          navigate("/users");
+        }
+      }
+    );
   };
 
   useEffect(() => {

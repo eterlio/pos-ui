@@ -4,6 +4,8 @@ import Sidebar from "@/components/dashboard/Sidebar";
 import Content from "@/components/dashboard/Content";
 import HeaderTitle from "./HeaderTitle";
 import Preloader from "../Preloader";
+import { ActionButtonProps } from "@/interfaces";
+// import BreadCrumb from "./BreadCrumb";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -13,7 +15,7 @@ interface DashboardLayoutProps {
   pageTitle: string;
   pageDescription?: string;
   showPageExporter?: boolean;
-  actionButtons?: Record<string, any>;
+  actionButton?: ActionButtonProps;
   showHeaderSearchBar?: boolean;
   showNotification?: boolean;
   isLoading?: boolean;
@@ -27,11 +29,12 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   pageTitle,
   pageDescription,
   showPageExporter = false,
-  actionButtons,
+  actionButton,
   showHeaderSearchBar = true,
   showNotification = true,
   isLoading
 }) => {
+  
   const handleDisplaySidebar = () => {
     setDisplaySidebar(!displaySidebar);
   };
@@ -62,7 +65,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                     pageTitle={pageTitle}
                     pageDescription={pageDescription}
                     showPageExporter={showPageExporter}
-                    actionButtons={actionButtons}
+                    actionButton={actionButton}
                   />
                   {/* <BreadCrumb /> */}
 

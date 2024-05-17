@@ -11,11 +11,12 @@ export const useFetchUsersQuery = (query: Record<string, any>) => {
   const { axiosInstance } = useBaseRequestService({ useToken: true, tokenType: "accessToken" });
   const { data, isFetching, isRefetching } = useQuery({
     queryKey: ["users", query],
-    staleTime: 10000,
+    // staleTime: 10000,
     // refetchOnMount: true,
+    enabled: !!query,
     retry: 0,
     refetchOnWindowFocus: false,
-    gcTime: 100000,
+    // gcTime: 100000,
     queryFn: async () => {
       const {
         data: { response }
@@ -33,6 +34,7 @@ export const useFetchUserQuery = (id: string) => {
     queryKey: ["users", id],
     // staleTime: 10000,
     // refetchOnMount: true,
+    enabled: !!id,
     retry: 0,
     refetchOnWindowFocus: false,
     // gcTime: 100000,
@@ -46,11 +48,16 @@ export const useFetchUserQuery = (id: string) => {
   return { data, isFetching, isRefetching };
 };
 
-export const useCreateMutation = () => {
+export const useCreateOrUpdateUserMutation = (id?: string) => {
   const { axiosInstance } = useBaseRequestService({ useToken: true, tokenType: "accessToken" });
   const { data, isPending, mutate } = useMutation({
-    mutationFn: async (data: { payload: UserProps }) => await axiosInstance.post<UserProps>(`/users`, data.payload),
-    mutationKey: ["createUser"],
+    mutationFn: async (data: { payload: UserProps }) => {
+      if (id) {
+        return await axiosInstance.put<UserProps>(`/users/${id}`, data.payload);
+      }
+      return await axiosInstance.post<UserProps>(`/users`, data.payload);
+    },
+    mutationKey: ["createOrUpdateUser", id],
     onError(error) {
       toast.error("Error", { description: getErrorMessageFromApi(error) });
     }
@@ -94,7 +101,6 @@ export const useDeleteUserMutation = (query: any) => {
   return { data, isPending, mutate };
 };
 
-
 // export function useCreateUpdatePostMutation(id?: string) {
 //   const request = id ? usePutRequest : usePostRequest
 //   const queryClient = useQueryClient()
@@ -122,6 +128,19 @@ export const useDeleteUserMutation = (query: any) => {
 //   })
 
 //   return query
+// }
+
+// export function addToOrUpdatePostList(userData:UserProps, queryClient: ReturnType<typeof useQueryClient>) {
+//   queryClient.setQueryData(["users"], (userResponseData: GetManyProps<UserProps> | undefined) => {
+//     if (!userResponseData) return
+//     for (let i = 0; i < userResponseData.data.length; i++) {
+//       if (userResponseData.data[i].id === post.id) {
+//         posts[i] = post
+//         return posts
+//       }
+//     }
+//     return [...posts, post]
+//   })
 // }
 
 // export function addToOrUpdatePostList(post: Post, queryClient: ReturnType<typeof useQueryClient>) {

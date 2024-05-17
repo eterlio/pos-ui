@@ -3,47 +3,39 @@ import PrimaryButton from "@/components/PrimayButton";
 import InputField from "@/components/customFields/input/InputField";
 import PasswordInput from "@/components/customFields/input/Password";
 import { HandlerProps } from "@/components/customFields/type";
-import { useBaseRequestService } from "@/hooks/request/useAxiosPrivate";
+import { useAuthLogin, useGetAuthUser } from "@/hooks/request/useAuthRequest";
 import { useError } from "@/hooks/useError";
-import { formReducer, getErrorMessageFromApi } from "@/utils";
+import { useFormFieldUpdate } from "@/hooks/useFormFieldUpdate";
 import { StoreContext, StoreContextProps } from "@/utils/store";
 import { Validator } from "@/validator";
-import { useContext, useEffect, useReducer, useState } from "react";
+import { useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 
 const LoginScreen = () => {
-  const { axiosInstance, getAuth } = useBaseRequestService({ useToken: true, tokenType: "accessToken" });
-  const { saveAuthUser, authUser } = useContext(StoreContext) as StoreContextProps;
-  const initialData = {
+  const authDefault = {
     password: "",
     email: ""
   };
-  const [state, dispatch] = useReducer(formReducer(initialData), initialData);
-  const [isLoading, setIsLoading] = useState(true);
+  const { authUser } = useContext(StoreContext) as StoreContextProps;
+  const { formValues, updateFormFieldValue } = useFormFieldUpdate(authDefault);
+  const { isFetching } = useGetAuthUser();
+  const { mutateAsync, isPending } = useAuthLogin();
   const navigate = useNavigate();
-  const { addErrors, errors, resetError } = useError();
-  const verifyUserIsAuthenticated = async () => {
-    try {
-      await getAuth();
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { addErrors, errors, resetError } = useError<Partial<typeof formValues>>();
+
   useEffect(() => {
-    verifyUserIsAuthenticated();
-    if (authUser && authUser.role) {
+    if (authUser && authUser?.role) {
       navigate(`/dashboard/${authUser?.role}`);
     }
   }, [authUser]);
-
   const formFieldHandler = (data: HandlerProps) => {
-    dispatch({ type: "UPDATE_FIELD", fieldName: data.key, value: data.value });
+    const { key, value } = data;
+    updateFormFieldValue(key, value);
   };
 
   const handleUserLogin = async () => {
-    const validator = new Validator<typeof initialData>({
-      formData: { email: state.email, password: state.password },
+    const validator = new Validator<typeof formValues>({
+      formData: formValues,
       rules: {
         email: "required|isEmail",
         password: "required"
@@ -52,36 +44,19 @@ const LoginScreen = () => {
 
     validator.validate();
 
-    if (validator.failed()) {
-      dispatch({ type: "FIELD_HAS_ERRORS", errorMessages: validator.getValidationErrorsByIndex() });
-      return;
+    validator.validate();
+    if (!validator.passed()) {
+      return addErrors(validator.getValidationErrorsByIndex());
     } else {
-      dispatch({ type: "RESET_ERROR_FIELDS" });
+      resetError();
     }
 
-    try {
-      dispatch({ type: "MAKE_REQUEST" });
-      const { data } = await axiosInstance.post("/auth/login", { email: state.email, password: state.password });
-      saveAuthUser(data.response);
-      dispatch({ type: "RESET_FIELDS" });
-
-      navigate(`/dashboard/${data.response.role}`);
-
-      toast.success("Success", {
-        description: "Login successful. Redirecting user"
-      });
-    } catch (error) {
-      toast.error("Error", {
-        description: getErrorMessageFromApi(error)
-      });
-    } finally {
-      dispatch({ type: "REQUEST_DONE" });
-    }
+    await mutateAsync(formValues);
   };
 
   return (
     <div className="min-h-screen flex">
-      {isLoading ? (
+      {isFetching ? (
         <Preloader />
       ) : (
         <>
@@ -96,7 +71,7 @@ const LoginScreen = () => {
                 <InputField
                   name="email"
                   handleInputChange={formFieldHandler}
-                  value={state.email}
+                  value={formValues.email}
                   isRequired
                   label={{ text: "Email" }}
                   errorMessage={errors?.email}
@@ -106,7 +81,7 @@ const LoginScreen = () => {
                 <PasswordInput
                   name="password"
                   handleInputChange={formFieldHandler}
-                  value={state.password}
+                  value={formValues.password}
                   isRequired
                   label={{ text: "Password" }}
                   errorMessage={errors?.password}
@@ -119,8 +94,8 @@ const LoginScreen = () => {
                 <PrimaryButton
                   text="Login"
                   onClick={handleUserLogin}
-                  loading={state.isLoading}
-                  disabled={state.isLoading}
+                  loading={isFetching || isPending}
+                  disabled={isFetching || isPending}
                 />
               </div>
             </div>

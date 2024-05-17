@@ -75,7 +75,10 @@ const ListUsersScreen = () => {
   }
 
   return (
-    <DashboardLayout pageTitle="Users List">
+    <DashboardLayout
+      pageTitle="Users List"
+      actionButton={{ createButton: { name: "Create user", onClick: () => navigate("/users/create") } }}
+    >
       <Modal
         showModal={modalData.showModal}
         modalTitle={modalData.modalTitle(selectedUser.firstName)}
