@@ -1,6 +1,6 @@
 import { MouseEventHandler } from "react";
 
-export interface IDefaultPlugin {
+export interface DefaultPluginProps {
   _id?: string;
   createdAt?: Date;
   updatedBy?: string;

@@ -1,12 +1,12 @@
 import { UserProps } from "@/interfaces/users";
 import {
   AddressProps,
-  IDefaultPlugin,
+  DefaultPluginProps,
   PhoneProps,
   RequestStateProps,
 } from "../interfaces";
 
-export const defaultPlugin: IDefaultPlugin = {
+export const defaultPlugin: DefaultPluginProps = {
   createdAt: new Date(),
   updatedBy: "",
   updatedAt: new Date(),

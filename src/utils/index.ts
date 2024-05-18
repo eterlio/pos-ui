@@ -1,5 +1,6 @@
 import { PERMISSIONS_LIST, PermissionString } from "@/helpers/permission";
 import { PhoneProps } from "@/interfaces";
+import { toLower, trim } from "lodash";
 
 export const getErrorMessageFromApi = (error: any) => {
   return error?.response?.data?.response?.message || error.message;
@@ -90,3 +91,26 @@ export const hasValidPhone = (phone: PhoneProps): boolean => {
     ["233"].includes(phone.prefix)
   );
 };
+
+export const createSlug = (str: string) => {
+  let lowerStr = toLower(str);
+
+  // Remove non-alphanumeric characters (excluding hyphens and spaces)
+  let cleanedStr = lowerStr.replace(/[^a-z0-9\s-]/g, "");
+
+  // Replace spaces and consecutive hyphens with a single hyphen
+  let hyphenatedStr = cleanedStr.replace(/[\s-]+/g, "-");
+
+  // Trim any leading or trailing hyphens
+  let slug = trim(hyphenatedStr, "-");
+
+  return slug;
+};
+export function formatQueryParams(params?: Record<string, any>): string {
+  let formattedQueryString: string = "";
+  const query = new URLSearchParams(params as any);
+  if (params && Object.keys(params).length) {
+    formattedQueryString = `?${query}`;
+  }
+  return formattedQueryString;
+}

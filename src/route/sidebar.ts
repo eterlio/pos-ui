@@ -60,44 +60,51 @@ export const menuSidebarRoutes = (userRole?: string): MenuSidebarRoutes => ({
       title: "Products",
       url: "/",
       icon: Tags,
-      isDisabled: true,
+      isDisabled: false,
       subLinks: [
         {
           title: "Add Product",
           url: "/users",
           isDisabled: true
-        }, {
+        },
+        {
           title: "Import Products",
           url: "/users",
           isDisabled: true
         },
         {
           title: "Print Barcode/QrCode",
-          url: "/users"
+          url: "/users",
+          isDisabled: true
         },
         {
           title: "Product Categories",
-          url: "/users"
+          url: "/product-categories"
         },
         {
           title: "Product Brands",
-          url: "/users"
+          url: "/users",
+          isDisabled: true
         },
         {
           title: "Product Units",
-          url: "/users"
+          url: "/users",
+          isDisabled: true
         },
         {
           title: "Product Variations",
-          url: "/users"
+          url: "/users",
+          isDisabled: true
         },
         {
           title: "Product Warrants",
-          url: "/users"
+          url: "/users",
+          isDisabled: true
         },
         {
           title: "Product Alert",
-          url: "/users"
+          url: "/users",
+          isDisabled: true
         }
       ]
     },
