@@ -1,8 +1,8 @@
-import { FC, useState } from 'react';
+import { FC, useState } from "react";
 
-import { GetManyProps } from '@/hooks/types';
-import SelectField from './SelectField';
-import { toast } from 'sonner';
+import { GetManyProps } from "@/hooks/types";
+import SelectField from "./SelectField";
+import { toast } from "sonner";
 import { useBaseRequestService } from "@/hooks/request/useAxiosPrivate";
 import { BaseResponse } from "@/helpers/baseResponse";
 import InputLabel from "../FieldLabel";
@@ -25,10 +25,11 @@ export const PromiseSelect: FC<PromiseSelectDataProps> = ({
   label,
   isMulti,
   minSearchLength = 3,
-  onChange
+  onChange,
+  fieldKey
 }) => {
   const [loading, setLoading] = useState(false);
-  const {axiosInstance} = useBaseRequestService({useToken: true, tokenType:"accessToken"})
+  const { axiosInstance } = useBaseRequestService({ useToken: true, tokenType: "accessToken" });
   let mappedOptions: OptionsProps[] = [];
   const handleSelectFieldChange = async (value: any) => {
     if (onChange) {
@@ -36,30 +37,30 @@ export const PromiseSelect: FC<PromiseSelectDataProps> = ({
     }
   };
   const selectSearchFieldChanged = async (searchValue: string) => {
-    if (typeof searchValue === 'string' && (searchValue.length >= minSearchLength || searchValue.length === 0)) {
+    if (typeof searchValue === "string" && (searchValue.length >= minSearchLength || searchValue.length === 0)) {
       try {
         setLoading(true);
-        const {data} = await axiosInstance.get<BaseResponse<GetManyProps<any>>>(url, {
+        const { data } = await axiosInstance.get<BaseResponse<GetManyProps<any>>>(url, {
           [`${searchKey}_eq`]: searchValue,
           ...query
         });
         if (data) {
           const options = data.response.data.map((field) => {
             return {
-              label: field[labelKey] || '',
-              value: field[valueKey] || ''
+              label: field[labelKey] || "",
+              value: field[valueKey] || ""
             };
           });
           mappedOptions = [...mappedOptions, ...options];
         }
       } catch (error: any) {
-        toast.error('Error', { description: error.message });
+        toast.error("Error", { description: error.message });
       } finally {
         setLoading(false);
       }
     }
   };
-  const selectFieldMapper = selectFields && selectFields.length ? selectFields.join(',') : null;
+  const selectFieldMapper = selectFields && selectFields.length ? selectFields.join(",") : null;
 
   if (selectFieldMapper) {
     query = {
@@ -72,8 +73,8 @@ export const PromiseSelect: FC<PromiseSelectDataProps> = ({
   if (data) {
     const options = data.response.data.map((field) => {
       return {
-        label: field[labelKey] || '',
-        value: field[valueKey] || ''
+        label: field[labelKey] || "",
+        value: field[valueKey] || ""
       };
     });
     mappedOptions = [...mappedOptions, ...options];
@@ -91,6 +92,7 @@ export const PromiseSelect: FC<PromiseSelectDataProps> = ({
         isMulti={isMulti}
         isSearchable
         searchFieldChanged={selectSearchFieldChanged}
+        key={fieldKey}
       />
     </>
   );

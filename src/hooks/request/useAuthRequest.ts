@@ -37,7 +37,7 @@ export const useAuthLogin = () => {
     onSuccess(data) {
       const authData = data.data.response;
       toast.success("Success", {
-        description: "Login success.Redirecting User"
+        description: "Login success. Redirecting User"
       });
       saveAuthUser(authData);
       navigate(`/dashboard/${authData.role}`);
@@ -46,4 +46,47 @@ export const useAuthLogin = () => {
   });
   return { data, isPending, mutateAsync };
 };
+export const useAuthResetPassword = () => {
+  const queryClient = useQueryClient();
+  const { axiosInstance } = useBaseRequestService();
+  const key = ["password reset"];
+  const { data, isPending, mutate } = useMutation({
+    mutationFn: async (payload: { token: string; password: string; confirmPassword: string }) => {
+      return await axiosInstance.put<BaseResponse<{}>>(`/auth/reset-password`, payload);
+    },
+    mutationKey: key,
 
+    onError(error) {
+      toast.error("Error", { description: getErrorMessageFromApi(error) });
+    },
+    onSuccess() {
+      toast.success("Success", {
+        description: "Password reset success"
+      });
+      queryClient.invalidateQueries({ queryKey: key });
+    }
+  });
+  return { data, isPending, mutate };
+};
+export const useAuthForgotPasswordPassword = () => {
+  const queryClient = useQueryClient();
+  const { axiosInstance } = useBaseRequestService();
+  const key = ["forgot password"];
+  const { data, isPending, mutate } = useMutation({
+    mutationFn: async (payload: { email: string }) => {
+      return await axiosInstance.patch<BaseResponse<{ message: string }>>(`/auth/forgot-password`, payload);
+    },
+    mutationKey: key,
+
+    onError(error) {
+      toast.error("Error", { description: getErrorMessageFromApi(error) });
+    },
+    onSuccess(data) {
+      queryClient.invalidateQueries({ queryKey: key });
+      toast.success("Success", {
+        description: data.data.response.message
+      });
+    }
+  });
+  return { data, isPending, mutate };
+};

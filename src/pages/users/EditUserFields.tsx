@@ -1,5 +1,5 @@
 import Container from "@/components/Container";
-import PrimaryButton from "@/components/PrimayButton";
+import PrimaryButton from "@/components/PrimaryButton";
 import SelectField from "@/components/customFields/Select/Select";
 import InputField from "@/components/customFields/input/InputField";
 import PasswordInput from "@/components/customFields/input/Password";

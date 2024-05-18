@@ -19,9 +19,9 @@ export const useHandlerUserFormFieldValidation = (isNew: boolean = true) => {
     validationRules = omit(validationRules, ["confirmPassword", "password"]);
   }
 
-  const validate = <T>(formField: T) => {
+  const validate = <T = any>(formField: any) => {
     // const formData =
-    const validator = new Validator<Partial<typeof formField>>({
+    const validator = new Validator<any>({
       formData: formField,
       rules: validationRules
     });

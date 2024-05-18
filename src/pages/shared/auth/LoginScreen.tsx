@@ -1,5 +1,5 @@
 import Preloader from "@/components/Preloader";
-import PrimaryButton from "@/components/PrimayButton";
+import PrimaryButton from "@/components/PrimaryButton";
 import InputField from "@/components/customFields/input/InputField";
 import PasswordInput from "@/components/customFields/input/Password";
 import { HandlerProps } from "@/components/customFields/type";
