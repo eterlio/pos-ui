@@ -5,6 +5,7 @@ import { useAuthForgotPasswordPassword } from "@/hooks/request/useAuthRequest";
 import { useError } from "@/hooks/useError";
 import { useFormFieldUpdate } from "@/hooks/useFormFieldUpdate";
 import { Validator } from "@/validator";
+import { Key } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const ForgotPasswordScreen = () => {
@@ -13,7 +14,7 @@ const ForgotPasswordScreen = () => {
   };
   const { formValues, updateFormFieldValue } = useFormFieldUpdate(initialData);
   const { addErrors, errors, resetError } = useError<typeof initialData>();
-  const {  isPending, mutate } = useAuthForgotPasswordPassword();
+  const { isPending, mutate } = useAuthForgotPasswordPassword();
   const formFieldHandler = (data: HandlerProps) => {
     const { key, value } = data;
     updateFormFieldValue(key, value);
@@ -41,8 +42,13 @@ const ForgotPasswordScreen = () => {
       <div className="md:min-w-[450px] m-auto p-5">
         <div className="relative">
           <div className="heading my-4 space-y-1">
-            <h1 className="text-xl font-medium">Forgot Password</h1>
-            <p className="text-sm font-light">Enter your email to and receive a password reset link</p>
+            <div className="flex items-center gap-3 mb-5">
+              <span className="w-10 h-10 border rounded-full bg-primary flex justify-center items-center">
+                <Key className="text-white" size={18} />
+              </span>
+              <h1 className="text-xl font-medium">Forgot Password</h1>
+            </div>
+            <p className="text-sm font-light ">Enter your email to and receive a password reset link</p>
           </div>
           <div>
             <InputField

@@ -18,7 +18,7 @@ export const AUTH_ROUTES: RoutesProps[] = [
 },
 {
     component: ResetPasswordScreen,
-    url: "/auth/password-recovery"
+    url: "/auth/reset-password"
 },
 {
     component: Dashboard,

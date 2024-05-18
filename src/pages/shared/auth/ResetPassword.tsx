@@ -5,6 +5,7 @@ import { useAuthResetPassword } from "@/hooks/request/useAuthRequest";
 import { useError } from "@/hooks/useError";
 import { useFormFieldUpdate } from "@/hooks/useFormFieldUpdate";
 import { Validator } from "@/validator";
+import { LockKeyhole } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const ResetPasswordScreen = () => {
@@ -45,7 +46,12 @@ const ResetPasswordScreen = () => {
     <div className="min-h-screen flex items-center justify-center">
       <div className="md:min-w-[450px] m-auto p-5 space-y-3">
         <div className="heading my-4 space-y-1">
-          <h1 className="text-xl font-medium">Reset Password</h1>
+        <div className="flex items-center gap-3 mb-5">
+              <span className="w-10 h-10 border rounded-full bg-primary flex justify-center items-center">
+                <LockKeyhole className="text-white" size={18} />
+              </span>
+              <h1 className="text-xl font-medium">Reset Password</h1>
+            </div>
           <p className="text-sm font-light">Enter your new password to reset the password</p>
         </div>
         <div>
