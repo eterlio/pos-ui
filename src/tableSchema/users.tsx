@@ -131,10 +131,10 @@ export const usersTableSchema: ColumnDef<UserProps>[] = [
         <div className="flex items-center justify-center">
           (status &&{" "}
           <TableStatus
-            bg={statusColors[status].bg}
+            bg={statusColors[status]?.bg}
             text={statusFiltered || ""}
-            textColor={statusColors[status].text}
-            circleBg={statusColors[status].circleBg}
+            textColor={statusColors[status]?.text}
+            circleBg={statusColors[status]?.circleBg}
           />
           )
         </div>
