@@ -10,7 +10,6 @@ import { StoreContext, StoreContextProps } from "@/utils/store";
 import { Validator } from "@/validator";
 import { useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import authBg from "@/assets/authBg.jpg";
 const LoginScreen = () => {
   const authDefault = {
     password: "",
