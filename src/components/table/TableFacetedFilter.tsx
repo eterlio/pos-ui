@@ -25,7 +25,7 @@ interface DataTableFacetedFilterProps {
   title?: string;
   options: {
     label: string;
-    value: string;
+    value: any;
     icon?: React.ComponentType<{ className?: string }>;
   }[];
   extra?: {
@@ -95,10 +95,10 @@ export function DataTableFacetedFilter({
                 ) : (
                   options
                     .filter((option) => selectedValues.includes(option.value))
-                    .map((option) => (
+                    .map((option, index) => (
                       <Badge
                         variant="secondary"
-                        key={option.value}
+                        key={index}
                         className="rounded-sm px-1 font-normal"
                       >
                         {option.label}

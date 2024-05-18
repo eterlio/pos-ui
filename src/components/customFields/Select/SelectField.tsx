@@ -1,9 +1,7 @@
-
 import { ChangeEvent, FC } from "react";
 import Select from "react-tailwindcss-select";
 import { FormIconProps } from "../type";
 import InputLabel from "../FieldLabel";
-
 
 export interface Option {
   value: string;
@@ -21,10 +19,11 @@ interface SelectProp {
   selectValue?: any | any[];
   isDisabled?: boolean;
   placeholder?: string;
-  onChange?: (selectedValues: any | any[]) => void;
+  onChange?: (data: { key: string; value: any }) => void;
   label?: string | { text: string; icon?: FormIconProps; className?: string };
   isRequired?: boolean;
   id?: string;
+  key: string;
   searchFieldChanged?: (selectValue: any) => void;
 }
 const SelectField: FC<SelectProp> = ({
@@ -41,13 +40,14 @@ const SelectField: FC<SelectProp> = ({
   isRequired,
   id,
   searchFieldChanged,
+  key
 }) => {
   const constructOption = () => {
     if (!isMulti) {
       return (
         options.find((option) => option.value === selectValue) || {
           value: "",
-          label: "",
+          label: ""
         }
       );
     }
@@ -61,13 +61,13 @@ const SelectField: FC<SelectProp> = ({
         if (option && !Array.isArray(option)) {
           const value = option.value;
           if (onChange) {
-            onChange(value);
+            onChange({ value, key });
           }
         }
         if (option && Array.isArray(option)) {
           const values = option.map((opt) => opt.value);
           if (onChange) {
-            onChange(values);
+            onChange({ value: values, key });
           }
         }
       }
@@ -81,22 +81,30 @@ const SelectField: FC<SelectProp> = ({
   return (
     <div>
       {label && (
-        <InputLabel id={id} required={isRequired || false} label={label} />
+        <div className="my-1">
+          <InputLabel id={id} required={isRequired || false} label={label} />
+        </div>
       )}
       <div className="select_field-container">
-      <Select
-        value={constructOption()}
-        options={options}
-        onChange={handleItemChange}
-        primaryColor={"white"}
-        isMultiple={isMulti}
-        isSearchable={isSearchable}
-        isDisabled={isDisabled}
-        placeholder={placeholder}
-        loading={isLoading}
-        onSearchInputChange={handleSelectInputChange}
-        isClearable={isClearable}
-      />
+        <Select
+          value={constructOption()}
+          options={options}
+          onChange={handleItemChange}
+          primaryColor={"white"}
+          isMultiple={isMulti}
+          isSearchable={isSearchable}
+          isDisabled={isDisabled}
+          placeholder={placeholder}
+          loading={isLoading}
+          onSearchInputChange={handleSelectInputChange}
+          isClearable={isClearable}
+          classNames={{
+            listItem: ({ isSelected }: any) =>
+              `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate rounded ${
+                isSelected ? `text-white bg-blue-500` : `text-gray-500 hover:bg-gray-100 hover:text-gray-500`
+              }`
+          }}
+        />
       </div>
     </div>
   );

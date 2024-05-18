@@ -74,7 +74,7 @@ export function DataTablePagination<TData>({
             <div className="flex items-center space-x-2">
               <Button
                 variant="outline"
-                className="h-8 w-8 p-0 flex"
+                className="h-8 w-8 p-0 flex disabled:bg-gray-100"
                 onClick={() => handleGoToNextOrPreviousPage(1)}
                 disabled={paginator?.page === 1}
               >
@@ -83,7 +83,7 @@ export function DataTablePagination<TData>({
               </Button>
               <Button
                 variant="outline"
-                className="h-8 w-8 p-0"
+                className="h-8 w-8 p-0 disabled:bg-gray-100 disabled:cursor-not-allowed"
                 onClick={() =>
                   handleGoToNextOrPreviousPage(paginator?.page! - 1)
                 }
@@ -98,7 +98,7 @@ export function DataTablePagination<TData>({
               />
               <Button
                 variant="outline"
-                className="h-8 w-8 p-0"
+                className="h-8 w-8 p-0 disabled:bg-gray-100"
                 onClick={() =>
                   handleGoToNextOrPreviousPage(paginator?.page! + 1)
                 }
@@ -112,7 +112,7 @@ export function DataTablePagination<TData>({
               </Button>
               <Button
                 variant="outline"
-                className="h-8 w-8 p-0 flex"
+                className="h-8 w-8 p-0 flex disabled:bg-gray-100"
                 onClick={() =>
                   handleGoToNextOrPreviousPage(paginator?.totalPages)
                 }

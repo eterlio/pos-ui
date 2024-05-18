@@ -32,7 +32,11 @@ const PasswordInput: FC<PasswordInputProps> = ({
   };
   return (
     <div>
-      {label && <InputLabel id={id} required={isRequired || false} label={label} />}
+      {label && (
+        <div className="my-1">
+          <InputLabel id={id} required={isRequired || false} label={label} />
+        </div>
+      )}
       <div className="relative flex items-center">
         <InputField
           handleInputChange={handleInputChange}
@@ -47,7 +51,7 @@ const PasswordInput: FC<PasswordInputProps> = ({
           {showPassword && <EyeOffIcon size={20} />}
         </div>
       </div>
-        {errorMessage && <InputError message={errorMessage} />}
+      {errorMessage && <InputError message={errorMessage} />}
     </div>
   );
 };

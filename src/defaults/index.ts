@@ -51,9 +51,8 @@ export const createDefaultUser: () => UserProps = () => ({
   address,
   phone,
   status: null,
-  isLoggedIn: false,
   permission: null,
-  subscriptionDataLayer: null,
+  isLoggedIn: false,
   ...defaultPlugin,
 });
 

@@ -34,7 +34,11 @@ const InputField: FC<InputFieldProps> = ({
   };
   return (
     <div className="w-full">
-      {label && <InputLabel id={id} required={isRequired || false} label={label} />}
+      {label && (
+        <div className="my-1">
+          <InputLabel id={id} required={isRequired || false} label={label} />
+        </div>
+      )}
       <Input
         type={name}
         value={value || ""}

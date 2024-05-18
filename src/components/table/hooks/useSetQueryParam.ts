@@ -16,7 +16,7 @@ export const useSetQueryParam = () => {
   }, [location.search]);
   
   const setQueryParam = (param: string, value: string) => {
-    queryParams.set(param, value);
+    queryParams.set(param, value);    
     updateUrl();
   };
 
