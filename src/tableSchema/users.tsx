@@ -129,14 +129,14 @@ export const usersTableSchema: ColumnDef<UserProps>[] = [
       const statusFiltered = USER_STATUS_OPTIONS.find((stat) => stat.value === status)?.label;
       return (
         <div className="flex items-center justify-center">
-          (status &&{" "}
+          {status &&
           <TableStatus
             bg={statusColors[status]?.bg}
             text={statusFiltered || ""}
             textColor={statusColors[status]?.text}
             circleBg={statusColors[status]?.circleBg}
           />
-          )
+    }
         </div>
       );
     },
