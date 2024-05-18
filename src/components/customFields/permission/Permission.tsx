@@ -1,10 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  PermissionString,
-  permissionOperations,
-  decipherPermission,
-  PermissionOperation,
-} from "@/helpers/permission";
+import { PermissionString, permissionOperations, decipherPermission, PermissionOperation } from "@/helpers/permission";
 import CheckBoxField from "../combo/CheckBoxField";
 import { capitalize, startCase } from "lodash";
 
@@ -13,7 +8,7 @@ const Permission = ({
   cypheredPermissions,
   fieldKey,
   onChange,
-  disabled,
+  disabled
 }: {
   permissionResources: PermissionString[];
   cypheredPermissions?: string;
@@ -38,14 +33,12 @@ const Permission = ({
   useEffect(() => {
     if (cypheredPermissions) {
       const decryptedPermissions = decipherPermission(cypheredPermissions);
+
       setPermissions(decryptedPermissions);
     }
-  }, []);
+  }, [cypheredPermissions]);
 
-  const handleTogglePermission = (
-    permission: PermissionString,
-    operation: PermissionOperation
-  ) => {
+  const handleTogglePermission = (permission: PermissionString, operation: PermissionOperation) => {
     setPermissions((prevPermissions) => {
       const currentPermissions = prevPermissions[permission] || [];
 
@@ -54,7 +47,7 @@ const Permission = ({
         [permission]:
           currentPermissions && currentPermissions.includes(operation)
             ? currentPermissions.filter((op) => op !== operation)
-            : [...currentPermissions, operation],
+            : [...currentPermissions, operation]
       } as { [key: string]: PermissionOperation[] };
 
       // Remove keys with empty arrays
@@ -81,15 +74,16 @@ const Permission = ({
   useEffect(() => {
     onChange({ key: fieldKey, value: permissions });
   }, [permissions]);
+
+  const formatPermissionResource = (resource: string) => {
+    const spacedStr = resource.replace(/([A-Z])/g, " $1");
+    return startCase(spacedStr.trim());
+  };
   return (
     <div className="flex flex-col">
       <div className="mb-5 flex items-center gap-4">
         <p>Check all permissions</p>
-        <CheckBoxField
-          onCheckedChange={handleCheckAllPermissions}
-          className="w-[20px] h-[20px]"
-          disabled={disabled}
-        />
+        <CheckBoxField onCheckedChange={handleCheckAllPermissions} className="w-[20px] h-[20px]" disabled={disabled} />
       </div>
 
       <div className="flex items-end justify-between">
@@ -104,22 +98,14 @@ const Permission = ({
       </div>
       <div className="my-5">
         {permissionResources.map((permission) => (
-          <div
-            className="flex gap-10 justify-between items-center overflow-x-auto"
-            key={permission}
-          >
-            <p className="flex-1 mb-2 pb-1">{startCase(permission)}</p>
+          <div className="flex gap-10 justify-between items-center overflow-x-auto" key={permission}>
+            <p className="flex-1 mb-2 pb-1">{formatPermissionResource(permission)}</p>
             <div className="flex items-center justify-between flex-1 gap-4">
               {permissionOperations.map((operation) => (
                 <CheckBoxField
                   key={operation}
-                  checked={
-                    permissions[permission] &&
-                    permissions[permission].includes(operation)
-                  }
-                  onCheckedChange={() =>
-                    handleTogglePermission(permission, operation)
-                  }
+                  checked={permissions[permission] && permissions[permission].includes(operation)}
+                  onCheckedChange={() => handleTogglePermission(permission, operation)}
                   className="w-[20px] h-[20px]"
                   disabled={disabled}
                 />

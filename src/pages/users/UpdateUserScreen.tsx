@@ -31,7 +31,7 @@ const UpdateUserScreen = () => {
     }
     updateFormFieldValue(key, value);
   };
-
+ 
   const updateUserHandler = async () => {
     const { errorObj, formIsValid } = validate<typeof formValues>(formValues);
     if (!formIsValid) {
@@ -71,7 +71,6 @@ const UpdateUserScreen = () => {
         onSubmitHandler={updateUserHandler}
         isLoading={isPending}
         pageTitle="Update User Information"
-        key={params.id}
       />
     </DashboardLayout>
   );

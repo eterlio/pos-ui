@@ -85,7 +85,7 @@ const ListUsersScreen = () => {
         modalDescription={modalData.modalDescription}
         actionButtons={modalData.actionButtons}
       />
-      <Container className="border border-gray-100">
+      <Container className="border border-gray-50">
         <Table
           columns={usersTableSchema}
           data={data?.data || []}

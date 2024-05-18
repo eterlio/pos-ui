@@ -1,5 +1,5 @@
 import { PermissionOperation, PermissionString } from "@/helpers/permission";
-import { AddressProps, IDefaultPlugin, PhoneProps } from ".";
+import { AddressProps, DefaultPluginProps, PhoneProps } from ".";
 
 export type UserRole =
   | "admin"
@@ -30,7 +30,7 @@ export const userStatuses: UserStatus[] = [
 ];
 
 
-export interface UserProps extends IDefaultPlugin {
+export interface UserProps extends DefaultPluginProps {
   id?: string;
   firstName?: string;
   lastName?: string;

@@ -135,6 +135,7 @@ const EditUserFields: FC<EditUserFieldsProps> = ({
             </>
           )}
         </div>
+        {JSON.stringify(formFields?.permission)}
         {formFields?.role !== "admin" && (
           <Permission
             onChange={handleFormFieldChange}
