@@ -8,25 +8,26 @@ import { useOptimisticUpdates } from "@/hooks/request/useOptimisticUpdates";
 import { GetManyProps } from "@/hooks/types";
 import { useSetQueryParam } from "@/hooks/useSetQueryParam";
 import { ModalActionButtonProps } from "@/interfaces";
-import { ProductCategoryProps } from "@/interfaces/productCategories";
-import { productCategorySchema } from "@/tableSchema/productCategories";
+import { ProductBrandProps } from "@/interfaces/productBrands";
+import { productBrandSchema } from "@/tableSchema/productBrands";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-const ListProductCategoriesScreen = () => {
+const ListProductBrandScreen = () => {
   const { removeItemFromList } = useOptimisticUpdates();
-  const [selectedCategory, setSelectedCategory] = useState<Record<string, any>>({});
+  const [selectedBrand, setSelectedBrand] = useState<Record<string, any>>({});
+  const brandId = selectedBrand.id;
   const { queryObject } = useSetQueryParam();
-  const { mutate, isPending } = useGeneralMutation<ProductCategoryProps>({
+  const { mutate, isPending } = useGeneralMutation<ProductBrandProps>({
     httpMethod: "delete",
-    mutationKey: ["deleteProductCategory", selectedCategory.id],
-    url: `/product-categories/${selectedCategory.id}`
+    mutationKey: ["deleteProductBrand", brandId],
+    url: `/product-brands/${brandId}`
   });
 
-  const { data, isFetching } = useGeneralQuery<GetManyProps<ProductCategoryProps>>({
-    queryKey: ["productCategories", queryObject],
-    url: "/product-categories",
+  const { data, isFetching } = useGeneralQuery<GetManyProps<ProductBrandProps>>({
+    queryKey: ["productBrands", queryObject],
+    url: "/product-brands",
     query: queryObject,
     enabled: !!Object.keys(queryObject).length
   });
@@ -41,7 +42,7 @@ const ListProductCategoriesScreen = () => {
       label: "Delete",
       action: (data: Record<string, any>) => {
         setOpenModal(true);
-        setSelectedCategory(data);
+        setSelectedBrand(data);
       }
     }
   ];
@@ -49,7 +50,7 @@ const ListProductCategoriesScreen = () => {
   const modalData = {
     showModal: openModal,
     modalTitle: (name: string) => `Are you sure you want to delete  ${name}`,
-    modalDescription: `Deleting the product category will permanently remove it from the system. Continue?`,
+    modalDescription: `Deleting the product brand will permanently remove it from the system. Continue?`,
     actionButtons: [
       {
         title: "Cancel",
@@ -59,15 +60,15 @@ const ListProductCategoriesScreen = () => {
       {
         title: "Continue",
         action: async () => {
-          mutate(selectedCategory.id, {
+          mutate(brandId, {
             onSuccess: () => {
               setOpenModal(false);
               toast.success("Success", {
-                description: "Product category deleted"
+                description: "Product brand deleted"
               });
             },
             onSettled() {
-              return removeItemFromList(["productCategories", queryObject], selectedCategory.id);
+              return removeItemFromList(["productBrands", queryObject], brandId);
             }
           });
         },
@@ -78,28 +79,28 @@ const ListProductCategoriesScreen = () => {
   };
 
   function handleEditRowActionClick(data: Record<string, any>) {
-    navigate(`/product-categories/${data.id}`);
+    navigate(`/product-brands/${data.id}`);
   }
 
   return (
     <DashboardLayout
-      pageTitle="Product Categories"
+      pageTitle="Product Brands"
       actionButton={{
-        createButton: { name: "Create Product Category", onClick: () => navigate("/product-categories/create") }
+        createButton: { name: "Create Product Brand", onClick: () => navigate("/product-brands/create") }
       }}
     >
       <Modal
         showModal={modalData.showModal}
-        modalTitle={modalData.modalTitle(selectedCategory.name)}
+        modalTitle={modalData.modalTitle(selectedBrand.name)}
         modalDescription={modalData.modalDescription}
         actionButtons={modalData.actionButtons}
       />
       <Container className="border border-gray-50">
         <Table
-          columns={productCategorySchema}
+          columns={productBrandSchema}
           data={data?.data || []}
           isLoading={isFetching}
-          loadingText="Fetching product category data"
+          loadingText="Fetching product brand data"
           showExportButton
           paginator={data?.paginator}
           filters={[]}
@@ -113,4 +114,4 @@ const ListProductCategoriesScreen = () => {
   );
 };
 
-export default ListProductCategoriesScreen;
+export default ListProductBrandScreen;
