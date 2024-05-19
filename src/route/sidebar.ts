@@ -83,8 +83,7 @@ export const menuSidebarRoutes = (userRole?: string): MenuSidebarRoutes => ({
         },
         {
           title: "Product Brands",
-          url: "/users",
-          isDisabled: true
+          url: "/product-brands"
         },
         {
           title: "Product Units",
