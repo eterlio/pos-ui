@@ -5,6 +5,9 @@ import UpdateProductBrandScreen from "@/pages/productBrand/UpdateProductBrandScr
 import CreateProductCategoryScreen from "@/pages/productCategories/CreateProductCategoryScreen";
 import ListProductCategoriesScreen from "@/pages/productCategories/ListProductCategoriesScreen";
 import UpdateProductCategoryScreen from "@/pages/productCategories/UpdateProductCategoryScreen";
+import CreateProductUnitScreen from "@/pages/productUnits/CreateProductUnitScreen";
+import ListProductUnitsScreen from "@/pages/productUnits/ListProductUnitsScreen";
+import UpdateProductUnitScreen from "@/pages/productUnits/UpdateProductUnitScreen";
 const PRODUCT_CATEGORIES_ROUTES: RoutesProps[] = [
   {
     component: ListProductCategoriesScreen,
@@ -45,5 +48,25 @@ const PRODUCT_BRANDS_ROUTES: RoutesProps[] = [
     permission: ["productBrand", "update"]
   }
 ];
+const PRODUCT_UNITS_ROUTES: RoutesProps[] = [
+  {
+    component: ListProductUnitsScreen,
+    url: "/product-units",
+    requireAuth: true,
+    permission: ["productUnit", "read"]
+  },
+  {
+    component: CreateProductUnitScreen,
+    url: "/product-units/create",
+    requireAuth: true,
+    permission: ["productUnit", "create"]
+  },
+  {
+    component: UpdateProductUnitScreen,
+    url: "/product-units/:id",
+    requireAuth: true,
+    permission: ["productUnit", "update"]
+  }
+];
 
-export const PRODUCT_ENDPOINTS = [...PRODUCT_CATEGORIES_ROUTES, ...PRODUCT_BRANDS_ROUTES];
+export const PRODUCT_ENDPOINTS = [...PRODUCT_CATEGORIES_ROUTES, ...PRODUCT_BRANDS_ROUTES, ...PRODUCT_UNITS_ROUTES];

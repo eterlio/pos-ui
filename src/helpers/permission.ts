@@ -6,7 +6,7 @@ export type PermissionString =
   | "faqs"
   | "accounts"
   | "products"
-  | "productUnits"
+  | "productUnit"
   | "productCategory"
   | "productBrand"
   | "productWarranty";
@@ -28,7 +28,8 @@ export const PERMISSIONS_LIST: PermissionString[] = [
   "calendar",
   "faqs",
   "productCategory",
-  "productBrand"
+  "productBrand",
+  "productUnit"
 ];
 
 export const PERMISSIONS = structurePermissionsObject(PERMISSIONS_LIST);
