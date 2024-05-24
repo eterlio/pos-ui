@@ -41,27 +41,36 @@ const Permission = ({
   const handleTogglePermission = (permission: PermissionString, operation: PermissionOperation) => {
     setPermissions((prevPermissions) => {
       const currentPermissions = prevPermissions[permission] || [];
+      let updatedPermissions: string[] = [];
 
-      const updatedPermissions = {
+      if (currentPermissions.includes(operation)) {
+        updatedPermissions = currentPermissions.filter((op) => op !== operation);
+      } else {
+        updatedPermissions = [...currentPermissions, operation];
+      }
+
+      if (operation === "read" && !updatedPermissions.includes("read")) {
+        updatedPermissions = [];
+      }
+
+      const newPermissions: any = {
         ...prevPermissions,
-        [permission]:
-          currentPermissions && currentPermissions.includes(operation)
-            ? currentPermissions.filter((op) => op !== operation)
-            : [...currentPermissions, operation]
-      } as { [key: string]: PermissionOperation[] };
+        [permission]: updatedPermissions
+      };
 
       // Remove keys with empty arrays
-      Object.keys(updatedPermissions).forEach((key) => {
-        if (updatedPermissions[key].length === 0) {
-          delete updatedPermissions[key];
+      Object.keys(newPermissions).forEach((key) => {
+        if (newPermissions[key].length === 0) {
+          delete newPermissions[key];
         }
       });
 
-      return updatedPermissions as {
+      onChange({ key: fieldKey, value: newPermissions });
+
+      return newPermissions as {
         [key in PermissionString]: PermissionOperation[];
       };
     });
-    onChange({ key: fieldKey, value: permissions });
   };
 
   const handleCheckAllPermissions = (value: any) => {
@@ -78,6 +87,9 @@ const Permission = ({
   const formatPermissionResource = (resource: string) => {
     const spacedStr = resource.replace(/([A-Z])/g, " $1");
     return startCase(spacedStr.trim());
+  };
+  const disablePermissionResource = (resource: PermissionString) => {
+    return !(permissions[resource] && permissions[resource].length && permissions[resource].includes("read"));
   };
   return (
     <div className="flex flex-col">
@@ -101,13 +113,13 @@ const Permission = ({
           <div className="flex gap-10 justify-between items-center overflow-x-auto" key={permission}>
             <p className="flex-1 mb-2 pb-1">{formatPermissionResource(permission)}</p>
             <div className="flex items-center justify-between flex-1 gap-4">
-              {permissionOperations.map((operation) => (
+              {permissionOperations.map((operation, index) => (
                 <CheckBoxField
-                  key={operation}
+                  key={index}
                   checked={permissions[permission] && permissions[permission].includes(operation)}
                   onCheckedChange={() => handleTogglePermission(permission, operation)}
                   className="w-[20px] h-[20px]"
-                  disabled={disabled}
+                  disabled={disabled || (disablePermissionResource(permission) && operation !== "read")}
                 />
               ))}
             </div>
