@@ -1,10 +1,13 @@
 import { RoutesProps } from "@/interfaces/route";
-import CreateProductBrandScreen from "@/pages/productBrand/CreateProductBrandScreen";
-import ListProductBrandScreen from "@/pages/productBrand/ListProductBrandScreen";
-import UpdateProductBrandScreen from "@/pages/productBrand/UpdateProductBrandScreen";
+import CreateProductBrandScreen from "@/pages/productBrands/CreateProductBrandScreen";
+import ListProductBrandScreen from "@/pages/productBrands/ListProductBrandScreen";
+import UpdateProductBrandScreen from "@/pages/productBrands/UpdateProductBrandScreen";
 import CreateProductCategoryScreen from "@/pages/productCategories/CreateProductCategoryScreen";
 import ListProductCategoriesScreen from "@/pages/productCategories/ListProductCategoriesScreen";
 import UpdateProductCategoryScreen from "@/pages/productCategories/UpdateProductCategoryScreen";
+import CreateProductCodeScreen from "@/pages/productCodes/CreateProductCodeScreen";
+import ListProductCodeScreen from "@/pages/productCodes/ListProductCodesScreen";
+import UpdateProductCodeScreen from "@/pages/productCodes/UpdateProductCodeScreen";
 import CreateProductUnitScreen from "@/pages/productUnits/CreateProductUnitScreen";
 import ListProductUnitsScreen from "@/pages/productUnits/ListProductUnitsScreen";
 import UpdateProductUnitScreen from "@/pages/productUnits/UpdateProductUnitScreen";
@@ -68,5 +71,30 @@ const PRODUCT_UNITS_ROUTES: RoutesProps[] = [
     permission: ["productUnit", "update"]
   }
 ];
+const PRODUCT_CODES_ROUTES: RoutesProps[] = [
+  {
+    component: ListProductCodeScreen,
+    url: "/product-codes",
+    requireAuth: true,
+    permission: ["productCode", "read"]
+  },
+  {
+    component: CreateProductCodeScreen,
+    url: "/product-codes/create",
+    requireAuth: true,
+    permission: ["productCode", "create"]
+  },
+  {
+    component: UpdateProductCodeScreen,
+    url: "/product-codes/:id",
+    requireAuth: true,
+    permission: ["productCode", "update"]
+  }
+];
 
-export const PRODUCT_ENDPOINTS = [...PRODUCT_CATEGORIES_ROUTES, ...PRODUCT_BRANDS_ROUTES, ...PRODUCT_UNITS_ROUTES];
+export const PRODUCT_ENDPOINTS = [
+  ...PRODUCT_CATEGORIES_ROUTES,
+  ...PRODUCT_BRANDS_ROUTES,
+  ...PRODUCT_UNITS_ROUTES,
+  ...PRODUCT_CODES_ROUTES
+];

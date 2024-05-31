@@ -9,6 +9,7 @@ export type PermissionString =
   | "productUnit"
   | "productCategory"
   | "productBrand"
+  | "productCode"
   | "productWarranty";
 export type IPermission = Record<PermissionString, Record<PermissionOperation, number>>;
 export const permissionOperations: PermissionOperation[] = ["create", "read", "update", "delete"];
@@ -29,7 +30,8 @@ export const PERMISSIONS_LIST: PermissionString[] = [
   "faqs",
   "productCategory",
   "productBrand",
-  "productUnit"
+  "products",
+  "productCode"
 ];
 
 export const PERMISSIONS = structurePermissionsObject(PERMISSIONS_LIST);

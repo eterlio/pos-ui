@@ -72,10 +72,10 @@ export const menuSidebarRoutes = (userRole?: string): MenuSidebarRoutes => ({
           url: "/users",
           isDisabled: true
         },
+
         {
-          title: "Print Barcode/QrCode",
-          url: "/users",
-          isDisabled: true
+          title: "Product Codes",
+          url: "/product-codes"
         },
         {
           title: "Product Categories",
@@ -96,6 +96,11 @@ export const menuSidebarRoutes = (userRole?: string): MenuSidebarRoutes => ({
         },
         {
           title: "Product Warrants",
+          url: "/users",
+          isDisabled: true
+        },
+        {
+          title: "Print Barcode/QrCode",
           url: "/users",
           isDisabled: true
         },
