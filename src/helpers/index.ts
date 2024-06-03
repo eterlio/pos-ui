@@ -10,7 +10,7 @@ export const formatCurrency = (amount: number, currency = "GHS") => {
     style: "currency",
     currency,
     minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    maximumFractionDigits: 2
   });
 };
 
@@ -30,17 +30,10 @@ export function objectToQueryString(obj: Record<string, any>) {
     if (value !== undefined && value !== null) {
       if (Array.isArray(value) && value.length > 0) {
         // If the value is an array with elements, join them with ","
-        return (
-          encodeURIComponent(key) + "=" + encodeURIComponent(value.join(","))
-        );
-      } else if (
-        (typeof value === "string" && value !== "") ||
-        typeof value === "number"
-      ) {
+        return encodeURIComponent(key) + "=" + encodeURIComponent(value.join(","));
+      } else if ((typeof value === "string" && value !== "") || typeof value === "number") {
         // If the value is a non-empty string or a number, include it in the query string
-        return (
-          encodeURIComponent(key) + "=" + encodeURIComponent(value.toString())
-        );
+        return encodeURIComponent(key) + "=" + encodeURIComponent(value.toString());
       }
     }
 
@@ -78,15 +71,16 @@ export function objectDifference(
   const diff: Record<string, any> = {};
 
   if (!objectToCompare || !baseObject) return diff;
+
   const baseKeys = Object.keys(baseObject);
   const compareKeys = Object.keys(objectToCompare);
 
   // Iterate over the keys of baseObject
   for (const key of baseKeys) {
-    if (compareKeys.includes(key)) {
-      const baseValue = baseObject[key];
-      const compareValue = objectToCompare[key];
+    const baseValue = baseObject[key];
+    const compareValue = objectToCompare[key];
 
+    if (compareKeys.includes(key)) {
       if (Array.isArray(baseValue) && Array.isArray(compareValue)) {
         // Handle arrays
         if (JSON.stringify(baseValue) !== JSON.stringify(compareValue)) {
@@ -94,16 +88,30 @@ export function objectDifference(
         }
       } else if (
         typeof baseValue === "object" &&
-        typeof compareValue === "object"
+        baseValue !== null &&
+        typeof compareValue === "object" &&
+        compareValue !== null
       ) {
         // Recursively compare nested objects
         const nestedDiff = objectDifference(baseValue, compareValue);
         if (!isEmpty(nestedDiff)) {
-          // Create a new object to avoid the "Cannot add property" error
-          diff[key] = { ...nestedDiff };
+          diff[key] = nestedDiff;
         }
       } else if (baseValue !== compareValue) {
-        diff[key] = compareValue;
+        if (
+          !(baseValue === "" && compareValue === "") &&
+          !(baseValue == null && compareValue == null) &&
+          !(
+            typeof baseValue === "number" &&
+            typeof compareValue === "number" &&
+            isNaN(baseValue) &&
+            isNaN(compareValue)
+          )
+        ) {
+          console.log({ compareValue, hh: typeof compareValue });
+          
+          diff[key] = compareValue;
+        }
       }
     } else {
       diff[key] = baseObject[key];
@@ -127,7 +135,7 @@ const sizeMap: Record<SizeUnit, number> = {
   KB: 1024,
   MB: 1024 * 1024,
   GB: 1024 * 1024 * 1024,
-  TB: 1024 * 1024 * 1024 * 1024,
+  TB: 1024 * 1024 * 1024 * 1024
 };
 
 export function formatFileSize(sizeInBytes: number): string {
@@ -183,8 +191,6 @@ export const formatPhoneToString = (phone: PhoneProps) => {
   const { number = "", prefix = "" } = phone;
   return `+${prefix} ${number}`;
 };
-
-
 
 export const isSpecialRole = (role: UserRole): boolean => {
   return specialRoles.includes(role);

@@ -1,12 +1,12 @@
 import { useState } from "react";
 
 export const useError = <T>() => {
-  const [errors, setError] = useState<Partial<T> | null>(null);
+  const [errors, setError] = useState<Partial<{ [key in keyof T]: string }> | null>(null);
 
   const resetError = () => {
     setError(null);
   };
-  const addErrors = (errors: Partial<T>) => {
+  const addErrors = (errors: Partial<{ [key in keyof T]: string }>) => {
     setError(errors);
   };
   return {

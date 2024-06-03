@@ -6,7 +6,7 @@ export const useGeneralQuery = <T>(mutationData: {
   queryKey: any[];
   url: string;
   requireAuth?: boolean;
-  query?: Record<string, string>;
+  query?: Record<string, string | number | boolean>;
   enabled?: boolean;
 }) => {
   const { queryKey, url, requireAuth = true, query, enabled } = mutationData;

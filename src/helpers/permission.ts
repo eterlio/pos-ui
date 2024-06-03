@@ -24,14 +24,15 @@ export const hasPermission = (
 };
 
 export const PERMISSIONS_LIST: PermissionString[] = [
-  "users",
-  "settings",
-  "calendar",
-  "faqs",
-  "productCategory",
-  "productBrand",
-  "products",
-  "productCode"
+	"users",
+	"settings",
+	"calendar",
+	"faqs",
+	"productCategory",
+	"productBrand",
+	"productCode",
+	"productUnit",
+	"products",
 ];
 
 export const PERMISSIONS = structurePermissionsObject(PERMISSIONS_LIST);
