@@ -1,10 +1,6 @@
 import { UserProps } from "@/interfaces/users";
-import {
-  AddressProps,
-  DefaultPluginProps,
-  PhoneProps,
-  RequestStateProps,
-} from "../interfaces";
+import { AddressProps, DefaultPluginProps, PhoneProps, RequestStateProps } from "../interfaces";
+import { SupplierProps } from "@/interfaces/supplier";
 
 export const defaultPlugin: DefaultPluginProps = {
   createdAt: new Date(),
@@ -13,7 +9,7 @@ export const defaultPlugin: DefaultPluginProps = {
   deleted: false,
   deletedAt: new Date(),
   deletedBy: "",
-  createdBy: "",
+  createdBy: ""
 };
 
 export const address: AddressProps = {
@@ -25,20 +21,20 @@ export const address: AddressProps = {
   gpsAddress: "",
   isGpsAddress: false,
   isPoBox: false,
-  poBox: "",
+  poBox: ""
 };
 
 export const phone: PhoneProps = {
   prefix: "",
   number: "",
-  country: "",
+  country: ""
 };
 
 export const initialRequestState: RequestStateProps = {
   isError: false,
   isLoading: false,
   isSuccess: false,
-  message: "",
+  message: ""
 };
 
 export const createDefaultUser: () => UserProps = () => ({
@@ -53,6 +49,22 @@ export const createDefaultUser: () => UserProps = () => ({
   status: null,
   permission: null,
   isLoggedIn: false,
-  ...defaultPlugin,
+  ...defaultPlugin
 });
 
+export const supplierDefaults = (): SupplierProps => {
+  return {
+    email: "",
+    name: "",
+    phone: {
+      country: "gh",
+      number: "",
+      prefix: "233"
+    },
+    ...defaultPlugin,
+    address,
+    accountId: "",
+    warehouseId: "",
+    status: "active"
+  };
+};

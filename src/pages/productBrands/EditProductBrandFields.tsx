@@ -35,7 +35,7 @@ const EditProductBrandFields: FC<EditProductBrandFieldsProps> = ({
         <h1>{pageTitle}</h1>
         <div className="grid grid-cols-1 gap-5">
           <InputField
-            name="name"
+            fieldKey="name"
             handleInputChange={handleFormFieldChange}
             label="Brand name"
             isRequired
