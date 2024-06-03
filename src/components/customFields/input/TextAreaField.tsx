@@ -47,6 +47,7 @@ const TextAreaField: FC<TextAreaFieldProps> = ({
         onBlur={onBlur}
         {...props}
         id={id}
+        className="resize-none"
       />
       {errorMessage && <InputError message={errorMessage} />}
     </div>

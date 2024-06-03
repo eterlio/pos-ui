@@ -1,9 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon, X } from "lucide-react";
@@ -13,7 +9,7 @@ import { FormIconProps, HandlerProps } from "../type";
 import InputLabel from "../FieldLabel";
 
 interface DatePickerProps {
-  value?: Date;
+  value?: Date | null;
   resetDate?: boolean;
   onChange?: (data: HandlerProps) => void;
   disabled?: boolean;
@@ -22,17 +18,8 @@ interface DatePickerProps {
   id?: string;
   fieldKey: string;
 }
-const DatePicker: FC<DatePickerProps> = ({
-  value,
-  resetDate,
-  onChange,
-  disabled,
-  label,
-  isRequired,
-  id,
-  fieldKey,
-}) => {
-  const [date, setDate] = useState<Date | undefined>(value);
+const DatePicker: FC<DatePickerProps> = ({ value, resetDate, onChange, disabled, label, isRequired, id, fieldKey }) => {
+  const [date, setDate] = useState<Date | undefined | null>(value);
   const [openPopOver, setOpenPopOver] = useState<boolean>(false);
 
   const handleOpenPopOver = () => {
@@ -46,10 +33,8 @@ const DatePicker: FC<DatePickerProps> = ({
   };
   return (
     <>
-      {label && (
-        <InputLabel id={id} required={isRequired || false} label={label} />
-      )}
-      <Popover open={openPopOver} onOpenChange={handleOpenPopOver} >
+      {label && <InputLabel id={id} required={isRequired || false} label={label} />}
+      <Popover open={openPopOver} onOpenChange={handleOpenPopOver}>
         <PopoverTrigger asChild>
           <Button
             variant={"outline"}
@@ -59,12 +44,10 @@ const DatePicker: FC<DatePickerProps> = ({
             )}
             disabled={disabled}
           >
-            <CalendarIcon className="mr-2 h-4 w-4" size={16}  />
+            <CalendarIcon className="mr-2 h-4 w-4" size={16} />
             {date ? (
               <div className="flex items-center justify-between flex-1">
-                <span className="ml-2 text-center">
-                  {format(date, "MM/dd/yyy")}
-                </span>
+                <span className="ml-2 text-center">{format(date, "MM/dd/yyy")}</span>
                 <span className=" -mr-3">
                   {resetDate && (
                     <X
@@ -89,7 +72,7 @@ const DatePicker: FC<DatePickerProps> = ({
           <Calendar
             mode="single"
             captionLayout="dropdown-buttons"
-            selected={date}
+            selected={date ? date : undefined}
             onSelect={handleChange}
             fromYear={1960}
             toYear={2050}

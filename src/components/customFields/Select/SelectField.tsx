@@ -1,7 +1,8 @@
 import { ChangeEvent, FC } from "react";
 import Select from "react-tailwindcss-select";
-import { FormIconProps } from "../type";
+import { FormIconProps, HandlerProps } from "../type";
 import InputLabel from "../FieldLabel";
+import InputError from "../input/InputError";
 
 export interface Option {
   value: string;
@@ -19,12 +20,13 @@ interface SelectProp {
   selectValue?: any | any[];
   isDisabled?: boolean;
   placeholder?: string;
-  onChange?: (data: { key: string; value: any }) => void;
+  onChange?: (data: HandlerProps) => void;
   label?: string | { text: string; icon?: FormIconProps; className?: string };
   isRequired?: boolean;
   id?: string;
-  key: string;
+  fieldKey: string;
   searchFieldChanged?: (selectValue: any) => void;
+  errorMessage?: string;
 }
 const SelectField: FC<SelectProp> = ({
   isClearable,
@@ -40,44 +42,32 @@ const SelectField: FC<SelectProp> = ({
   isRequired,
   id,
   searchFieldChanged,
-  key
+  fieldKey,
+  errorMessage
 }) => {
   const constructOption = () => {
-    if (!isMulti) {
-      return (
-        options.find((option) => option.value === selectValue) || {
-          value: "",
-          label: ""
-        }
-      );
+    if (isMulti) {
+      return options.filter((option) => selectValue?.includes(option.value));
+    } else {
+      return options.find((option) => option.value === selectValue) || null;
     }
-    return options.filter((option) => {
-      return selectValue.includes(option.value) || [{ value: "", label: "" }];
-    });
   };
+
   const handleItemChange = (option: Option | Option[] | null) => {
-    if (option) {
-      if (!isMulti) {
-        if (option && !Array.isArray(option)) {
-          const value = option.value;
-          if (onChange) {
-            onChange({ value, key });
-          }
-        }
-        if (option && Array.isArray(option)) {
-          const values = option.map((opt) => opt.value);
-          if (onChange) {
-            onChange({ value: values, key });
-          }
-        }
-      }
+    if (Array.isArray(option)) {
+      const values = option.map((opt) => opt.value);
+      onChange?.({ value: values, key: fieldKey });
+    } else if (option) {
+      onChange?.({ value: option.value, key: fieldKey });
+    } else {
+      onChange?.({ value: isMulti ? [] : "", key: fieldKey });
     }
   };
+
   const handleSelectInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (searchFieldChanged) {
-      searchFieldChanged(event.target.value);
-    }
+    searchFieldChanged?.(event.target.value);
   };
+
   return (
     <div>
       {label && (
@@ -101,10 +91,12 @@ const SelectField: FC<SelectProp> = ({
           classNames={{
             listItem: ({ isSelected }: any) =>
               `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate rounded ${
-                isSelected ? `text-white bg-blue-500` : `text-gray-500 hover:bg-gray-100 hover:text-gray-500`
+                isSelected ? `text-gray-600 bg-gray-50` : `text-gray-500 hover:bg-gray-50 hover:text-gray-500`
               }`
           }}
+          noOptionsMessage="No data found"
         />
+        {errorMessage && <InputError message={errorMessage} />}
       </div>
     </div>
   );

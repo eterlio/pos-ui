@@ -4,15 +4,15 @@ import { FormIconProps, HandlerProps } from "../type";
 import InputLabel from "../FieldLabel";
 import InputError from "./InputError";
 
-interface InputFieldProps extends InputProps {
+interface NumberFieldProps extends InputProps {
   label?: string | { text: string; icon?: FormIconProps; className?: string };
   isRequired?: boolean;
   handleInputChange: (data: HandlerProps) => void;
-  fieldKey: string;
   errorMessage?: string;
+  fieldKey: string;
+  value?: number;
 }
-const InputField: FC<InputFieldProps> = ({
-  fieldKey,
+const NumberField: FC<NumberFieldProps> = ({
   value,
   onBlur,
   handleInputChange,
@@ -21,6 +21,7 @@ const InputField: FC<InputFieldProps> = ({
   id,
   errorMessage,
   isRequired,
+  fieldKey,
   ...props
 }) => {
   const handleInputFieldChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -40,7 +41,9 @@ const InputField: FC<InputFieldProps> = ({
         </div>
       )}
       <Input
-        value={value || ""}
+        type="number"
+        name={fieldKey}
+        value={value}
         onBlur={onBlur}
         onChange={handleInputFieldChange}
         disabled={disabled}
@@ -52,4 +55,4 @@ const InputField: FC<InputFieldProps> = ({
   );
 };
 
-export default InputField;
+export default NumberField;
