@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronRight, ChevronDown, Minus } from "lucide-react";
 import { MenuSidebarRoute, SubLink } from "@/route/sidebar";
@@ -32,7 +32,7 @@ const SidebarMenuItem: React.FC<MenuSidebarRoute> = ({
               }`}
               onClick={toggleSubMenu}
             >
-              {icon}
+              {icon as ReactNode}
               <span className="ml-3 text-[12px]">{title}</span>
               {subLinks && (
                 <span className="ml-auto mr-3 transition-transform duration-300 transform">
@@ -50,7 +50,7 @@ const SidebarMenuItem: React.FC<MenuSidebarRoute> = ({
                  border-r-green-500 ${isDisabled ? "opacity-70 cursor-not-allowed pointer-events-none" : ""}`}
             >
               <div className="flex items-center">
-                {icon}
+                {icon as ReactNode}
                 <span className="ml-3 text-[12px]">{title}</span>
               </div>
             </Link>

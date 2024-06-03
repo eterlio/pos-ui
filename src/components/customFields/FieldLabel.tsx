@@ -11,7 +11,7 @@ const InputLabel: FC<InputLabelProps> = ({ label, id, required }) => {
   return (
     <>
       {label && typeof label === "string" && (
-        <label htmlFor={id} className="cursor-pointer text-sm  my-1">
+        <label htmlFor={id} className="cursor-pointer text-sm my-1">
           {label} {required && <sup className="font-bold text-red-500">*</sup>}
         </label>
       )}

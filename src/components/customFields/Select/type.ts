@@ -5,7 +5,6 @@ export interface PromiseSelectProps {
   query?: Record<string, any>;
   value?: any;
   searchKey: string;
-  selectFields?: string[];
   valueKey: string;
   labelKey: string;
   label?: string | { text: string; icon?: FormIconProps; className?: string };
@@ -13,7 +12,6 @@ export interface PromiseSelectProps {
   id?: string;
   isMulti?: boolean;
   minSearchLength?: number;
-  type: "promise-select";
   fieldKey: string;
 }
 

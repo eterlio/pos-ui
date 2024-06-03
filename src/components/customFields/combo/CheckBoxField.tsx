@@ -2,33 +2,40 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { CheckboxProps } from "@radix-ui/react-checkbox";
 import { FC } from "react";
 import InputLabel from "../FieldLabel";
-import { FormIconProps } from "../type";
+import { FormIconProps, HandlerProps } from "../type";
 
 interface CheckBoxFieldProps extends CheckboxProps {
   label?: string | { text: string; icon?: FormIconProps; className?: string };
   isRequired?: boolean;
+  value?: any;
+  handleFieldChange: (data: HandlerProps) => void;
+  fieldKey: string;
 }
 const CheckBoxField: FC<CheckBoxFieldProps> = ({
-  onCheckedChange,
   value,
   id,
   name,
   isRequired,
   label,
+  handleFieldChange,
+  fieldKey,
   ...props
 }) => {
+  const handleOnChange = (e: any) => {
+    handleFieldChange({ key: fieldKey, value: e });
+  };
   return (
     <div className="flex items-center  gap-4">
       <Checkbox
-        id={id}
-        onCheckedChange={onCheckedChange}
+        id={fieldKey}
         value={value}
         name={name}
         {...props}
+        onCheckedChange={handleOnChange}
+        defaultValue={value}
+        defaultChecked={!!value}
       />
-      {label && (
-        <InputLabel id={id} required={isRequired || false} label={label} />
-      )}
+      {label && <InputLabel id={id} required={isRequired || false} label={label}  />}
     </div>
   );
 };

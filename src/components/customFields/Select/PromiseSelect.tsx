@@ -1,5 +1,4 @@
-import { FC, useState } from "react";
-
+import { FC, useState, useEffect } from "react";
 import { GetManyProps } from "@/hooks/types";
 import SelectField from "./SelectField";
 import { toast } from "sonner";
@@ -7,16 +6,15 @@ import { useBaseRequestService } from "@/hooks/request/useAxiosPrivate";
 import { BaseResponse } from "@/helpers/baseResponse";
 import InputLabel from "../FieldLabel";
 import { OptionsProps, PromiseSelectProps } from "./type";
-import { useSearchRequestQuery } from "./hook/useRequest";
+import { HandlerProps } from "../type";
 
 interface PromiseSelectDataProps extends PromiseSelectProps {
-  onChange?: (selectedValues: any) => void;
+  onChange?: (data: HandlerProps) => void;
 }
 export const PromiseSelect: FC<PromiseSelectDataProps> = ({
   query,
   url,
   value,
-  selectFields,
   searchKey,
   valueKey,
   labelKey,
@@ -29,63 +27,56 @@ export const PromiseSelect: FC<PromiseSelectDataProps> = ({
   fieldKey
 }) => {
   const [loading, setLoading] = useState(false);
+  const [mappedOptions, setMappedOptions] = useState<OptionsProps[]>([]);
   const { axiosInstance } = useBaseRequestService({ useToken: true, tokenType: "accessToken" });
-  let mappedOptions: OptionsProps[] = [];
-  const handleSelectFieldChange = async (value: any) => {
+
+  const handleSelectFieldChange = async (data: HandlerProps) => {
     if (onChange) {
-      onChange(value);
+      onChange(data);
     }
   };
-  const selectSearchFieldChanged = async (searchValue: string) => {
-    if (typeof searchValue === "string" && (searchValue.length >= minSearchLength || searchValue.length === 0)) {
-      try {
-        setLoading(true);
-        const { data } = await axiosInstance.get<BaseResponse<GetManyProps<any>>>(url, {
-          [`${searchKey}_eq`]: searchValue,
-          ...query
-        });
-        if (data) {
-          const options = data.response.data.map((field) => {
-            return {
-              label: field[labelKey] || "",
-              value: field[valueKey] || ""
-            };
-          });
-          mappedOptions = [...mappedOptions, ...options];
-        }
-      } catch (error: any) {
-        toast.error("Error", { description: error.message });
-      } finally {
-        setLoading(false);
+
+  const fetchData = async (params: Record<string, any>) => {
+    try {
+      setLoading(true);
+      const { data } = await axiosInstance.get<BaseResponse<GetManyProps<any>>>(url, { params });
+      if (data) {
+        const options = data.response.data.map((field) => ({
+          label: field[labelKey] || "",
+          value: field[valueKey] || ""
+        }));
+        setMappedOptions(options);
       }
+    } catch (error: any) {
+      toast.error("Error", { description: error.message });
+    } finally {
+      setLoading(false);
     }
   };
-  const selectFieldMapper = selectFields && selectFields.length ? selectFields.join(",") : null;
 
-  if (selectFieldMapper) {
-    query = {
-      ...query,
-      columns: selectFieldMapper
-    };
-  }
-  const { data, isLoading } = useSearchRequestQuery<GetManyProps<any>>(url, query);
+  const selectSearchFieldChanged = (searchValue: string) => {
+    if (typeof searchValue === "string" && (searchValue.length >= minSearchLength || searchValue.length === 0)) {
+      fetchData({
+        ...query,
+        [`${searchKey}_eq`]: searchValue
+      });
+    }
+  };
 
-  if (data) {
-    const options = data.response.data.map((field) => {
-      return {
-        label: field[labelKey] || "",
-        value: field[valueKey] || ""
-      };
-    });
-    mappedOptions = [...mappedOptions, ...options];
-  }
+  useEffect(() => {
+    if (value && value.length) {
+      fetchData({
+        [`${valueKey}_in`]: value
+      });
+    }
+  }, []);
 
   return (
     <>
       {label && <InputLabel id={id} required={isRequired || false} label={label} />}
       <SelectField
         options={mappedOptions}
-        isLoading={isLoading || loading}
+        isLoading={loading}
         onChange={handleSelectFieldChange}
         selectValue={value}
         closeOnSelect
@@ -93,6 +84,7 @@ export const PromiseSelect: FC<PromiseSelectDataProps> = ({
         isSearchable
         searchFieldChanged={selectSearchFieldChanged}
         key={fieldKey}
+        fieldKey={fieldKey}
       />
     </>
   );

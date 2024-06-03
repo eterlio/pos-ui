@@ -70,4 +70,11 @@
   .select_field-container .relative > div {
     @apply !border-input shadow-none min-h-10 focus:ring-0 focus-within:ring-0 focus-visible:ring-0 focus:!outline-none focus:outline-offset-0;
   }
+  .select_field-container input {
+    background-color: #f9fafb4a;
+    border-color: #f9fafb1e;
+    border-radius: 3px;
+    @apply mb-3;
+  }
+
 }
