@@ -11,6 +11,16 @@ import UpdateProductCodeScreen from "@/pages/productCodes/UpdateProductCodeScree
 import CreateProductUnitScreen from "@/pages/productUnits/CreateProductUnitScreen";
 import ListProductUnitsScreen from "@/pages/productUnits/ListProductUnitsScreen";
 import UpdateProductUnitScreen from "@/pages/productUnits/UpdateProductUnitScreen";
+import CreateProductScreen from "@/pages/products/CreateProductScreen";
+
+const PRODUCT_ROUTES: RoutesProps[] = [
+  {
+    component: CreateProductScreen,
+    url: "/products/create",
+    permission: ["products", "create"],
+    requireAuth: true
+  }
+];
 const PRODUCT_CATEGORIES_ROUTES: RoutesProps[] = [
   {
     component: ListProductCategoriesScreen,
@@ -93,6 +103,7 @@ const PRODUCT_CODES_ROUTES: RoutesProps[] = [
 ];
 
 export const PRODUCT_ENDPOINTS = [
+  ...PRODUCT_ROUTES,
   ...PRODUCT_CATEGORIES_ROUTES,
   ...PRODUCT_BRANDS_ROUTES,
   ...PRODUCT_UNITS_ROUTES,

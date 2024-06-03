@@ -49,8 +49,6 @@ const ListProductCodeScreen = () => {
   const modalData = {
     showModal: openModal,
     modalTitle: (code: string) => {
-      console.log({ code });
-
       return `Are you sure you want to delete  ${code}`;
     },
     modalDescription: `Deleting the product code will permanently remove it from the system. Continue?`,
