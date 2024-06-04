@@ -17,7 +17,7 @@ const DashboardSidebar = ({
     <div
       className={`flex-shrink-0 overflow-x-hidden dark ${
         displaySidebar ? "left-[-100%] w-0" : "left-0"
-      } w-[260px] lg:block md:block bg-primary z-[900] shadow-md fixed bottom-0 top-0`}
+      } w-[260px] lg:block md:block bg-primary z-[900] shadow-md fixed bottom-0 top-0 sm:w-0`}
     >
       <div className="h-full w-full p-5 pr-0">
         <div className="flex h-full min-h-0 flex-col">
@@ -40,7 +40,7 @@ const DashboardSidebar = ({
           </div>
         </div>
       </div>
-       
+      
     </div>
   );
 };
