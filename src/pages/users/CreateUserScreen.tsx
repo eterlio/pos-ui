@@ -7,29 +7,15 @@ import EditUserFields from "./EditUserFields";
 import { useHandlerUserFormFieldValidation } from "@/hooks/useHandlerUserFormFieldValidation";
 import { useError } from "@/hooks/useError";
 import { useFormFieldUpdate } from "@/hooks/useFormFieldUpdate";
+import { UserProps } from "@/interfaces/users";
+import { createDefaultUser } from "@/defaults";
 
 const CreateUserScreen = () => {
-  const userDefaultObj = {
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    role: null,
-    phone: {
-      prefix: "",
-      number: "",
-      country: ""
-    },
-    status: "pending",
-    userPermission: null,
-    confirmPassword: "",
-    gender: ""
-  };
   const { isPending, mutate } = useCreateOrUpdateUserMutation();
   const { validate } = useHandlerUserFormFieldValidation();
   const navigate = useNavigate();
-  const { errors, resetError, addErrors } = useError<typeof userDefaultObj>();
-  const { formValues, updateFormFieldValue } = useFormFieldUpdate(userDefaultObj);
+  const { errors, resetError, addErrors } = useError<UserProps>();
+  const { formValues, updateFormFieldValue } = useFormFieldUpdate<Partial<UserProps>>(createDefaultUser());
 
   const handleFormFieldChange = (data: HandlerProps) => {
     const { key, value } = data;
@@ -41,7 +27,7 @@ const CreateUserScreen = () => {
     updateFormFieldValue(key, value);
   };
   const createUserHandler = async () => {
-    const { errorObj, formIsValid } = validate<typeof formValues>(formValues);
+    const { errorObj, formIsValid } = validate<UserProps>(formValues);
     if (!formIsValid) {
       return addErrors(errorObj);
     } else {

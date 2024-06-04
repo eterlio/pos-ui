@@ -7,7 +7,7 @@ const Header = ({
   handleDisplaySidebar,
   showHeaderSearchBar,
   showNotification,
-  displaySidebar
+  // displaySidebar
 }: {
   handleDisplaySidebar: MouseEventHandler;
   showHeaderSearchBar?: boolean;

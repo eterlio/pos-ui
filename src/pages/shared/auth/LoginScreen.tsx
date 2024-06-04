@@ -70,7 +70,7 @@ const LoginScreen = () => {
               </div>
               <div>
                 <InputField
-                  name="email"
+                  fieldKey="email"
                   handleInputChange={formFieldHandler}
                   value={formValues.email}
                   isRequired
@@ -80,7 +80,7 @@ const LoginScreen = () => {
               </div>
               <div>
                 <PasswordInput
-                  name="password"
+                  fieldKey="password"
                   handleInputChange={formFieldHandler}
                   value={formValues.password}
                   isRequired

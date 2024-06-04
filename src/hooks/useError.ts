@@ -6,7 +6,7 @@ export const useError = <T>() => {
   const resetError = () => {
     setError(null);
   };
-  const addErrors = (errors: Partial<{ [key in keyof T]: string }>) => {
+  const addErrors = (errors: Partial<{ [key in keyof T]: any }>) => {
     setError(errors);
   };
   return {
