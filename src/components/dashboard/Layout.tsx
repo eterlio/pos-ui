@@ -45,7 +45,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       <div className="overflow-hidden w-full h-screen relative flex z-0 bg-gray-50">
         {showSidebar && <Sidebar displaySidebar={displaySidebar} handleDisplaySidebar={handleDisplaySidebar} />}
         <div
-          className={`main-content relative flex h-full max-w-full flex-1 overflow-hidden sm:ml-0 ${
+          className={`main-content relative flex h-full max-w-full flex-1 overflow-hidden ml-0 ${
             displaySidebar ? "ml-0" : "md:ml-[260px] lg:ml-[260px]"
           }`}
         >
