@@ -1,46 +1,48 @@
-import { Input } from "@/components/ui/input";
-import { MessageSquare, BellIcon, Menu } from "lucide-react";
-import { MouseEventHandler } from "react";
-import UserNav from "./UserNav";
-const Header = ({
-  handleDisplaySidebar,
-  showHeaderSearchBar,
-  showNotification,
-  displaySidebar
+import SidebarMenu from "./SidebarMenu";
+import { MouseEventHandler, memo, useContext } from "react";
+import { generalSidebarRoutes, menuSidebarRoutes } from "@/route/sidebar";
+import { ChevronsLeft } from "lucide-react";
+import { StoreContext, StoreContextProps } from "@/utils/store";
+const DashboardSidebar = ({
+  displaySidebar,
+  handleDisplaySidebar
 }: {
+  displaySidebar: boolean;
   handleDisplaySidebar: MouseEventHandler;
-  showHeaderSearchBar?: boolean;
-  showNotification?: boolean;
-  displaySidebar?: boolean;
 }) => {
+  const { authUser } = useContext(StoreContext) as StoreContextProps;
+  const menuSidebarRoutesLinks = menuSidebarRoutes(authUser?.role || "");
+  const generalSidebarRoutesLinks = generalSidebarRoutes();
   return (
-    <div className="header-container bg-white sticky top-0 z-[5]">
-      <header className="flex h-[56px] items-center justify-between px-8  sticky top-0" role="banner">
-        <div className="flex flex-1 items-center gap-5 mr-2">
-          {displaySidebar && <Menu className=" cursor-pointer" onClick={handleDisplaySidebar} />}
-          {showHeaderSearchBar && (
-            <Input type="email" placeholder="Search..." className="bg-gray-50 border-gray-50 lg:flex md:w-[300px] lg:w-[300px]" />
-          )}
-        </div>
-        <div className="flex items-center justify-end flex-shrink-0 gap-5">
-          {showNotification && (
-            <>
-              <div className="message-box w-8 h-8 bg-gray-50 rounded-full flex items-center justify-center">
-                <MessageSquare size={18} />
+    <div
+      className={`flex-shrink-0 overflow-x-hidden dark ${
+        displaySidebar ? "left-[-100%] w-0" : "left-0"
+      } w-[260px] lg:block md:block bg-primary z-[900] shadow-md fixed bottom-0 top-0`}
+    >
+      <div className="h-full w-full p-5 pr-0">
+        <div className="flex h-full min-h-0 flex-col">
+          <div className="relative h-full w-full flex-1 items-start border-white/20 flex flex-col">
+            <div className="sidebar-main__content flex-grow w-full">
+              <div className="logo mb-10 flex items-center justify-between text-white pr-3">
+                {/* <img src=Logo} alt="Logo" className="w-[120px]" /> */}
+                <span>Logo</span>
+                <ChevronsLeft onClick={handleDisplaySidebar} className="cursor-pointer" size={19} />
               </div>
-              <div className="notification-icon w-8 h-8 bg-gray-50 rounded-full flex items-center justify-center relative">
-                <span className="w-2 h-2 block absolute top-[7px] right-[10px] rounded-full bg-green-400"></span>
-                <BellIcon size={18} />
+              <div className="menu-items">
+                <SidebarMenu title={menuSidebarRoutesLinks.title} routesData={menuSidebarRoutesLinks.routeLinks} />
+      
+                <SidebarMenu
+                  title={generalSidebarRoutesLinks.title}
+                  routesData={generalSidebarRoutesLinks.routeLinks}
+                />
               </div>
-            </>
-          )}
-          <div className="avatar">
-            <UserNav />
+            </div>
           </div>
         </div>
-      </header>
+      </div>
+       
     </div>
   );
 };
 
-export default Header;
+export default memo(DashboardSidebar);
