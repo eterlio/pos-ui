@@ -32,7 +32,7 @@ const EditProductCodeFields: FC<EditProductCodeFieldsProps> = ({
         <h1>{pageTitle}</h1>
         <div className="space-y-5">
           <InputField
-            name="code"
+            fieldKey="code"
             handleInputChange={handleFormFieldChange}
             label="Code"
             isRequired

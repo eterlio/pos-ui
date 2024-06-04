@@ -66,7 +66,7 @@ const UpdateProductCategoryScreen = () => {
       {
         onSuccess() {
           toast.success("Success", {
-            description: "Product category created"
+            description: "Product category updated"
           });
           navigate("/product-categories");
         }
@@ -80,7 +80,7 @@ const UpdateProductCategoryScreen = () => {
   }, [params.id, data]);
   return (
     <EditProductCategoryFields
-      pageTitle="Create Product Category"
+      pageTitle="Update Product Category"
       buttonTitle={buttonTitle}
       formFields={formValues as Record<string, any>}
       handleFormFieldChange={handleFormFieldChange}

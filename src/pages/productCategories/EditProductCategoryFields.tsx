@@ -35,7 +35,7 @@ const EditProductCategoryFields: FC<EditProductCategoryFieldsProps> = ({
         <h1>{pageTitle}</h1>
         <div className="grid grid-cols-2 gap-5">
           <InputField
-            name="name"
+            fieldKey="name"
             handleInputChange={handleFormFieldChange}
             label="Category name"
             isRequired
@@ -44,7 +44,7 @@ const EditProductCategoryFields: FC<EditProductCategoryFieldsProps> = ({
             disabled={isLoading}
           />
           <InputField
-            name="slug"
+            fieldKey="slug"
             handleInputChange={handleFormFieldChange}
             label="Category slug"
             isRequired

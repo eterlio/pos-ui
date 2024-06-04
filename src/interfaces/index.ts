@@ -15,7 +15,6 @@ export interface PhoneProps {
   prefix: string;
   number: string;
   country: string;
-  _id?: string;
 }
 
 export interface AddressProps {
@@ -68,3 +67,9 @@ export interface OptionsProps {
   label: string;
   value: string;
 }
+
+
+
+export type FieldKeys<T> = T extends object
+  ? { [K in keyof T]: T[K] extends Function ? never : `${K & string}` | `${K & string}.${FieldKeys<T[K]>}` }[keyof T]
+  : never;

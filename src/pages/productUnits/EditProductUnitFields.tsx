@@ -35,22 +35,24 @@ const EditProductUnitFields: FC<EditProductUnitFieldsProps> = ({
         <h1>{pageTitle}</h1>
         <div className="grid grid-cols-2 gap-5">
           <InputField
-            name="title"
+            fieldKey="title"
             handleInputChange={handleFormFieldChange}
             label="Unit title"
             isRequired
             errorMessage={errors?.title}
             value={formFields?.title}
             disabled={isLoading}
+            placeholder="Eg: Kilograms"
           />
           <InputField
-            name="name"
+            fieldKey="name"
             handleInputChange={handleFormFieldChange}
             label="Unit name"
             isRequired
             errorMessage={errors?.name}
             value={formFields?.name}
             disabled={isLoading}
+            placeholder="Eg: kg"
           />
         </div>
         <div>

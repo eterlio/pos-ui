@@ -60,7 +60,7 @@ const UpdateProductBrandScreen = () => {
       {
         onSuccess() {
           toast.success("Success", {
-            description: "Product brand created"
+            description: "Product brand updated"
           });
           navigate("/product-brands");
         }
@@ -74,7 +74,7 @@ const UpdateProductBrandScreen = () => {
   }, [params.id, data]);
   return (
     <EditProductBrandFields
-      pageTitle="Create Product Brand"
+      pageTitle="Update Product Brand"
       buttonTitle={buttonTitle}
       formFields={formValues as Record<string, any>}
       handleFormFieldChange={handleFormFieldChange}
