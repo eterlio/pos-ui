@@ -1,54 +1,79 @@
-import Container from "@/components/Container";
-import PrimaryButton from "@/components/PrimaryButton";
-import SelectField from "@/components/customFields/Select/SelectField";
-import AddressBox from "@/components/customFields/address/AddressBox";
-import InputField from "@/components/customFields/input/InputField";
-import PhoneInputField from "@/components/customFields/input/Phone";
 import { HandlerProps } from "@/components/customFields/type";
-import DashboardLayout from "@/components/dashboard/Layout";
 import { supplierDefaults } from "@/defaults";
+import { useError } from "@/hooks/useError";
 import { useFormFieldUpdate } from "@/hooks/useFormFieldUpdate";
-
+import { SupplierProps } from "@/interfaces/supplier";
+import { hasValidPhone } from "@/utils";
+import { Validator } from "@/validator";
+import { PhoneProps } from "@/interfaces";
+import { useGeneralMutation } from "@/hooks/request/useGeneralMutation";
+import { addressValidationProps } from "@/helpers";
+import { toast } from "sonner";
+import { pick } from "lodash";
+import { useNavigate } from "react-router-dom";
+import SupplierEditFields from "./SupplierEditFields";
 const CreateSupplierScreen = () => {
   const { formValues, updateFormFieldValue } = useFormFieldUpdate(supplierDefaults());
+  const { errors, resetError, addErrors } = useError<any>();
+  const { isPending, mutate } = useGeneralMutation({
+    httpMethod: "post",
+    mutationKey: ["createSupplier"],
+    url: "/suppliers"
+  });
+  const navigate = useNavigate();
   const handleChange = (data: HandlerProps) => {
     updateFormFieldValue(data.key, data.value);
   };
-  const onsubmitHandler = () => {};
+  const onsubmitHandler = () => {
+    const validator = new Validator<SupplierProps>({
+      formData: formValues,
+      rules: {
+        ...addressValidationProps.validation,
+        name: "required|minLength:3",
+        email: "required|isEmail",
+        phone: "required|customValidator"
+      },
+      customFieldKeys: {
+        ...addressValidationProps.customFields
+      }
+    });
+    validator.addCustomValidation({
+      fieldKey: "phone",
+      fieldPassed(value: PhoneProps) {
+        return !!hasValidPhone(value);
+      }
+    });
+    validator.validate();
+
+    if (validator.failed()) {
+      return addErrors(validator.getValidationErrorsByIndex());
+    }
+    resetError();
+
+    const payload = pick(formValues, ["address", "email", "name", "phone", "status"]);
+    mutate(
+      { payload },
+      {
+        onSuccess() {
+          toast.success("Success", {
+            description: "Supplier created"
+          });
+          navigate("/suppliers");
+        }
+      }
+    );
+  };
   return (
-    <DashboardLayout pageTitle="Create Supplier">
-      <Container>
-        <div>
-          <h1 className="text-xl mb-4">Supplier Information</h1>
-          <div className="grid md:grid-cols-3 gap-5">
-            <InputField fieldKey="name" handleInputChange={handleChange} label="Supplier Name" />
-            <InputField fieldKey="email" handleInputChange={handleChange} label="Supplier Email" />
-            <PhoneInputField
-              fieldKey="phone"
-              handleInputChange={handleChange}
-              isRequired
-              errorMessage=""
-              value={formValues.phone}
-              label="Phone"
-            />
-          </div>
-        </div>
-        <AddressBox fieldKey="address" values={formValues.address} onChange={handleChange} />
-        <div className="grid md:grid-cols-3 gap-5">
-          <SelectField
-            options={[
-              { label: "Active", value: "active" },
-              { label: "Inactive", value: "inactive" }
-            ]}
-            onChange={handleChange}
-            key="status"
-            label="Status"
-            selectValue={formValues.status}
-          />
-        </div>
-        <PrimaryButton text={"Create Supplier"} onClick={onsubmitHandler} loading={false} className="md:w-[200px]" />
-      </Container>
-    </DashboardLayout>
+      <SupplierEditFields
+        buttonTitle="Create Supplier"
+        formFields={formValues}
+        handleFormFieldChange={handleChange}
+        onsubmitHandler={onsubmitHandler}
+        disabledButton={isPending}
+        isLoading={isPending}
+        errors={errors as any}
+        pageTitle="Create Supplier"
+      />
   );
 };
 

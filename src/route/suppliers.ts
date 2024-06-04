@@ -1,6 +1,7 @@
 import { RoutesProps } from "@/interfaces/route";
 import CreateSupplierScreen from "@/pages/suppliers/CreateSupplierScreen";
 import ListSuppliersScreen from "@/pages/suppliers/ListSuppliersScreen";
+import UpdateSupplierScreen from "@/pages/suppliers/UpdateSupplierScreen";
 
 export const SUPPLIERS_ROUTES: RoutesProps[] = [
   {
@@ -14,11 +15,11 @@ export const SUPPLIERS_ROUTES: RoutesProps[] = [
     url: "/suppliers/create",
     requireAuth: true,
     permission: ["suppliers", "create"]
+  },
+  {
+    component: UpdateSupplierScreen,
+    url: "/suppliers/:id",
+    requireAuth: true,
+    permission: ["suppliers", "update"]
   }
-  // {
-  //   component: UpdateProductCategoryScreen,
-  //   url: "/suppliers/:id",
-  //   requireAuth: true,
-  //   permission: ["suppliers", "update"]
-  // }
 ];

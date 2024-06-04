@@ -1,16 +1,18 @@
 import { FC } from "react";
 import InputField from "../input/InputField";
-import SelectField from "../Select/Select";
+import SelectField from "../Select/SelectField";
 import { HandlerProps } from "../type";
 import { AddressProps } from "@/interfaces";
+import { get } from "lodash";
 
 interface AddressBoxProps {
   values: AddressProps;
   fieldKey: string;
   onChange: (data: { key: string; value: any }) => void;
-  errors?: { [key in keyof AddressProps]: string };
+  errors?: { [key in `address.${keyof AddressProps}`]: string } | null;
+  disabled?: boolean;
 }
-const AddressBox: FC<AddressBoxProps> = ({ values, fieldKey, onChange, errors }) => {
+const AddressBox: FC<AddressBoxProps> = ({ values, fieldKey, onChange, errors, disabled }) => {
   const handleFormInputChange = ({ key, value }: HandlerProps) => {
     onChange({ key, value });
   };
@@ -19,7 +21,7 @@ const AddressBox: FC<AddressBoxProps> = ({ values, fieldKey, onChange, errors })
   };
 
   const getValue = (fieldName: string) => {
-    return (values as Record<string, any>)[fieldName];
+    return (values as Record<string, any>)?.[fieldName];
   };
   return (
     <div className="mt-10">
@@ -31,8 +33,9 @@ const AddressBox: FC<AddressBoxProps> = ({ values, fieldKey, onChange, errors })
           handleInputChange={handleFormInputChange}
           label="P.O box"
           value={getValue("poBox")}
-          errorMessage={errors?.poBox}
+          errorMessage={get(errors, `address.poBox`)}
           isRequired
+          disabled={disabled}
         />
         <InputField
           placeholder="GPS Address"
@@ -40,15 +43,12 @@ const AddressBox: FC<AddressBoxProps> = ({ values, fieldKey, onChange, errors })
           label="GPS Address"
           value={getValue("gpsAddress")}
           handleInputChange={handleFormInputChange}
-          errorMessage={errors?.gpsAddress}
-          isRequired
+          errorMessage={get(errors, `address.gpsAddress`)}
+          disabled={disabled}
         />
         <SelectField
           fieldKey="country"
-          options={[
-            { label: "Ghana", value: "GH" }
-            // { label: "Nigeria", value: "NG" }
-          ]}
+          options={[{ label: "Ghana", value: "GH" }]}
           label="Country"
           selectValue={getValue("country")}
           isSearchable
@@ -60,8 +60,9 @@ const AddressBox: FC<AddressBoxProps> = ({ values, fieldKey, onChange, errors })
               value: selectedValue
             })
           }
-          errorMessage={errors?.country}
+          errorMessage={get(errors, `address.country`)}
           isRequired
+          isDisabled={disabled}
         />
         <InputField
           placeholder="City"
@@ -69,8 +70,9 @@ const AddressBox: FC<AddressBoxProps> = ({ values, fieldKey, onChange, errors })
           handleInputChange={handleFormInputChange}
           label="City"
           value={getValue("city")}
-          errorMessage={errors?.city}
+          errorMessage={get(errors, `address.city`)}
           isRequired
+          disabled={disabled}
         />
         <InputField
           placeholder="State"
@@ -78,8 +80,9 @@ const AddressBox: FC<AddressBoxProps> = ({ values, fieldKey, onChange, errors })
           handleInputChange={handleFormInputChange}
           label="State"
           value={getValue("state")}
-          errorMessage={errors?.state}
+          errorMessage={get(errors, `address.state`)}
           isRequired
+          disabled={disabled}
         />
       </div>
     </div>
