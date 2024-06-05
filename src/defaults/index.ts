@@ -1,6 +1,12 @@
 import { UserProps } from "@/interfaces/users";
 import { AddressProps, DefaultPluginProps, PhoneProps, RequestStateProps } from "../interfaces";
-import { BarcodeSymbology, ProductProps, ProductStatus, productBarcodeSymbology, productStatus } from "@/interfaces/products";
+import {
+  BarcodeSymbology,
+  ProductProps,
+  ProductStatus,
+  productBarcodeSymbology,
+  productStatus
+} from "@/interfaces/products";
 import { startCase } from "lodash";
 
 export const defaultPlugin: DefaultPluginProps = {
@@ -53,18 +59,22 @@ export const createDefaultUser: () => UserProps = () => ({
   ...defaultPlugin
 });
 
-export const barCodeOptions: { label: string; value: BarcodeSymbology }[] = productBarcodeSymbology.map((code) => {
-  return {
-    label: startCase(code),
-    value: code
-  };
-});
-export const productStatusOptions: { label: string; value: ProductStatus }[] = productStatus.map((status) => {
-  return {
-    label: startCase(status),
-    value: status
-  };
-});
+export const barCodeOptions: { label: string; value: BarcodeSymbology }[] = productBarcodeSymbology.map(
+  (code) => {
+    return {
+      label: startCase(code),
+      value: code
+    };
+  }
+);
+export const productStatusOptions: { label: string; value: ProductStatus }[] = productStatus.map(
+  (status: ProductStatus) => {
+    return {
+      label: startCase(status),
+      value: status
+    };
+  }
+);
 export const productDefaults = (): ProductProps => {
   return {
     name: "",
@@ -101,7 +111,7 @@ export const productDefaults = (): ProductProps => {
     SKU: "",
     tags: [],
     taxId: "",
-    taxType: null,
+    taxType: undefined,
     updatedAt: new Date(),
     updatedBy: "",
     warehouseIds: [],

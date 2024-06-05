@@ -76,5 +76,7 @@
     border-radius: 3px;
     @apply mb-3;
   }
-
+  .table-head__title button {
+    @apply text-[13px];
+  }
 }
