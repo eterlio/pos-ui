@@ -166,9 +166,9 @@ export const menuSidebarRoutes = (userRole?: string): MenuSidebarRoutes => ({
     },
     {
       title: "Supplier",
-      url: "/",
+      url: "/suppliers",
       icon: Truck,
-      isDisabled: true
+      isDisabled: false
     },
 
     {

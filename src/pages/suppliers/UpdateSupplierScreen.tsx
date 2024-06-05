@@ -6,37 +6,39 @@ import { Validator } from "@/validator";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useGeneralQuery } from "@/hooks/request/useGeneralQuery";
-import { objectDifference } from "@/helpers";
+import { addressValidationProps, objectDifference } from "@/helpers";
 import { useEffect } from "react";
-import EditProductCodeFields from "./EditProductCodeFields";
-import { ProductCodeProps } from "@/interfaces/productCode";
+import { SupplierProps } from "@/interfaces/supplier";
+import SupplierEditFields from "./SupplierEditFields";
 
-interface ValidatorProps {
-  code: string;
-  description: string;
-}
-const UpdateProductCodeScreen = () => {
+const UpdateSupplierScreen = () => {
   const params = useParams<{ id: string }>();
-  const categoryId = params.id;
+  const supplierId = params.id;
   const buttonTitle = "Update";
-  const { addErrors, errors, resetError } = useError<ValidatorProps>();
-  const { data } = useGeneralQuery<ProductCodeProps>({
-    queryKey: ["productCode", categoryId],
-    url: `/product-codes/${categoryId}`
+  const { addErrors, errors, resetError } = useError<any>();
+  const { data } = useGeneralQuery<SupplierProps>({
+    queryKey: ["supplier", supplierId],
+    url: `/suppliers/${supplierId}`
   });
 
-  const { formValues, updateFormFieldValue, setFormValues } = useFormFieldUpdate(data);
+  const { formValues, updateFormFieldValue, setFormValues } = useFormFieldUpdate(data!);
   const navigate = useNavigate();
   const { isPending, mutate } = useGeneralMutation({
     httpMethod: "put",
-    mutationKey: ["updateCode", categoryId as string],
-    url: `/product-codes/${categoryId}`
+    mutationKey: ["updateSupplier", supplierId as string],
+    url: `/suppliers/${supplierId}`
   });
-  const validator = new Validator<Partial<ValidatorProps>>({
-    formData: formValues as ValidatorProps,
+
+  const validator = new Validator<SupplierProps>({
+    formData: formValues,
     rules: {
-      description: "required|minLength:10",
-      code: "required:minLength:5"
+      ...addressValidationProps.validation,
+      name: "required|minLength:3",
+      email: "required|isEmail",
+      phone: "required|customValidator"
+    },
+    customFieldKeys: {
+      ...addressValidationProps.customFields
     }
   });
 
@@ -46,6 +48,8 @@ const UpdateProductCodeScreen = () => {
   };
 
   const payload = objectDifference(data, formValues);
+  console.log(payload);
+  
   const onsubmitHandler = () => {
     validator.validate();
 
@@ -60,9 +64,9 @@ const UpdateProductCodeScreen = () => {
       {
         onSuccess() {
           toast.success("Success", {
-            description: "Product code updated"
+            description: "Supplier details updated"
           });
-          navigate("/product-codes");
+          navigate("/suppliers");
         }
       }
     );
@@ -73,8 +77,8 @@ const UpdateProductCodeScreen = () => {
     }
   }, [params.id, data]);
   return (
-    <EditProductCodeFields
-      pageTitle="Update Product Code"
+    <SupplierEditFields
+      pageTitle="Update Supplier"
       buttonTitle={buttonTitle}
       formFields={formValues as Record<string, any>}
       handleFormFieldChange={handleFormFieldChange}
@@ -86,4 +90,4 @@ const UpdateProductCodeScreen = () => {
   );
 };
 
-export default UpdateProductCodeScreen;
+export default UpdateSupplierScreen;

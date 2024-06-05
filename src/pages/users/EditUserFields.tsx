@@ -34,7 +34,7 @@ const EditUserFields: FC<EditUserFieldsProps> = ({
       <div className="relative">
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
           <InputField
-            name="firstName"
+            fieldKey="firstName"
             handleInputChange={handleFormFieldChange}
             label={"First Name"}
             placeholder="First Name"
@@ -45,7 +45,7 @@ const EditUserFields: FC<EditUserFieldsProps> = ({
             disabled={isLoading}
           />
           <InputField
-            name="lastName"
+            fieldKey="lastName"
             handleInputChange={handleFormFieldChange}
             label={"Last Name"}
             placeholder="Last Name"
@@ -56,7 +56,7 @@ const EditUserFields: FC<EditUserFieldsProps> = ({
             disabled={isLoading}
           />
           <InputField
-            name="email"
+            fieldKey="email"
             handleInputChange={handleFormFieldChange}
             label={"Email"}
             placeholder="Email"
@@ -116,7 +116,7 @@ const EditUserFields: FC<EditUserFieldsProps> = ({
             <>
               <PasswordInput
                 handleInputChange={handleFormFieldChange}
-                name="password"
+                fieldKey="password"
                 placeholder="Password"
                 label={"Password"}
                 value={formFields?.password}
@@ -125,7 +125,7 @@ const EditUserFields: FC<EditUserFieldsProps> = ({
               />
               <PasswordInput
                 handleInputChange={handleFormFieldChange}
-                name="confirmPassword"
+                fieldKey="confirmPassword"
                 placeholder="Confirm Password"
                 label={"Confirm Password"}
                 value={formFields?.confirmPassword}

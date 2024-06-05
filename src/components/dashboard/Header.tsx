@@ -2,7 +2,6 @@ import { Input } from "@/components/ui/input";
 import { MessageSquare, BellIcon, Menu } from "lucide-react";
 import { MouseEventHandler } from "react";
 import UserNav from "./UserNav";
-
 const Header = ({
   handleDisplaySidebar,
   showHeaderSearchBar,
@@ -16,15 +15,11 @@ const Header = ({
 }) => {
   return (
     <div className="header-container bg-white sticky top-0 z-[5]">
-      <header className="flex h-[56px] items-center justify-between px-8 sticky top-0" role="banner">
+      <header className="flex h-[56px] items-center justify-between px-8  sticky top-0" role="banner">
         <div className="flex flex-1 items-center gap-5 mr-2">
-          <Menu className="cursor-pointer block lg:hidden" onClick={handleDisplaySidebar} />
+          <Menu className={`cursor-pointer ${displaySidebar && 'block'} md:hidden block`} onClick={handleDisplaySidebar} />
           {showHeaderSearchBar && (
-            <Input
-              type="email"
-              placeholder="Search..."
-              className="bg-gray-50 border-gray-50 md:w-[300px] lg:w-[300px]"
-            />
+            <Input type="email" placeholder="Search..." className="bg-gray-50 border-gray-50 lg:flex md:w-[300px] lg:w-[300px]" />
           )}
         </div>
         <div className="flex items-center justify-end flex-shrink-0 gap-5">

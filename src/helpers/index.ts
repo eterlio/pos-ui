@@ -109,7 +109,7 @@ export function objectDifference(
           )
         ) {
           console.log({ compareValue, hh: typeof compareValue });
-          
+
           diff[key] = compareValue;
         }
       }
@@ -194,4 +194,20 @@ export const formatPhoneToString = (phone: PhoneProps) => {
 
 export const isSpecialRole = (role: UserRole): boolean => {
   return specialRoles.includes(role);
+};
+
+export const addressValidationProps = {
+  validation: {
+    "address.city": "required",
+    "address.country": "required",
+    "address.poBox": "required",
+    "address.state": "required"
+  },
+  customFields: {
+    "address.city": "City",
+    "address.country": "Country",
+    "address.poBox": "po Box",
+    "address.state": "State"
+  }
+
 };

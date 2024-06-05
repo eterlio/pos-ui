@@ -8,6 +8,7 @@ import {
   productStatus
 } from "@/interfaces/products";
 import { startCase } from "lodash";
+import { SupplierProps } from "@/interfaces/supplier";
 
 export const defaultPlugin: DefaultPluginProps = {
   createdAt: new Date(),
@@ -59,14 +60,12 @@ export const createDefaultUser: () => UserProps = () => ({
   ...defaultPlugin
 });
 
-export const barCodeOptions: { label: string; value: BarcodeSymbology }[] = productBarcodeSymbology.map(
-  (code) => {
-    return {
-      label: startCase(code),
-      value: code
-    };
-  }
-);
+export const barCodeOptions: { label: string; value: BarcodeSymbology }[] = productBarcodeSymbology.map((code) => {
+  return {
+    label: startCase(code),
+    value: code
+  };
+});
 export const productStatusOptions: { label: string; value: ProductStatus }[] = productStatus.map(
   (status: ProductStatus) => {
     return {
@@ -116,5 +115,21 @@ export const productDefaults = (): ProductProps => {
     updatedBy: "",
     warehouseIds: [],
     weight: 0
+  };
+};
+export const supplierDefaults = (): SupplierProps => {
+  return {
+    email: "",
+    name: "",
+    phone: {
+      country: "gh",
+      number: "",
+      prefix: "233"
+    },
+    ...defaultPlugin,
+    address,
+    accountId: "",
+    warehouseId: "",
+    status: "active"
   };
 };

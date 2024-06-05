@@ -56,7 +56,7 @@ const ResetPasswordScreen = () => {
         </div>
         <div>
           <PasswordInput
-            name="password"
+            fieldKey="password"
             handleInputChange={formFieldHandler}
             value={formValues?.password}
             isRequired
@@ -66,7 +66,7 @@ const ResetPasswordScreen = () => {
         </div>
         <div>
           <PasswordInput
-            name="confirmPassword"
+            fieldKey="confirmPassword"
             handleInputChange={formFieldHandler}
             value={formValues?.confirmPassword}
             isRequired

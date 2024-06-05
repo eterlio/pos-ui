@@ -8,8 +8,8 @@ interface CheckBoxFieldProps extends CheckboxProps {
   label?: string | { text: string; icon?: FormIconProps; className?: string };
   isRequired?: boolean;
   value?: any;
-  handleFieldChange: (data: HandlerProps) => void;
-  fieldKey: string;
+  handleFieldChange?: (data: HandlerProps) => void;
+  fieldKey?: string;
 }
 const CheckBoxField: FC<CheckBoxFieldProps> = ({
   value,
@@ -22,7 +22,9 @@ const CheckBoxField: FC<CheckBoxFieldProps> = ({
   ...props
 }) => {
   const handleOnChange = (e: any) => {
-    handleFieldChange({ key: fieldKey, value: e });
+    if (handleFieldChange && fieldKey) {
+      handleFieldChange({ key: fieldKey, value: e });
+    }
   };
   return (
     <div className="flex items-center  gap-4">
@@ -35,7 +37,7 @@ const CheckBoxField: FC<CheckBoxFieldProps> = ({
         defaultValue={value}
         defaultChecked={!!value}
       />
-      {label && <InputLabel id={id} required={isRequired || false} label={label}  />}
+      {label && <InputLabel id={id} required={isRequired || false} label={label} />}
     </div>
   );
 };

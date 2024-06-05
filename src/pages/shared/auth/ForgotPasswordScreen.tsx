@@ -52,7 +52,7 @@ const ForgotPasswordScreen = () => {
           </div>
           <div>
             <InputField
-              name="email"
+              fieldKey="email"
               handleInputChange={formFieldHandler}
               value={formValues?.email}
               isRequired

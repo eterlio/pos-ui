@@ -62,7 +62,7 @@ const UpdateProductUnitScreen = () => {
       {
         onSuccess() {
           toast.success("Success", {
-            description: "Product unit created"
+            description: "Product unit updated"
           });
           navigate("/product-units");
         }
@@ -76,7 +76,7 @@ const UpdateProductUnitScreen = () => {
   }, [params.id, data]);
   return (
     <EditProductUnitFields
-      pageTitle="Create Product Unit"
+      pageTitle="Update Product Unit"
       buttonTitle={buttonTitle}
       formFields={formValues as Record<string, any>}
       handleFormFieldChange={handleFormFieldChange}
