@@ -8,25 +8,25 @@ import { useOptimisticUpdates } from "@/hooks/request/useOptimisticUpdates";
 import { GetManyProps } from "@/hooks/types";
 import { useSetQueryParam } from "@/hooks/useSetQueryParam";
 import { ModalActionButtonProps } from "@/interfaces";
-import { ProductCodeProps } from "@/interfaces/productCode";
-import { productCodeSchema } from "@/tableSchema/productCodes";
+import { ProductProps } from "@/interfaces/products";
+import { productTableSchema } from "@/tableSchema/products";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-const ListProductCodeScreen = () => {
+const ProductListsScreen = () => {
   const { removeItemFromList } = useOptimisticUpdates();
-  const [selectedCode, setSelectedCode] = useState<Record<string, any>>({});
+  const [selectedProduct, setSelectedProduct] = useState<Record<string, any>>({});
   const { queryObject } = useSetQueryParam();
-  const { mutate, isPending } = useGeneralMutation<ProductCodeProps>({
+  const { mutate, isPending } = useGeneralMutation<ProductProps>({
     httpMethod: "delete",
-    mutationKey: ["deleteProductCode", selectedCode.id],
-    url: `/product-codes/${selectedCode.id}`
+    mutationKey: ["deleteProduct", selectedProduct.id],
+    url: `/products/${selectedProduct.id}`
   });
 
-  const { data, isFetching } = useGeneralQuery<GetManyProps<ProductCodeProps>>({
-    queryKey: ["productCodes", queryObject],
-    url: "/product-codes",
+  const { data, isFetching } = useGeneralQuery<GetManyProps<ProductProps>>({
+    queryKey: ["products", queryObject],
+    url: "/products",
     query: queryObject,
     enabled: !!Object.keys(queryObject).length
   });
@@ -41,17 +41,15 @@ const ListProductCodeScreen = () => {
       label: "Delete",
       action: (data: Record<string, any>) => {
         setOpenModal(true);
-        setSelectedCode(data);
+        setSelectedProduct(data);
       }
     }
   ];
 
   const modalData = {
     showModal: openModal,
-    modalTitle: (code: string) => {
-      return `Are you sure you want to delete  ${code}`;
-    },
-    modalDescription: `Deleting the product code will permanently remove it from the system. Continue?`,
+    modalTitle: (name: string) => `Are you sure you want to delete  ${name}`,
+    modalDescription: `Deleting the product will permanently remove it from the system. Continue?`,
     actionButtons: [
       {
         title: "Cancel",
@@ -61,15 +59,15 @@ const ListProductCodeScreen = () => {
       {
         title: "Continue",
         action: async () => {
-          mutate(selectedCode.id, {
+          mutate(selectedProduct.id, {
             onSuccess: () => {
               setOpenModal(false);
               toast.success("Success", {
-                description: "Product code deleted"
+                description: "Product deleted"
               });
             },
             onSettled() {
-              return removeItemFromList(["productCodes", queryObject], selectedCode.id);
+              return removeItemFromList(["products", queryObject], selectedProduct.id);
             }
           });
         },
@@ -80,39 +78,41 @@ const ListProductCodeScreen = () => {
   };
 
   function handleEditRowActionClick(data: Record<string, any>) {
-    navigate(`/product-codes/${data.id}`);
+    navigate(`/products/${data.id}`);
   }
 
   return (
     <DashboardLayout
-      pageTitle="Product Codes"
+      pageTitle="Products List"
       actionButton={{
-        createButton: { name: "Create Product Code", onClick: () => navigate("/product-codes/create") }
+        createButton: {
+          name: "Create Product",
+          onClick: () => navigate("/products/create"),
+          loading: isFetching
+        }
       }}
     >
       <Modal
         showModal={modalData.showModal}
-        modalTitle={modalData.modalTitle(selectedCode.code)}
+        modalTitle={modalData.modalTitle(selectedProduct.name)}
         modalDescription={modalData.modalDescription}
         actionButtons={modalData.actionButtons}
       />
       <Container className="border border-gray-50">
         <Table
-          columns={productCodeSchema}
+          columns={productTableSchema}
           data={data?.data || []}
-          isLoading={isFetching}
-          loadingText="Fetching product code data"
-          showExportButton
           paginator={data?.paginator}
-          filters={[]}
-          actionButtons={rowActions}
           allowRowSelect
-          handleRowClick={handleEditRowActionClick}
           showSelectColumns
+          showExportButton
+          isLoading={isFetching}
+          actionButtons={rowActions}
+          handleRowClick={handleEditRowActionClick}
         />
       </Container>
     </DashboardLayout>
   );
 };
 
-export default ListProductCodeScreen;
+export default ProductListsScreen;

@@ -36,8 +36,7 @@ export function DataTable<TData, TValue>({
   handleRowClick,
   isLoading,
   loadingText
-}: // selectedDocuments
-DataTableProps<TData, TValue>) {
+}: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -64,6 +63,8 @@ DataTableProps<TData, TValue>) {
   useEffect(() => {
     if (!queryColumn) {
       setQueryParam("columns", columnsForDefaultValues.join(","));
+      setQueryParam("limit", (30).toString());
+      setQueryParam("currentPage", (1).toString());
     }
   }, []);
 
@@ -98,10 +99,9 @@ DataTableProps<TData, TValue>) {
                 onCheckedChange={(value) => row.toggleSelected(!!value)}
                 aria-label="Select row"
                 className="translate-y-[2px]"
-               onClick={(e)=> {
-               e.stopPropagation()
-                
-               }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
               />
             ),
             enableSorting: false,
@@ -156,7 +156,7 @@ DataTableProps<TData, TValue>) {
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead key={header.id} className="table-head__title">
                       {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   );
@@ -179,10 +179,10 @@ DataTableProps<TData, TValue>) {
                 .getRowModel()
                 .rows.map((row) => <TableBodyItem row={row} key={row.id} handleRowClick={handleRowClick} />)
             ) : (
-              <TableRow className=" w-full">
+              <TableRow className="w-full">
                 <TableCell colSpan={9} className="text-center w-full">
                   <div className="p-10 flex items-center justify-center flex-col gap-4  w-full">
-                    <img src={NoDataImg} alt="" style={{ width: "20%" }} />
+                    <img src={NoDataImg} alt="" style={{ width: "10%" }} />
                     <p className="text-lg">No results.</p>
                   </div>
                 </TableCell>

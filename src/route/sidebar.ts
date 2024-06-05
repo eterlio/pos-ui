@@ -11,7 +11,8 @@ import {
   UserPlus,
   UsersIcon,
   MinusCircle,
-  Puzzle
+  Puzzle,
+  LucideIcon
 } from "lucide-react";
 
 interface RouteLink {
@@ -24,7 +25,7 @@ interface RouteLink {
 export interface SubLink extends RouteLink {}
 
 export interface MenuSidebarRoute extends RouteLink {
-  icon?: any;
+  icon?: LucideIcon;
   subLinks?: SubLink[];
 }
 
@@ -63,9 +64,14 @@ export const menuSidebarRoutes = (userRole?: string): MenuSidebarRoutes => ({
       isDisabled: false,
       subLinks: [
         {
+          title: "Products List",
+          url: "/products",
+          isDisabled: false
+        },
+        {
           title: "Add Product",
-          url: "/users",
-          isDisabled: true
+          url: "/products/create",
+          isDisabled: false
         },
         {
           title: "Import Products",

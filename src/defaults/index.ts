@@ -1,5 +1,13 @@
 import { UserProps } from "@/interfaces/users";
 import { AddressProps, DefaultPluginProps, PhoneProps, RequestStateProps } from "../interfaces";
+import {
+  BarcodeSymbology,
+  ProductProps,
+  ProductStatus,
+  productBarcodeSymbology,
+  productStatus
+} from "@/interfaces/products";
+import { startCase } from "lodash";
 import { SupplierProps } from "@/interfaces/supplier";
 
 export const defaultPlugin: DefaultPluginProps = {
@@ -52,6 +60,63 @@ export const createDefaultUser: () => UserProps = () => ({
   ...defaultPlugin
 });
 
+export const barCodeOptions: { label: string; value: BarcodeSymbology }[] = productBarcodeSymbology.map((code) => {
+  return {
+    label: startCase(code),
+    value: code
+  };
+});
+export const productStatusOptions: { label: string; value: ProductStatus }[] = productStatus.map(
+  (status: ProductStatus) => {
+    return {
+      label: startCase(status),
+      value: status
+    };
+  }
+);
+export const productDefaults = (): ProductProps => {
+  return {
+    name: "",
+    brandId: "",
+    alertQuantity: 0,
+    barcodeSymbology: "code128",
+    categoryId: "",
+    productCodeId: "",
+    productSellingPrice: 0,
+    productUnitPrice: 0,
+    status: "draft",
+    supplierId: "",
+    unitId: "",
+    accountId: "",
+    _id: "",
+    availability: "offlineOnly",
+    canExpire: false,
+    expirationDate: null,
+    createdAt: new Date(),
+    createdBy: "",
+    deleted: false,
+    deletedAt: new Date(),
+    deletedBy: "",
+    description: "",
+    dimensions: {
+      height: 0,
+      length: 0,
+      width: 0
+    },
+    id: "",
+    isFeatured: false,
+    primaryImageId: "",
+    secondaryImages: [],
+    SKU: "",
+    tags: [],
+    taxId: "",
+    taxType: undefined,
+    updatedAt: new Date(),
+    updatedBy: "",
+    warehouseIds: [],
+    weight: 0
+  };
+};
 export const supplierDefaults = (): SupplierProps => {
   return {
     email: "",

@@ -39,7 +39,7 @@ const CustomField: FC<CustomFieldProps> = ({
     } = event;
 
     if (handleInputChange) {
-      handleInputChange({ key: fieldKey, value });
+      handleInputChange({ key: fieldKey, value: type === "number" ? Number(value) : value });
     }
   };
 
@@ -67,7 +67,7 @@ const CustomField: FC<CustomFieldProps> = ({
         <Input
           type={type}
           name={fieldKey}
-          value={value}
+          value={value || ""}
           onBlur={onBlur}
           onChange={handleInputFieldChange}
           disabled={disabled}
