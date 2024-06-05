@@ -118,21 +118,21 @@ export const menuSidebarRoutes = (userRole?: string): MenuSidebarRoutes => ({
       ]
     },
     {
-      title: "Stock Adjustment",
+      title: "Stocking",
       url: "/",
       icon: Box,
       isDisabled: true,
       subLinks: [
         {
+          title: "Take Stock",
+          url: "/users"
+        },
+        {
           title: "Stock List",
           url: "/users"
         },
         {
-          title: "Product Stock List",
-          url: "/users"
-        },
-        {
-          title: "Product stock adjustment",
+          title: "Stock Adjustment",
           url: "/users"
         }
       ]
