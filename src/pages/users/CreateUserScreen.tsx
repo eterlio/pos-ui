@@ -9,6 +9,7 @@ import { useError } from "@/hooks/useError";
 import { useFormFieldUpdate } from "@/hooks/useFormFieldUpdate";
 import { UserProps } from "@/interfaces/users";
 import { createDefaultUser } from "@/defaults";
+import { objectDifference } from "@/helpers";
 
 const CreateUserScreen = () => {
   const { isPending, mutate } = useCreateOrUpdateUserMutation();
@@ -34,8 +35,9 @@ const CreateUserScreen = () => {
       resetError();
     }
 
+    const payload = objectDifference(createDefaultUser(), formValues);
     mutate(
-      { payload: formValues as any },
+      { payload: payload as any },
       {
         onSuccess: () => {
           toast.success("Success", {
