@@ -32,7 +32,7 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({ pageTitle, pageDescription, s
             onClick={actionButton.createButton?.onClick}
             disabled={actionButton.createButton?.disabled}
           >
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-3">
               <span>{actionButton.createButton?.name}</span>
               <span>{actionButton.createButton?.loading && <Loader />}</span>
             </div>
