@@ -67,7 +67,7 @@ const CustomField: FC<CustomFieldProps> = ({
         <Input
           type={type}
           name={fieldKey}
-          value={value}
+          value={value || ""}
           onBlur={onBlur}
           onChange={handleInputFieldChange}
           disabled={disabled}
