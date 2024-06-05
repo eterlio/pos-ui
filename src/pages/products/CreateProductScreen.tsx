@@ -22,6 +22,7 @@ import { ProductCategoryProps } from "@/interfaces/productCategories";
 import { ProductCodeProps } from "@/interfaces/productCode";
 import { ProductUnitProps } from "@/interfaces/productUnits";
 import { ProductProps } from "@/interfaces/products";
+import { SupplierProps } from "@/interfaces/supplier";
 import { Validator } from "@/validator";
 import { DollarSign } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -72,6 +73,12 @@ const CreateProductScreen = () => {
     query: { deleted: false, columns: "code" },
     requireAuth: true
   });
+  const { data: supplierData } = useGeneralQuery<GetManyProps<SupplierProps>>({
+    queryKey: ["suppliers", {}],
+    url: "/suppliers",
+    query: { deleted: false, columns: "name" },
+    requireAuth: true
+  });
   const categoriesOptions =
     categoryData?.data.map((category) => {
       return {
@@ -100,6 +107,13 @@ const CreateProductScreen = () => {
         value: code._id
       };
     }) || [];
+  const supplierOptions =
+    supplierData?.data.map((supplier) => {
+      return {
+        label: `${supplier.name}`,
+        value: supplier._id
+      };
+    }) || [];
 
   const handleSubmit = () => {
     const validator = new Validator<ProductProps>({
@@ -116,7 +130,7 @@ const CreateProductScreen = () => {
         productUnitPrice: "required|isNumber|minValue:0.1",
         unitId: "required",
         status: "required|in:active,inactive,draft",
-        // supplierId: "required",
+        supplierId: "required",
         weight: "required|isNumber"
       },
       customFieldKeys: {
@@ -143,7 +157,7 @@ const CreateProductScreen = () => {
     resetError();
 
     const payload = objectDifference(productDefaults(), formValues);
-    payload.supplierId = "89977396-57b5-4ef2-8b9f-c8dc4871799d"
+    payload.supplierId = "89977396-57b5-4ef2-8b9f-c8dc4871799d";
     mutate(
       { payload },
       {
@@ -167,7 +181,7 @@ const CreateProductScreen = () => {
               <div className="border border-gray-100 rounded-sm p-4 space-y-3">
                 <InputField
                   handleInputChange={handleFieldChange}
-                  name="name"
+                  fieldKey="name"
                   label="Product Name"
                   value={formValues?.name}
                   isRequired
@@ -219,7 +233,7 @@ const CreateProductScreen = () => {
                   selectValue={formValues?.supplierId}
                   onChange={handleFieldChange}
                   isRequired
-                  options={[]}
+                  options={supplierOptions}
                   closeOnSelect
                   errorMessage={errors?.supplierId}
                 />

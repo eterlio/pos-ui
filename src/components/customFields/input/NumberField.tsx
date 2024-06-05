@@ -30,7 +30,7 @@ const NumberField: FC<NumberFieldProps> = ({
     } = event;
 
     if (handleInputChange) {
-      handleInputChange({ key: fieldKey, value });
+      handleInputChange({ key: fieldKey, value: Number(value) });
     }
   };
   return (
