@@ -51,12 +51,11 @@ export const createDefaultUser: () => UserProps = () => ({
   lastName: "",
   email: "",
   password: "",
-  role: null,
   address,
   phone,
-  status: null,
   permission: null,
   isLoggedIn: false,
+  status: "pending",
   ...defaultPlugin
 });
 

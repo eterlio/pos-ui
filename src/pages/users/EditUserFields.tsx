@@ -1,6 +1,6 @@
 import Container from "@/components/Container";
 import PrimaryButton from "@/components/PrimaryButton";
-import SelectField from "@/components/customFields/Select/Select";
+import SelectField from "@/components/customFields/Select/SelectField";
 import InputField from "@/components/customFields/input/InputField";
 import PasswordInput from "@/components/customFields/input/Password";
 import PhoneInputField from "@/components/customFields/input/Phone";
@@ -135,7 +135,6 @@ const EditUserFields: FC<EditUserFieldsProps> = ({
             </>
           )}
         </div>
-        {JSON.stringify(formFields?.permission)}
         {formFields?.role !== "admin" && (
           <Permission
             onChange={handleFormFieldChange}
