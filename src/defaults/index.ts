@@ -55,7 +55,6 @@ export const createDefaultUser: () => UserProps = () => ({
   phone,
   permission: null,
   isLoggedIn: false,
-  status: "pending",
   ...defaultPlugin
 });
 
