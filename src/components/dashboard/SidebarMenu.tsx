@@ -15,7 +15,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({ title, routesData }) => {
           routesData.map((data, index) => {
             return (
               <SidebarMenuItem
-                icon={<data.icon size={19} className="group-hover:text-green-400"/>}
+                icon={data.icon && <data.icon size={19} className="group-hover:text-green-400"/> as any}
                 title={data.title}
                 url={data.url}
                 key={index}
