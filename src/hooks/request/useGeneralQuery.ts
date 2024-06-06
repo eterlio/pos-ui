@@ -26,21 +26,10 @@ export const useGeneralQuery = <T>(mutationData: {
     refetchOnWindowFocus: false,
     gcTime: 100000,
     queryFn: async () => {
-      try {
-        const {
-          data: { response }
-        } = await axiosInstance.get<BaseResponse<T>>(url, { params: query });
-        return response;
-      } catch (err) {
-        if (axios.isAxiosError(err)) {
-          // Axios specific error handling
-          const statusCode = err.response?.status;
-          throw new Error(`HTTP error! Status: ${statusCode}`);
-        } else {
-          // Handle other errors
-          throw new Error("An unknown error occurred");
-        }
-      }
+      const {
+        data: { response }
+      } = await axiosInstance.get<BaseResponse<T>>(url, { params: query });
+      return response;
     }
   });
 
