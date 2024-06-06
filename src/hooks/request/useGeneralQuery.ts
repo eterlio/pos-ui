@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useBaseRequestService } from "./useAxiosPrivate";
 import { BaseResponse } from "@/helpers/baseResponse";
-import axios from "axios";
+
 
 export const useGeneralQuery = <T>(mutationData: {
   queryKey: any[];
