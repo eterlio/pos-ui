@@ -29,10 +29,13 @@ const NumberField: FC<NumberFieldProps> = ({
       target: { value }
     } = event;
 
+    const numericValue = value === "" ? undefined : parseFloat(value);
+
     if (handleInputChange) {
-      handleInputChange({ key: fieldKey, value: Number(value) });
+      handleInputChange({ key: fieldKey, value: numericValue });
     }
   };
+
   return (
     <div className="w-full">
       {label && (
