@@ -6,7 +6,7 @@ import HeaderTitle from "./HeaderTitle";
 import Preloader from "../Preloader";
 import { ActionButtonProps } from "@/interfaces";
 // import BreadCrumb from "./BreadCrumb";
-
+import { useMediaQuery } from "@uidotdev/usehooks";
 interface DashboardLayoutProps {
   children: ReactNode;
   showScrollToTopButton?: boolean;
@@ -34,11 +34,10 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   showNotification = true,
   isLoading
 }) => {
-  
-  const handleDisplaySidebar = () => {
+  const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");  const handleDisplaySidebar = () => {
     setDisplaySidebar(!displaySidebar);
   };
-  const [displaySidebar, setDisplaySidebar] = useState(false);
+  const [displaySidebar, setDisplaySidebar] = useState(false || isSmallDevice);
   return (
     <>
       {isLoading && <Preloader />}
