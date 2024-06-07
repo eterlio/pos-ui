@@ -108,7 +108,6 @@ export function objectDifference(
             isNaN(compareValue)
           )
         ) {
-          console.log({ compareValue, hh: typeof compareValue });
 
           diff[key] = compareValue;
         }
