@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { PermissionString, permissionOperations, decipherPermission, PermissionOperation } from "@/helpers/permission";
 import CheckBoxField from "../combo/CheckBoxField";
 import { capitalize, startCase } from "lodash";
+import { HandlerProps } from "../type";
 
 const Permission = ({
   permissionResources,
@@ -39,6 +40,8 @@ const Permission = ({
   }, [cypheredPermissions]);
 
   const handleTogglePermission = (permission: PermissionString, operation: PermissionOperation) => {
+    console.log(permission, operation);
+    
     setPermissions((prevPermissions) => {
       const currentPermissions = prevPermissions[permission] || [];
       let updatedPermissions: string[] = [];
@@ -73,12 +76,14 @@ const Permission = ({
     });
   };
 
-  const handleCheckAllPermissions = (value: any) => {
+  const handleCheckAllPermissions = (data: HandlerProps) => {
     const result = permissionResources.reduce((acc: any, permission) => {
-      acc[permission] = value ? permissionOperations : [];
+      acc[permission] = data.value ? permissionOperations : [];
       return acc;
     }, {});
     setPermissions(result);
+
+    
   };
   useEffect(() => {
     onChange({ key: fieldKey, value: permissions });
@@ -95,7 +100,7 @@ const Permission = ({
     <div className="flex flex-col">
       <div className="mb-5 flex items-center gap-4">
         <p>Check all permissions</p>
-        <CheckBoxField onCheckedChange={handleCheckAllPermissions} className="w-[20px] h-[20px]" disabled={disabled} />
+        <CheckBoxField handleFieldChange={handleCheckAllPermissions} className="w-[20px] h-[20px]" disabled={disabled} fieldKey="checkAll" />
       </div>
 
       <div className="flex items-end justify-between">
@@ -117,9 +122,10 @@ const Permission = ({
                 <CheckBoxField
                   key={index}
                   checked={permissions[permission] && permissions[permission].includes(operation)}
-                  onCheckedChange={() => handleTogglePermission(permission, operation)}
+                  handleFieldChange={() => handleTogglePermission(permission, operation)}
                   className="w-[20px] h-[20px]"
                   disabled={disabled || (disablePermissionResource(permission) && operation !== "read")}
+                  fieldKey={fieldKey}
                 />
               ))}
             </div>
