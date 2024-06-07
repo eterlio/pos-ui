@@ -30,8 +30,8 @@ const SupplierEditFields: FC<SupplierEditFieldsProps> = ({
 }) => {
   return (
     <DashboardLayout
-      pageTitle="Create Product Category"
-      pageDescription="Fill the details to create a product category"
+      pageTitle="Create Supplier"
+      pageDescription="Fill the details to create a supplier"
     >
       <Container>
         <div>
