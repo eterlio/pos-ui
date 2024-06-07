@@ -70,7 +70,6 @@ const CreateProductScreen = () => {
     resetError();
 
     const payload = objectDifference(productDefaults(), formValues);
-    payload.supplierId = "89977396-57b5-4ef2-8b9f-c8dc4871799d";
     mutate(
       { payload },
       {
@@ -91,7 +90,9 @@ const CreateProductScreen = () => {
       onsubmitHandler={handleSubmit}
       errors={errors}
       isLoading={isPending}
-      pageTitle="Product information"
+      pageTitle="Create Product"
+      formTitle="Product Information"
+      pageDescription="Fill the form to create a product"
     />
   );
 };

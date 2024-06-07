@@ -13,8 +13,10 @@ interface EditProductCategoryFieldsProps {
   handleFormFieldChange: (data: HandlerProps) => void;
   errors?: Record<string, string>;
   isLoading?: boolean;
-  pageTitle?: string;
+  pageTitle: string;
   disabledButton?: boolean;
+  formTitle: string;
+  pageDescription: string;
 }
 const EditProductCategoryFields: FC<EditProductCategoryFieldsProps> = ({
   handleFormFieldChange,
@@ -24,16 +26,15 @@ const EditProductCategoryFields: FC<EditProductCategoryFieldsProps> = ({
   isLoading,
   buttonTitle,
   pageTitle,
-  disabledButton
+  disabledButton,
+  pageDescription,
+  formTitle
 }) => {
   return (
-    <DashboardLayout
-      pageTitle="Create Product Category"
-      pageDescription="Fill the details to create a product category"
-    >
+    <DashboardLayout pageTitle={pageTitle} pageDescription={pageDescription}>
       <Container className="border border-gray-50">
-        <h1>{pageTitle}</h1>
-        <div className="grid grid-cols-2 gap-5">
+        <h1>{formTitle}</h1>
+        <div className="grid grid-cols-1 gap-5">
           <InputField
             fieldKey="name"
             handleInputChange={handleFormFieldChange}
@@ -41,15 +42,6 @@ const EditProductCategoryFields: FC<EditProductCategoryFieldsProps> = ({
             isRequired
             errorMessage={errors?.name}
             value={formFields?.name}
-            disabled={isLoading}
-          />
-          <InputField
-            fieldKey="slug"
-            handleInputChange={handleFormFieldChange}
-            label="Category slug"
-            isRequired
-            errorMessage={errors?.slug}
-            value={formFields?.slug}
             disabled={isLoading}
           />
         </div>

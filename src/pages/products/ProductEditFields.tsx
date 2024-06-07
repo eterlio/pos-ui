@@ -29,8 +29,10 @@ interface EditProductFieldsProps {
   handleFormFieldChange: (data: HandlerProps) => void;
   errors: Record<string, any>;
   isLoading?: boolean;
-  pageTitle?: string;
+  pageTitle: string;
   disabledButton?: boolean;
+  formTitle: string;
+  pageDescription: string;
 }
 const ProductEditFields: FC<EditProductFieldsProps> = ({
   handleFormFieldChange,
@@ -40,7 +42,9 @@ const ProductEditFields: FC<EditProductFieldsProps> = ({
   isLoading,
   buttonTitle,
   pageTitle,
-  disabledButton
+  disabledButton,
+  formTitle,
+  pageDescription
 }) => {
   const { data: categoryData } = useGeneralQuery<GetManyProps<ProductCategoryProps>>({
     queryKey: ["productCategories", {}],
@@ -109,9 +113,9 @@ const ProductEditFields: FC<EditProductFieldsProps> = ({
     }) || [];
 
   return (
-    <DashboardLayout pageTitle="Create Product Brand" pageDescription="Fill the details to create a product brand">
+    <DashboardLayout pageTitle={pageTitle} pageDescription={pageDescription}>
       <Container className="border border-gray-50">
-        <h1>{pageTitle}</h1>
+        <h1>{formTitle}</h1>
         <div className="grid md:grid-cols-2 gap-4">
           <div className="left-content">
             {/* Description */}

@@ -13,8 +13,10 @@ interface EditProductUnitFieldsProps {
   handleFormFieldChange: (data: HandlerProps) => void;
   errors?: Record<string, string>;
   isLoading?: boolean;
-  pageTitle?: string;
+  pageTitle: string;
   disabledButton?: boolean;
+  formTitle: string;
+  pageDescription: string;
 }
 const EditProductUnitFields: FC<EditProductUnitFieldsProps> = ({
   handleFormFieldChange,
@@ -24,15 +26,14 @@ const EditProductUnitFields: FC<EditProductUnitFieldsProps> = ({
   isLoading,
   buttonTitle,
   pageTitle,
-  disabledButton
+  disabledButton,
+  formTitle,
+  pageDescription
 }) => {
   return (
-    <DashboardLayout
-      pageTitle="Create Product Unit"
-      pageDescription="Fill the details to create a product category"
-    >
+    <DashboardLayout pageTitle={pageTitle} pageDescription={pageDescription}>
       <Container className="border border-gray-50">
-        <h1>{pageTitle}</h1>
+        <h1>{formTitle}</h1>
         <div className="grid grid-cols-2 gap-5">
           <InputField
             fieldKey="title"

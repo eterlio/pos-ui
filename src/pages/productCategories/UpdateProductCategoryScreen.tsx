@@ -2,7 +2,6 @@ import { HandlerProps } from "@/components/customFields/type";
 import { useGeneralMutation } from "@/hooks/request/useGeneralMutation";
 import { useError } from "@/hooks/useError";
 import { useFormFieldUpdate } from "@/hooks/useFormFieldUpdate";
-import { createSlug } from "@/utils";
 import { Validator } from "@/validator";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -38,16 +37,12 @@ const UpdateProductCategoryScreen = () => {
     formData: formValues as ValidatorProps,
     rules: {
       description: "required|minLength:10",
-      name: "required:minLength:5",
-      slug: "required:minLength:3"
+      name: "required:minLength:5"
     }
   });
 
   const handleFormFieldChange = (data: HandlerProps) => {
     const { key, value } = data;
-    if (key === "name") {
-      updateFormFieldValue("slug", createSlug(formValues?.name || ""));
-    }
     updateFormFieldValue(key, value);
   };
 
@@ -88,6 +83,8 @@ const UpdateProductCategoryScreen = () => {
       errors={errors as Record<string, any>}
       isLoading={isPending}
       disabledButton={!Object.keys(payload).length}
+      formTitle="Product category information"
+      pageDescription="Edit the fields to update the product category"
     />
   );
 };

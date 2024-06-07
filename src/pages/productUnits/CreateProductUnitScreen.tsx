@@ -67,6 +67,8 @@ const CreateProductUnitScreen = () => {
       onsubmitHandler={onsubmitHandler}
       errors={errors as Record<string, any>}
       isLoading={isPending}
+      formTitle="Product Unit information"
+      pageDescription="Fill the fields to create a product unit"
     />
   );
 };

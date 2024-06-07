@@ -65,6 +65,8 @@ const CreateProductCodeScreen = () => {
       onsubmitHandler={onsubmitHandler}
       errors={errors as Record<string, any>}
       isLoading={isPending}
+      formTitle="Product code information"
+      pageDescription="Fill the form to create a product code"
     />
   );
 };

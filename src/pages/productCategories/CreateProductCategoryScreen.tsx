@@ -2,7 +2,6 @@ import { HandlerProps } from "@/components/customFields/type";
 import { useGeneralMutation } from "@/hooks/request/useGeneralMutation";
 import { useError } from "@/hooks/useError";
 import { useFormFieldUpdate } from "@/hooks/useFormFieldUpdate";
-import { createSlug } from "@/utils";
 import { Validator } from "@/validator";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -12,8 +11,7 @@ const CreateProductCategoryScreen = () => {
   const buttonTitle = "Create";
   const defaultData = {
     description: "",
-    name: "",
-    slug: ""
+    name: ""
   };
   const { addErrors, errors, resetError } = useError<typeof defaultData>();
   const { formValues, updateFormFieldValue } = useFormFieldUpdate(defaultData);
@@ -27,16 +25,12 @@ const CreateProductCategoryScreen = () => {
     formData: formValues,
     rules: {
       description: "required|minLength:10",
-      name: "required:minLength:5",
-      slug: "required:minLength:3"
+      name: "required:minLength:5"
     }
   });
 
   const handleFormFieldChange = (data: HandlerProps) => {
     const { key, value } = data;
-    if (key === "name") {
-      updateFormFieldValue("slug", createSlug(formValues.name));
-    }
     updateFormFieldValue(key, value);
   };
 
@@ -71,6 +65,8 @@ const CreateProductCategoryScreen = () => {
       onsubmitHandler={onsubmitHandler}
       errors={errors as Record<string, any>}
       isLoading={isPending}
+      formTitle="Product Category Information"
+      pageDescription="Fill the form to create a product category"
     />
   );
 };

@@ -82,6 +82,8 @@ const UpdateProductCodeScreen = () => {
       errors={errors as Record<string, any>}
       isLoading={isPending}
       disabledButton={!Object.keys(payload).length}
+      formTitle="Product code information"
+      pageDescription="Update the product details"
     />
   );
 };

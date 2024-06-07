@@ -84,6 +84,8 @@ const UpdateProductUnitScreen = () => {
       errors={errors as Record<string, any>}
       isLoading={isPending}
       disabledButton={!Object.keys(payload).length}
+      formTitle="Product unit information"
+      pageDescription="Edit the product unit to update the unit"
     />
   );
 };
