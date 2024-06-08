@@ -72,6 +72,7 @@ const UpdateProductScreen = () => {
   };
 
   const payload = objectDifference(data, formValues);
+  
   const onsubmitHandler = () => {
     validator.validate();
 

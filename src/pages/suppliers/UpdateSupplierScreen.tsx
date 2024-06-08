@@ -10,6 +10,8 @@ import { addressValidationProps, objectDifference } from "@/helpers";
 import { useEffect } from "react";
 import { SupplierProps } from "@/interfaces/supplier";
 import SupplierEditFields from "./SupplierEditFields";
+import { hasValidPhone } from "@/utils";
+import { PhoneProps } from "@/interfaces";
 
 const UpdateSupplierScreen = () => {
   const params = useParams<{ id: string }>();
@@ -41,14 +43,18 @@ const UpdateSupplierScreen = () => {
       ...addressValidationProps.customFields
     }
   });
-
+  validator.addCustomValidation({
+    fieldKey: "phone",
+    fieldPassed(value: PhoneProps) {
+      return !!hasValidPhone(value);
+    }
+  });
   const handleFormFieldChange = (data: HandlerProps) => {
     const { key, value } = data;
     updateFormFieldValue(key, value);
   };
 
   const payload = objectDifference(data, formValues);
-  console.log(payload);
   
   const onsubmitHandler = () => {
     validator.validate();
