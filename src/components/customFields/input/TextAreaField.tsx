@@ -8,11 +8,11 @@ interface TextAreaFieldProps extends TextareaProps {
   label?: string | { text: string; icon?: FormIconProps; className?: string };
   isRequired?: boolean;
   handleInputChange: (data: { key: string; value: any }) => void;
-  name: string;
+  fieldKey: string;
   errorMessage?: string;
 }
 const TextAreaField: FC<TextAreaFieldProps> = ({
-  name,
+  fieldKey,
   value,
   onBlur,
   handleInputChange,
@@ -28,8 +28,8 @@ const TextAreaField: FC<TextAreaFieldProps> = ({
       target: { value }
     } = event;
 
-    if (handleInputChange && name) {
-      handleInputChange({ key: name, value });
+    if (handleInputChange && fieldKey) {
+      handleInputChange({ key: fieldKey, value });
     }
   };
   return (
@@ -40,7 +40,7 @@ const TextAreaField: FC<TextAreaFieldProps> = ({
         </div>
       )}
       <Textarea
-        name={name}
+        name={fieldKey}
         value={value}
         disabled={disabled}
         onChange={handleInputFieldChange}

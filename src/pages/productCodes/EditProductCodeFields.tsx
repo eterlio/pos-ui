@@ -45,7 +45,7 @@ const EditProductCodeFields: FC<EditProductCodeFieldsProps> = ({
             disabled={isLoading}
           />
           <TextAreaField
-            name="description"
+            fieldKey="description"
             handleInputChange={handleFormFieldChange}
             label="Code description"
             isRequired

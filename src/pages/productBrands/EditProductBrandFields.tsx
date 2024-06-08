@@ -46,7 +46,7 @@ const EditProductBrandFields: FC<EditProductBrandFieldsProps> = ({
         </div>
         <div>
           <TextAreaField
-            name="description"
+            fieldKey="description"
             handleInputChange={handleFormFieldChange}
             label="Brand description"
             isRequired

@@ -134,7 +134,7 @@ const ProductEditFields: FC<EditProductFieldsProps> = ({
                 />
                 <TextAreaField
                   handleInputChange={handleFormFieldChange}
-                  name="description"
+                  fieldKey="description"
                   label="Product Description"
                   value={formFields?.description}
                   isRequired

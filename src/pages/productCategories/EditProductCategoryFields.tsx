@@ -47,7 +47,7 @@ const EditProductCategoryFields: FC<EditProductCategoryFieldsProps> = ({
         </div>
         <div>
           <TextAreaField
-            name="description"
+            fieldKey="description"
             handleInputChange={handleFormFieldChange}
             label="Category description"
             isRequired

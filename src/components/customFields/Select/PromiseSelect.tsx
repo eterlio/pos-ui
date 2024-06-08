@@ -72,8 +72,12 @@ export const PromiseSelect: FC<PromiseSelectDataProps> = ({
   }, []);
 
   return (
-    <>
-      {label && <InputLabel id={id} required={isRequired || false} label={label} />}
+    <div>
+      {label && (
+        <div className="my-2">
+          <InputLabel id={id} required={isRequired || false} label={label} />
+        </div>
+      )}
       <SelectField
         options={mappedOptions}
         isLoading={loading}
@@ -86,6 +90,6 @@ export const PromiseSelect: FC<PromiseSelectDataProps> = ({
         key={fieldKey}
         fieldKey={fieldKey}
       />
-    </>
+    </div>
   );
 };

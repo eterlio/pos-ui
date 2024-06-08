@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useState, type ReactNode, useRef } from "react";
 import Header from "@/components/dashboard/Header";
 import Sidebar from "@/components/dashboard/Sidebar";
 import Content from "@/components/dashboard/Content";
@@ -7,6 +7,8 @@ import Preloader from "../Preloader";
 import { ActionButtonProps } from "@/interfaces";
 // import BreadCrumb from "./BreadCrumb";
 import { useMediaQuery } from "@uidotdev/usehooks";
+import { ArrowUp } from "lucide-react";
+
 interface DashboardLayoutProps {
   children: ReactNode;
   showScrollToTopButton?: boolean;
@@ -34,10 +36,23 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   showNotification = true,
   isLoading
 }) => {
-  const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");  const handleDisplaySidebar = () => {
+  const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
+  const handleDisplaySidebar = () => {
     setDisplaySidebar(!displaySidebar);
   };
   const [displaySidebar, setDisplaySidebar] = useState(false || isSmallDevice);
+  const mainRef = useRef<HTMLDivElement>(null);
+
+  const handleScrollToTop = () => {
+    if (mainRef.current) {
+      console.log(mainRef);
+
+      mainRef.current.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   return (
     <>
       {isLoading && <Preloader />}
@@ -47,6 +62,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           className={`main-content relative flex h-full max-w-full flex-1 overflow-hidden ml-0 ${
             displaySidebar ? "ml-0" : "md:ml-[260px] lg:ml-[260px]"
           }`}
+          ref={mainRef}
         >
           <div className="flex h-full max-w-full flex-1 flex-col">
             <main className="relative h-full w-full transition-width overflow-auto flex-1">
@@ -59,7 +75,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                     displaySidebar={displaySidebar}
                   />
                 )}
-                <Content showScrollToTopButton={showScrollToTopButton}>
+                <Content>
                   <HeaderTitle
                     pageTitle={pageTitle}
                     pageDescription={pageDescription}
@@ -67,9 +83,16 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                     actionButton={actionButton}
                   />
                   {/* <BreadCrumb /> */}
-
                   {children}
                 </Content>
+                {showScrollToTopButton && (
+                  <button
+                    onClick={handleScrollToTop}
+                    className="fixed bottom-10 right-10 bg-[#10172a] text-white p-2 rounded"
+                  >
+                    <ArrowUp size={18} />
+                  </button>
+                )}
               </div>
             </main>
           </div>
