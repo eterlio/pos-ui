@@ -14,6 +14,7 @@ interface RadioBoxFieldProps {
   value?: string;
   options: OptionsProps[];
   errorMessage?: string;
+  disabled?: boolean;
 }
 const RadioBoxField: FC<RadioBoxFieldProps> = ({
   value,
@@ -23,20 +24,32 @@ const RadioBoxField: FC<RadioBoxFieldProps> = ({
   handleFieldChange,
   fieldKey,
   options,
-  errorMessage
+  errorMessage,
+  disabled
 }) => {
   const handleOnChange = (value: any) => {
     handleFieldChange({ key: fieldKey, value });
   };
   return (
     <div>
-      <RadioGroup id={id} aria-describedby="helper-radio-text" value={value} onValueChange={handleOnChange}>
+      <RadioGroup
+        id={id}
+        aria-describedby="helper-radio-text"
+        value={value}
+        onValueChange={handleOnChange}
+        disabled={disabled}
+      >
         {options &&
           options.length > 0 &&
           options.map((option, index) => {
             return (
               <div key={index} className="flex items-center space-x-2">
-                <RadioGroupItem value={option.value} id={option.value} defaultValue={option.value} />
+                <RadioGroupItem
+                  value={option.value}
+                  id={option.value}
+                  defaultValue={option.value}
+                  disabled={disabled}
+                />
                 <InputLabel id={option.value} required={isRequired || false} label={option.label} />
               </div>
             );

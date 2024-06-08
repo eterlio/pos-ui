@@ -21,6 +21,7 @@ import { DollarSign } from "lucide-react";
 import CheckBoxField from "@/components/customFields/combo/CheckBoxField";
 import DatePicker from "@/components/customFields/date/DatePicker";
 import { barCodeOptions, productStatusOptions } from "@/defaults";
+import DimensionField from "@/components/customFields/dimension/DimensionField";
 
 interface EditProductFieldsProps {
   buttonTitle: string;
@@ -129,14 +130,16 @@ const ProductEditFields: FC<EditProductFieldsProps> = ({
                   value={formFields?.name}
                   isRequired
                   errorMessage={errors?.name}
+                  disabled={isLoading}
                 />
                 <TextAreaField
                   handleInputChange={handleFormFieldChange}
-                  name="description"
+                  fieldKey="description"
                   label="Product Description"
                   value={formFields?.description}
                   isRequired
                   errorMessage={errors?.description}
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -153,6 +156,7 @@ const ProductEditFields: FC<EditProductFieldsProps> = ({
                   options={codeOptions}
                   closeOnSelect
                   errorMessage={errors?.productCodeId}
+                  isDisabled={isLoading}
                 />
               </div>
             </div>
@@ -169,6 +173,7 @@ const ProductEditFields: FC<EditProductFieldsProps> = ({
                   options={categoriesOptions}
                   closeOnSelect
                   errorMessage={errors?.categoryId}
+                  isDisabled={isLoading}
                 />
                 <SelectField
                   fieldKey="supplierId"
@@ -179,6 +184,7 @@ const ProductEditFields: FC<EditProductFieldsProps> = ({
                   options={supplierOptions}
                   closeOnSelect
                   errorMessage={errors?.supplierId}
+                  isDisabled={isLoading}
                 />
                 <SelectField
                   fieldKey="brandId"
@@ -189,6 +195,7 @@ const ProductEditFields: FC<EditProductFieldsProps> = ({
                   options={brandOptions}
                   closeOnSelect
                   errorMessage={errors?.brandId}
+                  isDisabled={isLoading}
                 />
                 <SelectField
                   fieldKey="unitId"
@@ -199,6 +206,7 @@ const ProductEditFields: FC<EditProductFieldsProps> = ({
                   options={unitOptions}
                   closeOnSelect
                   errorMessage={errors?.unitId}
+                  isDisabled={isLoading}
                 />
               </div>
             </div>
@@ -213,6 +221,7 @@ const ProductEditFields: FC<EditProductFieldsProps> = ({
                   label="Alert Quantity"
                   value={formFields?.alertQuantity}
                   min={0}
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -231,6 +240,7 @@ const ProductEditFields: FC<EditProductFieldsProps> = ({
                   ]}
                   value={formFields?.availability}
                   errorMessage={errors?.availability}
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -278,6 +288,7 @@ const ProductEditFields: FC<EditProductFieldsProps> = ({
                     value={formFields?.productUnitPrice}
                     isRequired
                     errorMessage={errors?.productUnitPrice}
+                    disabled={isLoading}
                   />
                   <CustomField
                     fieldKey="productSellingPrice"
@@ -292,6 +303,7 @@ const ProductEditFields: FC<EditProductFieldsProps> = ({
                     value={formFields?.productSellingPrice}
                     isRequired
                     errorMessage={errors?.productSellingPrice}
+                    disabled={isLoading}
                   />
                 </div>
               </div>
@@ -308,30 +320,14 @@ const ProductEditFields: FC<EditProductFieldsProps> = ({
                   isRequired
                   errorMessage={errors?.weight}
                   value={formFields?.weight}
+                  disabled={isLoading}
                 />
-                <div className="grid grid-cols-3 gap-4">
-                  <NumberField
-                    fieldKey="dimensions.length"
-                    handleInputChange={handleFormFieldChange}
-                    label="Length"
-                    value={formFields?.dimensions?.length}
-                    min={0}
-                  />
-                  <NumberField
-                    fieldKey="dimensions.width"
-                    handleInputChange={handleFormFieldChange}
-                    label="Width"
-                    value={formFields?.dimensions?.width}
-                    min={0}
-                  />
-                  <NumberField
-                    fieldKey="dimensions.height"
-                    handleInputChange={handleFormFieldChange}
-                    label="Height"
-                    value={formFields?.dimensions?.height}
-                    min={0}
-                  />
-                </div>
+                <DimensionField
+                  fieldKey="dimensions"
+                  onChange={handleFormFieldChange}
+                  values={formFields?.dimensions}
+                  disabled={isLoading}
+                />
               </div>
             </div>
 
@@ -345,6 +341,8 @@ const ProductEditFields: FC<EditProductFieldsProps> = ({
                   label="Can Expire"
                   fieldKey="canExpire"
                   value={formFields?.canExpire}
+                  checked={formFields?.canExpire}
+                  disabled={isLoading}
                 />
                 {formFields?.canExpire && (
                   <DatePicker
@@ -352,6 +350,7 @@ const ProductEditFields: FC<EditProductFieldsProps> = ({
                     fieldKey="expirationDate"
                     label="Expiration Date"
                     value={formFields?.expirationDate}
+                    disabled={isLoading}
                   />
                 )}
                 <SelectField
@@ -362,6 +361,7 @@ const ProductEditFields: FC<EditProductFieldsProps> = ({
                   options={barCodeOptions}
                   closeOnSelect
                   isSearchable
+                  isDisabled={isLoading}
                 />
                 <SelectField
                   onChange={handleFormFieldChange}
@@ -373,6 +373,7 @@ const ProductEditFields: FC<EditProductFieldsProps> = ({
                   isSearchable
                   isRequired
                   errorMessage={errors?.status}
+                  isDisabled={isLoading}
                 />
               </div>
             </div>

@@ -75,6 +75,12 @@ export function objectDifference(
   const baseKeys = Object.keys(baseObject);
   const compareKeys = Object.keys(objectToCompare);
 
+
+  // Helper function to find array differences
+  const arrayDifference = (baseArray: any[], compareArray: any[]) => {
+    return compareArray.filter(item => !baseArray.includes(item));
+  };
+
   // Iterate over the keys of baseObject
   for (const key of baseKeys) {
     const baseValue = baseObject[key];
@@ -82,9 +88,10 @@ export function objectDifference(
 
     if (compareKeys.includes(key)) {
       if (Array.isArray(baseValue) && Array.isArray(compareValue)) {
-        // Handle arrays
-        if (JSON.stringify(baseValue) !== JSON.stringify(compareValue)) {
-          diff[key] = compareValue;
+        // Handle arrays with more granular comparison
+        const diffArray = arrayDifference(baseValue, compareValue);
+        if (diffArray.length > 0) {
+          diff[key] = diffArray;
         }
       } else if (
         typeof baseValue === "object" &&
@@ -108,12 +115,11 @@ export function objectDifference(
             isNaN(compareValue)
           )
         ) {
-
           diff[key] = compareValue;
         }
       }
     } else {
-      diff[key] = baseObject[key];
+      diff[key] = baseValue;
     }
   }
 
@@ -126,6 +132,7 @@ export function objectDifference(
 
   return diff;
 }
+
 
 type SizeUnit = "B" | "KB" | "MB" | "GB" | "TB";
 

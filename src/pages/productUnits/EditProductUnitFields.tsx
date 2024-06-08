@@ -58,7 +58,7 @@ const EditProductUnitFields: FC<EditProductUnitFieldsProps> = ({
         </div>
         <div>
           <TextAreaField
-            name="description"
+            fieldKey="description"
             handleInputChange={handleFormFieldChange}
             label="Unit description"
             isRequired

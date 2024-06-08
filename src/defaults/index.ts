@@ -9,6 +9,7 @@ import {
 } from "@/interfaces/products";
 import { startCase } from "lodash";
 import { SupplierProps } from "@/interfaces/supplier";
+import { StockDataProps, StockProps } from "@/interfaces/stock";
 
 export const defaultPlugin: DefaultPluginProps = {
   createdAt: new Date(),
@@ -130,5 +131,28 @@ export const supplierDefaults = (): SupplierProps => {
     accountId: "",
     warehouseId: "",
     status: "active"
+  };
+};
+
+export const stockDataDefault = (): StockDataProps => {
+  return {
+    productId: "",
+    quantityExpected: 0,
+    quantityReceived: 0,
+    remarks: "",
+    section: "",
+    status: "pending"
+  };
+};
+export const stockDefault = (): StockProps => {
+  return {
+    accountId: "",
+    batchId: "",
+    stockData: [stockDataDefault()],
+    supplierId: "",
+    warehouseId: "",
+    truckNumber: "",
+    ...defaultPlugin,
+    receivedDate: new Date()
   };
 };

@@ -32,14 +32,18 @@ const DatePicker: FC<DatePickerProps> = ({ value, resetDate, onChange, disabled,
     }
   };
   return (
-    <>
-      {label && <InputLabel id={id} required={isRequired || false} label={label} />}
+    <div>
+      {label && (
+        <div className="my-2">
+          <InputLabel id={id} required={isRequired || false} label={label} />
+        </div>
+      )}
       <Popover open={openPopOver} onOpenChange={handleOpenPopOver}>
         <PopoverTrigger asChild>
           <Button
             variant={"outline"}
             className={cn(
-              "w-full justify-start text-left font-normal min-h-[41px]",
+              "w-full justify-start text-left font-normal h-10 py-2 px-3 rounded-[3px]",
               !date && "text-muted-foreground disabled:opacity-50"
             )}
             disabled={disabled}
@@ -81,7 +85,7 @@ const DatePicker: FC<DatePickerProps> = ({ value, resetDate, onChange, disabled,
           />
         </PopoverContent>
       </Popover>
-    </>
+    </div>
   );
 };
 

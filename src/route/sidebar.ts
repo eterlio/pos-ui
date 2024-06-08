@@ -118,22 +118,23 @@ export const menuSidebarRoutes = (userRole?: string): MenuSidebarRoutes => ({
       ]
     },
     {
-      title: "Stocking",
+      title: "Inventory",
       url: "/",
       icon: Box,
-      isDisabled: true,
+      isDisabled: false,
       subLinks: [
         {
-          title: "Take Stock",
-          url: "/users"
+          title: "Record Stock",
+          url: "/record-stock"
         },
         {
           title: "Stock List",
-          url: "/users"
+          url: "/stocks"
         },
         {
           title: "Stock Adjustment",
-          url: "/users"
+          url: "/users",
+          isDisabled: true
         }
       ]
     },
@@ -179,6 +180,10 @@ export const menuSidebarRoutes = (userRole?: string): MenuSidebarRoutes => ({
       subLinks: [
         {
           title: "Profit/Loss",
+          url: "/users/create"
+        },
+        {
+          title: "Sales Target",
           url: "/users/create"
         },
 

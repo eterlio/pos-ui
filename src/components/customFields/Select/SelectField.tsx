@@ -71,7 +71,7 @@ const SelectField: FC<SelectProp> = ({
   return (
     <div>
       {label && (
-        <div className="my-1">
+        <div className="my-2">
           <InputLabel id={id} required={isRequired || false} label={label} />
         </div>
       )}

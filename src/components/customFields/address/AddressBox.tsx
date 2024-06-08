@@ -14,11 +14,13 @@ interface AddressBoxProps {
 }
 const AddressBox: FC<AddressBoxProps> = ({ values, fieldKey, onChange, errors, disabled }) => {
   const handleFormInputChange = ({ key, value }: HandlerProps) => {
-    onChange({ key, value });
+    const fieldValues = {
+      ...values,
+      [key]: value
+    };
+    onChange({ key: fieldKey, value: fieldValues });
   };
-  const handleSelectFieldChange = (data: HandlerProps) => {
-    onChange(data);
-  };
+
 
   const getValue = (fieldName: string) => {
     return (values as Record<string, any>)?.[fieldName];
@@ -29,7 +31,7 @@ const AddressBox: FC<AddressBoxProps> = ({ values, fieldKey, onChange, errors, d
       <div className="grid lg:grid-cols-3 md:grid-cols-2 mt-4 gap-x-5 gap-y-2">
         <InputField
           placeholder="P.O Box"
-          fieldKey={`${fieldKey}.poBox`}
+          fieldKey={`poBox`}
           handleInputChange={handleFormInputChange}
           label="P.O box"
           value={getValue("poBox")}
@@ -39,7 +41,7 @@ const AddressBox: FC<AddressBoxProps> = ({ values, fieldKey, onChange, errors, d
         />
         <InputField
           placeholder="GPS Address"
-          fieldKey={`${fieldKey}.gpsAddress`}
+          fieldKey={`gpsAddress`}
           label="GPS Address"
           value={getValue("gpsAddress")}
           handleInputChange={handleFormInputChange}
@@ -54,19 +56,14 @@ const AddressBox: FC<AddressBoxProps> = ({ values, fieldKey, onChange, errors, d
           isSearchable
           placeholder="Select country"
           closeOnSelect
-          onChange={(selectedValue: any) =>
-            handleSelectFieldChange({
-              key: `${fieldKey}.country`,
-              value: selectedValue
-            })
-          }
+          onChange={handleFormInputChange}
           errorMessage={get(errors, `address.country`)}
           isRequired
           isDisabled={disabled}
         />
         <InputField
           placeholder="City"
-          fieldKey={`${fieldKey}.city`}
+          fieldKey={`city`}
           handleInputChange={handleFormInputChange}
           label="City"
           value={getValue("city")}
@@ -76,7 +73,7 @@ const AddressBox: FC<AddressBoxProps> = ({ values, fieldKey, onChange, errors, d
         />
         <InputField
           placeholder="State"
-          fieldKey={`${fieldKey}.state`}
+          fieldKey={`state`}
           handleInputChange={handleFormInputChange}
           label="State"
           value={getValue("state")}
