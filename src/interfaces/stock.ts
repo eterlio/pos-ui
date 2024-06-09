@@ -1,4 +1,5 @@
 import { DefaultPluginProps } from ".";
+import { SupplierProps } from "./supplier";
 
 export type StockStatus = "received" | "partially received" | "pending";
 
@@ -19,4 +20,6 @@ export interface StockProps extends DefaultPluginProps {
   truckNumber: string;
   accountId: string;
   warehouseId: string;
+  // virtuals
+  supplier?: SupplierProps;
 }

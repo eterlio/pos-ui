@@ -5,7 +5,7 @@ import StockListScreen from "@/pages/stock/StockListScreen";
 export const STOCK_ROUTES: RoutesProps[] = [
   {
     component: RecordStockScreen,
-    url: "/record-stock",
+    url: "/stocks/record",
     requireAuth: true,
     permission: ["stocks", "create"]
   },

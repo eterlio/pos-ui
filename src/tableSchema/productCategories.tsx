@@ -28,7 +28,7 @@ export const productCategorySchema: ColumnDef<ProductCategoryProps>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Created At" />,
     cell: ({ row }) => {
       const date: Date = row.getValue("createdAt")
-      return <div className="flex space-x-2">{format(date, "d-m-y")}</div>;
+      return <div className="flex space-x-2">{format(date, "dd-MM-y")}</div>;
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));

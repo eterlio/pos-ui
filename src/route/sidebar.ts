@@ -125,7 +125,7 @@ export const menuSidebarRoutes = (userRole?: string): MenuSidebarRoutes => ({
       subLinks: [
         {
           title: "Record Stock",
-          url: "/record-stock"
+          url: "/stocks/record"
         },
         {
           title: "Stock List",
