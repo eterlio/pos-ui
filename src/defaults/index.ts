@@ -141,7 +141,7 @@ export const stockDataDefault = (): StockDataProps => {
     quantityReceived: 0,
     remarks: "",
     section: "",
-    status: "pending"
+    status: "partially received"
   };
 };
 export const stockDefault = (): StockProps => {
