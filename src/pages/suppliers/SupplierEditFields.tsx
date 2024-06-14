@@ -32,6 +32,7 @@ const SupplierEditFields: FC<SupplierEditFieldsProps> = ({
     <DashboardLayout
       pageTitle="Create Supplier"
       pageDescription="Fill the details to create a supplier"
+      isLoading={isLoading}
     >
       <Container>
         <div>

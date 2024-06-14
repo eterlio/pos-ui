@@ -4,6 +4,11 @@ import { format } from "date-fns";
 import { StockDataProps, StockProps } from "@/interfaces/stock";
 import { SupplierProps } from "@/interfaces/supplier";
 
+const statusMapper: Record<string, string> = {
+  pending: "text-orange-500",
+  approved: "text-green-500",
+  rejected: "text-red-500"
+};
 export const stockDataSchema: ColumnDef<StockProps>[] = [
   {
     accessorKey: "batchId",
@@ -41,6 +46,28 @@ export const stockDataSchema: ColumnDef<StockProps>[] = [
     cell: ({ row }) => {
       const stockData: StockDataProps[] = row.getValue("stockData") || [];
       return <div className="flex space-x-2">{stockData.length}</div>;
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    }
+  },
+  {
+    accessorKey: "createdBy",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Recorded by" />,
+    cell: ({ row }) => {
+      const recordedBy = row.original?.createdByData;
+      return <div className="flex space-x-2">{`${recordedBy?.fullName || "N/A"}`}</div>;
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    }
+  },
+  {
+    accessorKey: "status",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+    cell: ({ row }) => {
+      const status = row.getValue<"pending" | "rejected" | "approved">("status");
+      return <div className={`flex space-x-2 ${statusMapper[status]}`}>{status}</div>;
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));

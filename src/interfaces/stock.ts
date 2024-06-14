@@ -1,6 +1,7 @@
 import { DefaultPluginProps } from ".";
 import { ProductProps } from "./products";
 import { SupplierProps } from "./supplier";
+import { UserProps } from "./users";
 
 export type StockDataStatus = "received" | "partially received";
 
@@ -12,8 +13,12 @@ export interface StockDataProps {
   quantityReceived: number;
   status?: StockDataStatus;
 }
+
+export type StockStatus = "pending" | "approved" | "rejected";
+
 export interface StockProps extends DefaultPluginProps {
   _id?: string;
+  id?: string;
   batchId: string;
   stockData: StockDataProps[];
   receivedDate?: Date;
@@ -21,9 +26,10 @@ export interface StockProps extends DefaultPluginProps {
   truckNumber: string;
   accountId: string;
   warehouseId: string;
-  status?: "pending" | "approved" | "rejected";
+  status?: StockStatus;
 
   // virtuals
   supplier?: SupplierProps;
   products?: ProductProps[];
+  createdByData?: UserProps;
 }

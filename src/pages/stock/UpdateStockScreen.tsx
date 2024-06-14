@@ -9,16 +9,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useGeneralMutation } from "@/hooks/request/useGeneralMutation";
 import { objectDifference } from "@/helpers";
 import { toast } from "sonner";
+import { isObject } from "lodash";
 
 const UpdateStockScreen = () => {
   const params = useParams<{ id: string }>();
   const stockId = params.id;
   const buttonTitle = "Update Stock";
-  const { data } = useGeneralQuery<StockProps>({
+  const { data, isFetching } = useGeneralQuery<StockProps>({
     queryKey: ["stock", stockId],
     url: `/stocks/${stockId}`
   });
-  console.log(data);
 
   const { formValues, updateFormFieldValue, setFormValues } = useFormFieldUpdate(data);
   const navigate = useNavigate();
@@ -28,12 +28,24 @@ const UpdateStockScreen = () => {
     url: `/stocks/${stockId}`
   });
 
-  const handleFormFieldChange = (data: HandlerProps) => {
+  const handleFieldChange = (data: HandlerProps) => {
     const { key, value } = data;
-    updateFormFieldValue(key, value);
+
+    if (isObject(value as Record<string, any>) && value.fieldKey && value.fieldKey === "stockData") {
+      const updatedStockData = formValues?.stockData.map((item, idx) => {
+        if (idx === value.index) {
+          return { ...item, [key]: value.value };
+        }
+        return item;
+      });
+      updateFormFieldValue("stockData", updatedStockData);
+    } else {
+      updateFormFieldValue(key, value);
+    }
   };
 
   const payload = objectDifference(data, formValues);
+  
   const onsubmitHandler = () => {
     mutate(
       { payload },
@@ -55,14 +67,15 @@ const UpdateStockScreen = () => {
   return (
     <StockEditFieldsScreen
       buttonTitle={buttonTitle}
-      formFields={data as StockProps}
+      formFields={formValues as StockProps}
       formTitle="Stock Information"
-      handleFormFieldChange={handleFormFieldChange}
+      handleFormFieldChange={handleFieldChange}
       onsubmitHandler={onsubmitHandler}
       pageDescription="Edit the stock information to update the stock data"
       pageTitle="Update Stock"
-      disabledButton={isPending}
+      disabledButton={!Object.keys(payload).length}
       isLoading={isPending}
+      pageLoading={isFetching}
     />
   );
 };

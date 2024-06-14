@@ -13,7 +13,7 @@ interface NumberFieldProps extends InputProps {
   value?: number;
 }
 const NumberField: FC<NumberFieldProps> = ({
-  value ,
+  value = 0,
   onBlur,
   handleInputChange,
   disabled,
@@ -29,7 +29,7 @@ const NumberField: FC<NumberFieldProps> = ({
       target: { value }
     } = event;
 
-    const numericValue = value === "" ? undefined : parseFloat(value);
+    const numericValue = !value ? undefined : parseFloat(value);
 
     if (handleInputChange) {
       handleInputChange({ key: fieldKey, value: numericValue });

@@ -1,6 +1,5 @@
 import Container from "@/components/Container";
 import PrimaryButton from "@/components/PrimaryButton";
-import { PromiseSelect } from "@/components/customFields/Select/PromiseSelect";
 import SelectField from "@/components/customFields/Select/SelectField";
 import DatePicker from "@/components/customFields/date/DatePicker";
 import InputField from "@/components/customFields/input/InputField";
@@ -12,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { stockDataDefault } from "@/defaults";
 import { useGeneralQuery } from "@/hooks/request/useGeneralQuery";
 import { GetManyProps } from "@/hooks/types";
-import { useFormFieldUpdate } from "@/hooks/useFormFieldUpdate";
+import { ProductProps } from "@/interfaces/products";
 import { StockDataProps, StockProps } from "@/interfaces/stock";
 import { SupplierProps } from "@/interfaces/supplier";
 import { Plus, X } from "lucide-react";
@@ -29,6 +28,7 @@ interface EditProductCategoryFieldsProps {
   disabledButton?: boolean;
   formTitle: string;
   pageDescription: string;
+  pageLoading?: boolean;
 }
 const StockEditFieldsScreen: FC<EditProductCategoryFieldsProps> = ({
   handleFormFieldChange,
@@ -40,15 +40,24 @@ const StockEditFieldsScreen: FC<EditProductCategoryFieldsProps> = ({
   pageTitle,
   disabledButton,
   pageDescription,
-  formTitle
+  formTitle,
+  pageLoading
 }) => {
   const defaultStockDataValues = stockDataDefault();
+
   const { data: supplierData } = useGeneralQuery<GetManyProps<SupplierProps>>({
     queryKey: ["suppliers", {}],
     url: "/suppliers",
     query: { deleted: false, columns: "name" },
     requireAuth: true
   });
+  const { data: productData } = useGeneralQuery<GetManyProps<ProductProps>>({
+    queryKey: ["products", {}],
+    url: "/products",
+    query: { deleted: false, columns: "name" },
+    requireAuth: true
+  });
+
   const supplierOptions =
     supplierData?.data.map((supplier) => {
       return {
@@ -56,21 +65,32 @@ const StockEditFieldsScreen: FC<EditProductCategoryFieldsProps> = ({
         value: supplier._id
       };
     }) || [];
-  const { updateFormFieldValue } = useFormFieldUpdate(formFields);
+  const productsOptions =
+    productData?.data.map((product) => {
+      return {
+        label: `${product.name}`,
+        value: product._id
+      };
+    }) || [];
 
   const handleAddStockDataForm = () => {
     const newValues = [...formFields.stockData, defaultStockDataValues];
-    updateFormFieldValue("stockData", newValues);
+    handleFormFieldChange({ key: "stockData", value: newValues });
   };
 
   const handleRemoveStockDataForm = (index: number) => {
     const newValues = formFields.stockData.filter((_, itemIndex) => {
       return itemIndex !== index;
     });
-    updateFormFieldValue("stockData", newValues);
+    handleFormFieldChange({ key: "stockData", value: newValues });
   };
   return (
-    <DashboardLayout pageTitle={pageTitle} pageDescription={pageDescription} showScrollToTopButton>
+    <DashboardLayout
+      pageTitle={pageTitle}
+      pageDescription={pageDescription}
+      showScrollToTopButton
+      isLoading={pageLoading}
+    >
       <Container className="border border-gray-50">
         <div className="">
           <h1 className="text-xl font-light mb-2">{formTitle}</h1>
@@ -118,22 +138,21 @@ const StockEditFieldsScreen: FC<EditProductCategoryFieldsProps> = ({
                   <div className="my-5 border border-gray-200 p-2" key={index}>
                     <h1>Stock Item #{index + 1}</h1>
                     <div key={index} className="grid md:grid-cols-2 gap-x-5">
-                      <PromiseSelect
-                        fieldKey={`productId`}
-                        labelKey="name"
-                        searchKey="name"
-                        url="/products"
-                        valueKey="_id"
-                        isRequired
-                        query={{ deleted: false }}
-                        label="Product"
-                        value={data?.productId}
+                      <SelectField
+                        fieldKey="productId"
                         onChange={(fieldData) =>
                           handleFormFieldChange({
                             key: fieldData.key,
                             value: { fieldKey: "stockData", index, value: fieldData.value }
                           })
                         }
+                        label="Product"
+                        options={productsOptions}
+                        closeOnSelect
+                        //   errorMessage={errors?.supplierId}
+                        selectValue={data?.productId}
+                        isSearchable
+                        isRequired
                       />
                       <NumberField
                         fieldKey={`quantityExpected`}
@@ -146,6 +165,7 @@ const StockEditFieldsScreen: FC<EditProductCategoryFieldsProps> = ({
                         label="Expected Quantity"
                         value={data?.quantityExpected}
                         isRequired
+                        min={0}
                       />
                       <NumberField
                         fieldKey={`quantityReceived`}
@@ -158,6 +178,7 @@ const StockEditFieldsScreen: FC<EditProductCategoryFieldsProps> = ({
                         label="Quantity Received"
                         value={data?.quantityReceived}
                         isRequired
+                        min={0}
                       />
                       <InputField
                         fieldKey={`section`}
@@ -204,12 +225,14 @@ const StockEditFieldsScreen: FC<EditProductCategoryFieldsProps> = ({
           </div>
         </div>
         <div className="mt-4 flex items-end justify-end gap-5">
-          <PrimaryButton
-            text={buttonTitle}
-            disabled={disabledButton || isLoading}
-            loading={isLoading}
-            onClick={onsubmitHandler}
-          />
+          {formFields?.status && formFields?.status === "pending" && (
+            <PrimaryButton
+              text={buttonTitle}
+              disabled={disabledButton || isLoading}
+              loading={isLoading}
+              onClick={onsubmitHandler}
+            />
+          )}
         </div>
       </Container>
     </DashboardLayout>

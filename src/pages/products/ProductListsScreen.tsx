@@ -91,6 +91,7 @@ const ProductListsScreen = () => {
           loading: isFetching
         }
       }}
+      isLoading={isFetching}
     >
       <Modal
         showModal={modalData.showModal}

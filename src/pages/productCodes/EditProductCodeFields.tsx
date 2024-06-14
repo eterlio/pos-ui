@@ -31,7 +31,7 @@ const EditProductCodeFields: FC<EditProductCodeFieldsProps> = ({
   formTitle
 }) => {
   return (
-    <DashboardLayout pageTitle={pageTitle} pageDescription={pageDescription}>
+    <DashboardLayout pageTitle={pageTitle} pageDescription={pageDescription} isLoading={isLoading}>
       <Container className="border border-gray-50">
         <h1>{formTitle}</h1>
         <div className="space-y-5">

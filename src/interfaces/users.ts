@@ -32,6 +32,7 @@ export interface UserProps extends DefaultPluginProps {
   };
   // virtuals
   permission?: any;
+  fullName?: string;
 }
 
 export interface AuthUserResponse extends UserProps {

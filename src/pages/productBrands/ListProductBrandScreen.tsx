@@ -88,6 +88,7 @@ const ListProductBrandScreen = () => {
       actionButton={{
         createButton: { name: "Create Product Brand", onClick: () => navigate("/product-brands/create") }
       }}
+      isLoading={isFetching}
     >
       <Modal
         showModal={modalData.showModal}

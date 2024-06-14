@@ -75,10 +75,9 @@ export function objectDifference(
   const baseKeys = Object.keys(baseObject);
   const compareKeys = Object.keys(objectToCompare);
 
-
   // Helper function to find array differences
   const arrayDifference = (baseArray: any[], compareArray: any[]) => {
-    return compareArray.filter(item => !baseArray.includes(item));
+    return compareArray.filter((item) => !baseArray.includes(item));
   };
 
   // Iterate over the keys of baseObject
@@ -91,7 +90,7 @@ export function objectDifference(
         // Handle arrays with more granular comparison
         const diffArray = arrayDifference(baseValue, compareValue);
         if (diffArray.length > 0) {
-          diff[key] = diffArray;
+          diff[key] = compareValue;
         }
       } else if (
         typeof baseValue === "object" &&
@@ -132,7 +131,6 @@ export function objectDifference(
 
   return diff;
 }
-
 
 type SizeUnit = "B" | "KB" | "MB" | "GB" | "TB";
 
@@ -215,5 +213,4 @@ export const addressValidationProps = {
     "address.poBox": "po Box",
     "address.state": "State"
   }
-
 };

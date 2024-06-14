@@ -30,6 +30,7 @@ const EditProductBrandFields: FC<EditProductBrandFieldsProps> = ({
     <DashboardLayout
       pageTitle="Create Product Brand"
       pageDescription="Fill the details to create a product brand"
+      isLoading={isLoading}
     >
       <Container className="border border-gray-50">
         <h1>{pageTitle}</h1>

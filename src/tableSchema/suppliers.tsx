@@ -2,7 +2,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/components/table/DataTableColumnHeader";
 import { format } from "date-fns";
 import { SupplierProps, SupplierStatus } from "@/interfaces/supplier";
-import { MessageSquare } from "lucide-react";
 import { formatPhoneToString } from "@/helpers";
 import TableStatus from "@/components/TableStatus";
 import { startCase } from "lodash";
@@ -35,10 +34,7 @@ export const suppliersTableSchema: ColumnDef<SupplierProps>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2 gap-2 items-center">
-          {row.getValue("email")}{" "}
-          <a href={`mailto:${row.getValue("email")}`}>
-            <MessageSquare size={18} />
-          </a>
+          {row.getValue("email")}
         </div>
       );
     },

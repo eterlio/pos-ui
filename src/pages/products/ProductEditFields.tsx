@@ -114,7 +114,7 @@ const ProductEditFields: FC<EditProductFieldsProps> = ({
     }) || [];
 
   return (
-    <DashboardLayout pageTitle={pageTitle} pageDescription={pageDescription}>
+    <DashboardLayout pageTitle={pageTitle} pageDescription={pageDescription} isLoading={isLoading}>
       <Container className="border border-gray-50">
         <h1>{formTitle}</h1>
         <div className="grid md:grid-cols-2 gap-4">

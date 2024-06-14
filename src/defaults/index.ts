@@ -18,7 +18,9 @@ export const defaultPlugin: DefaultPluginProps = {
   deleted: false,
   deletedAt: new Date(),
   deletedBy: "",
-  createdBy: ""
+  createdBy: "",
+  _id: "",
+  id: ""
 };
 
 export const address: AddressProps = {
@@ -57,7 +59,8 @@ export const createDefaultUser: () => UserProps = () => ({
   permission: null,
   isLoggedIn: false,
   status: "pending",
-  ...defaultPlugin
+  ...defaultPlugin,
+  fullName: ""
 });
 
 export const barCodeOptions: { label: string; value: BarcodeSymbology }[] = productBarcodeSymbology.map((code) => {
@@ -153,6 +156,7 @@ export const stockDefault = (): StockProps => {
     warehouseId: "",
     truckNumber: "",
     ...defaultPlugin,
-    receivedDate: new Date()
+    receivedDate: new Date(),
+    status: "pending"
   };
 };

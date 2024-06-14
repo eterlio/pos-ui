@@ -3,18 +3,22 @@ import Drawer from "@/components/Drawer";
 import DashboardLayout from "@/components/dashboard/Layout";
 import Table from "@/components/table/Table";
 import { ActionButton } from "@/components/table/type";
-import { Button } from "@/components/ui/button";
 import { useGeneralQuery } from "@/hooks/request/useGeneralQuery";
 import { GetManyProps } from "@/hooks/types";
 import { useSetQueryParam } from "@/hooks/useSetQueryParam";
-import { StockProps } from "@/interfaces/stock";
+import { StockProps, StockStatus } from "@/interfaces/stock";
 import { stockDataSchema } from "@/tableSchema/stocks";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StockCard from "./StockCard";
+import PrimaryButton from "@/components/PrimaryButton";
+import { useGeneralMutation } from "@/hooks/request/useGeneralMutation";
+import { Button } from "@/components/ui/button";
+import { useOptimisticUpdates } from "@/hooks/request/useOptimisticUpdates";
 
 const StockListScreen = () => {
   const navigate = useNavigate();
+  const { addToOrUpdateList } = useOptimisticUpdates();
   const [selectedStock, setSelectedStock] = useState<Partial<StockProps>>({});
   const [openDrawer, setOpenDrawer] = useState(false);
   const { queryObject } = useSetQueryParam();
@@ -50,12 +54,31 @@ const StockListScreen = () => {
   const getStockData = (productId: string) => {
     return selectedStock.stockData?.find((stock) => stock.productId === productId);
   };
+  const { isPending, mutate } = useGeneralMutation({
+    httpMethod: "put",
+    mutationKey: ["updateStock", selectedStock._id as string],
+    url: `/stocks/${selectedStock._id}/change-status`
+  });
+
+  const handleStockStatusChange = (status: StockStatus) => {
+    mutate(
+      { payload: { status } },
+      {
+        onSuccess(data) {
+          const stock = data.data.response as StockProps;
+          addToOrUpdateList<StockProps>(["stocks", queryObject], stock);
+        }
+      }
+    );
+    console.log(status);
+  };
   return (
     <DashboardLayout
       pageTitle="Stock Data"
       actionButton={{
         createButton: { name: "Record Stock", onClick: () => navigate("/stocks/record"), disabled: isFetching }
       }}
+      isLoading={isFetching}
     >
       <Drawer
         description=""
@@ -96,10 +119,30 @@ const StockListScreen = () => {
                 );
               })}
           </div>
-          <div className="button-container flex justify-between items-center gap-4">
-            <Button className="w-full">Approve</Button>
-            <Button variant={"outline"} className="w-full border-primary">
-              Reject
+          {selectedStock && selectedStock?.status === "pending" && (
+            <div className="button-container flex justify-between items-center gap-4">
+              <PrimaryButton
+                text="Approve"
+                onClick={() => handleStockStatusChange("approved")}
+                loading={isPending}
+                disabled={isPending}
+              />
+              <PrimaryButton
+                text="Reject"
+                variant={"outline"}
+                className="w-full border-primary"
+                onClick={() => handleStockStatusChange("rejected")}
+                loading={isPending}
+                disabled={isPending}
+              />
+            </div>
+          )}
+          <div className="my-5 text-center">
+            <Button
+              className="bg-transparent text-primary space-x-2 hover:bg-transparent"
+              onClick={() => navigate(`/stocks/${selectedStock._id}`)}
+            >
+              Edit Stock
             </Button>
           </div>
         </div>

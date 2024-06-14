@@ -87,6 +87,7 @@ const ListSuppliersScreen = () => {
       actionButton={{
         createButton: { name: "Create Supplier", onClick: () => navigate("/suppliers/create") }
       }}
+      isLoading={isFetching}
     >
       <Modal
         showModal={modalData.showModal}
