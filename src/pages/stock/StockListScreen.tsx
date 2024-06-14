@@ -68,10 +68,10 @@ const StockListScreen = () => {
         onSuccess(data) {
           const stock = data.data.response as StockProps;
           addToOrUpdateList<StockProps>(["stocks", queryObject], stock);
+          setOpenDrawer(()=> false);
         }
       }
     );
-    console.log(status);
   };
   return (
     <DashboardLayout
@@ -114,7 +114,8 @@ const StockListScreen = () => {
                       quantityExpected: stock?.quantityExpected,
                       quantityReceived: stock?.quantityReceived,
                       status: stock?.status,
-                      batchId: stock?.batchId
+                      batchId: stock?.batchId,
+                      remark: stock?.remarks
                     }}
                     key={index}
                   />
