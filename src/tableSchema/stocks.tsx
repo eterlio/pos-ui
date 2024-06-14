@@ -11,9 +11,9 @@ const statusMapper: Record<string, string> = {
 };
 export const stockDataSchema: ColumnDef<StockProps>[] = [
   {
-    accessorKey: "batchId",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Batch Number" />,
-    cell: ({ row }) => <div className="flex space-x-2">{row.getValue("batchId")}</div>,
+    accessorKey: "deliveryId",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Delivery Code" />,
+    cell: ({ row }) => <div className="flex space-x-2">{row.getValue("deliveryId")}</div>,
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
     },

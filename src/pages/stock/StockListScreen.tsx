@@ -83,7 +83,7 @@ const StockListScreen = () => {
     >
       <Drawer
         description=""
-        title={selectedStock?.batchId || ""}
+        title={selectedStock?.deliveryId || ""}
         handleDrawerClose={() => setOpenDrawer(!openDrawer)}
         open={openDrawer}
       >
@@ -113,7 +113,8 @@ const StockListScreen = () => {
                     stock={{
                       quantityExpected: stock?.quantityExpected,
                       quantityReceived: stock?.quantityReceived,
-                      status: stock?.status
+                      status: stock?.status,
+                      batchId: stock?.batchId
                     }}
                     key={index}
                   />

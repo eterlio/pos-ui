@@ -96,10 +96,10 @@ const StockEditFieldsScreen: FC<EditProductCategoryFieldsProps> = ({
           <h1 className="text-xl font-light mb-2">{formTitle}</h1>
           <div className="my-5 grid md:grid-cols-3 gap-5">
             <InputField
-              fieldKey="batchId"
+              fieldKey="deliveryId"
               handleInputChange={handleFormFieldChange}
-              label="Batch Id"
-              value={formFields?.batchId}
+              label="Delivery Code"
+              value={formFields?.deliveryId}
               isRequired
             />
             <SelectField
@@ -152,6 +152,18 @@ const StockEditFieldsScreen: FC<EditProductCategoryFieldsProps> = ({
                         //   errorMessage={errors?.supplierId}
                         selectValue={data?.productId}
                         isSearchable
+                        isRequired
+                      />
+                      <InputField
+                        fieldKey={`batchId`}
+                        handleInputChange={(fieldData) =>
+                          handleFormFieldChange({
+                            key: fieldData.key,
+                            value: { fieldKey: "stockData", index, value: fieldData.value }
+                          })
+                        }
+                        label="Batch Code"
+                        value={data?.batchId}
                         isRequired
                       />
                       <NumberField
