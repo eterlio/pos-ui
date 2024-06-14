@@ -15,6 +15,7 @@ import PrimaryButton from "@/components/PrimaryButton";
 import { useGeneralMutation } from "@/hooks/request/useGeneralMutation";
 import { Button } from "@/components/ui/button";
 import { useOptimisticUpdates } from "@/hooks/request/useOptimisticUpdates";
+import { format } from "date-fns";
 
 const StockListScreen = () => {
   const navigate = useNavigate();
@@ -93,7 +94,7 @@ const StockListScreen = () => {
           </div>
           <div>
             <h1 className="font-medium">Received Data</h1>
-            <p>{selectedStock?.truckNumber}</p>
+            <p>{selectedStock.receivedDate ? format(selectedStock?.receivedDate, "dd-MM-y") : "N/A"}</p>
           </div>
           <div>
             <h1 className="font-medium">Truck #</h1>
