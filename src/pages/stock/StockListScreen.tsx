@@ -68,6 +68,7 @@ const StockListScreen = () => {
         onSuccess(data) {
           const stock = data.data.response as StockProps;
           addToOrUpdateList<StockProps>(["stocks", queryObject], stock);
+          setOpenDrawer(false);
         }
       }
     );

@@ -37,7 +37,7 @@ const StockCard: FC<StockCardProps> = ({ product, stock: { quantityExpected = 0,
         <div className="status text-[12px] text-gray-500">{startCase(status)}</div>
       </div>
       <div>
-        <p className="text-[12px] text-center">{remark}</p>
+        <p className="text-[12px] text-center mt-3">{remark}</p>
       </div>
     </div>
   );
