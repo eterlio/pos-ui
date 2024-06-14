@@ -9,9 +9,10 @@ interface StockCardProps {
     quantityExpected?: number;
     quantityReceived?: number;
     status?: "received" | "partially received";
+    remark?: string;
   };
 }
-const StockCard: FC<StockCardProps> = ({ product, stock: { quantityExpected = 0, quantityReceived = 0, status } }) => {
+const StockCard: FC<StockCardProps> = ({ product, stock: { quantityExpected = 0, quantityReceived = 0, status, remark = "" } }) => {
   return (
     <div className="mb-2 rounded border-[1.8px] p-4 border-primary min-h-[200px] flex flex-col">
       <div className="flex items-center justify-between flex-wrap">
@@ -34,6 +35,9 @@ const StockCard: FC<StockCardProps> = ({ product, stock: { quantityExpected = 0,
           <p>Discrepancy</p>
         </div>
         <div className="status text-[12px] text-gray-500">{startCase(status)}</div>
+      </div>
+      <div>
+        <p className="text-sm">{remark}</p>
       </div>
     </div>
   );

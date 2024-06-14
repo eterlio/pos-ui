@@ -113,7 +113,8 @@ const StockListScreen = () => {
                     stock={{
                       quantityExpected: stock?.quantityExpected,
                       quantityReceived: stock?.quantityReceived,
-                      status: stock?.status
+                      status: stock?.status,
+                      remark: stock?.remarks
                     }}
                     key={index}
                   />
