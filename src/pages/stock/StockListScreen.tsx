@@ -40,7 +40,7 @@ const StockListScreen = () => {
     {
       label: "View",
       action: (data: Record<string, any>) => {
-        setSelectedStock(data);
+        navigate(`/stocks/${data.id}/view`);
       }
     },
     {
@@ -68,7 +68,7 @@ const StockListScreen = () => {
         onSuccess(data) {
           const stock = data.data.response as StockProps;
           addToOrUpdateList<StockProps>(["stocks", queryObject], stock);
-          setOpenDrawer(()=> false);
+          setOpenDrawer(() => false);
         }
       }
     );

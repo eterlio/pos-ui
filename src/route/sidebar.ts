@@ -1,3 +1,4 @@
+import { hasPermission } from "@/helpers/permission";
 import {
   ArrowRightLeft,
   Box,
@@ -33,237 +34,240 @@ export interface MenuSidebarRoutes {
   title: string;
   routeLinks: MenuSidebarRoute[];
 }
-export const menuSidebarRoutes = (userRole?: string): MenuSidebarRoutes => ({
-  title: "Menu",
-  routeLinks: [
-    {
-      title: "Dashboard",
-      url: `/dashboard/${userRole}`,
-      icon: LayoutDashboard
-    },
-    {
-      title: "Users",
-      url: "/",
-      icon: UsersIcon,
-      subLinks: [
-        {
-          title: "Create users",
-          url: "/users/create"
-        },
+export const menuSidebarRoutes = (userRole: string, userPermission: string): MenuSidebarRoutes => {
+  return {
+    title: "Menu",
+    routeLinks: [
+      {
+        title: "Dashboard",
+        url: `/dashboard/${userRole}`,
+        icon: LayoutDashboard
+      },
+      {
+        title: "Users",
+        url: "/",
+        icon: UsersIcon,
+        isVisible: hasPermission(userPermission, ["users", "read"]),
+        subLinks: [
+          {
+            title: "Create users",
+            url: "/users/create"
+          },
 
-        {
-          title: "List users",
-          url: "/users"
-        }
-      ]
-    },
-    {
-      title: "Products",
-      url: "/",
-      icon: Tags,
-      isDisabled: false,
-      subLinks: [
-        {
-          title: "Products List",
-          url: "/products",
-          isDisabled: false
-        },
-        {
-          title: "Add Product",
-          url: "/products/create",
-          isDisabled: false
-        },
-        {
-          title: "Import Products",
-          url: "/users",
-          isDisabled: true
-        },
+          {
+            title: "List users",
+            url: "/users"
+          }
+        ]
+      },
+      {
+        title: "Products",
+        url: "/",
+        icon: Tags,
+        isDisabled: false,
+        subLinks: [
+          {
+            title: "Products List",
+            url: "/products",
+            isDisabled: false
+          },
+          {
+            title: "Add Product",
+            url: "/products/create",
+            isDisabled: false
+          },
+          {
+            title: "Import Products",
+            url: "/users",
+            isDisabled: true
+          },
 
-        {
-          title: "Product Codes",
-          url: "/product-codes"
-        },
-        {
-          title: "Product Categories",
-          url: "/product-categories"
-        },
-        {
-          title: "Product Brands",
-          url: "/product-brands"
-        },
-        {
-          title: "Product Units",
-          url: "/product-units"
-        },
-        {
-          title: "Product Variations",
-          url: "/users",
-          isDisabled: true
-        },
-        {
-          title: "Product Warrants",
-          url: "/users",
-          isDisabled: true
-        },
-        {
-          title: "Print Barcode/QrCode",
-          url: "/users",
-          isDisabled: true
-        },
-        {
-          title: "Product Alert",
-          url: "/users",
-          isDisabled: true
-        }
-      ]
-    },
-    {
-      title: "Inventory",
-      url: "/",
-      icon: Box,
-      isDisabled: false,
-      subLinks: [
-        {
-          title: "Record Stock",
-          url: "/stocks/record"
-        },
-        {
-          title: "Stock List",
-          url: "/stocks"
-        },
-        {
-          title: "Stock Adjustment",
-          url: "/users",
-          isDisabled: true
-        }
-      ]
-    },
-    {
-      title: "Stock Transfer",
-      url: "/",
-      icon: ArrowRightLeft,
-      isVisible: false,
-      isDisabled: true,
-      subLinks: [
-        {
-          title: "List stock transfers",
-          url: "/users/create"
-        },
-        {
-          title: "Add stock transfers",
-          url: "/users/create"
-        },
-        {
-          title: "Received transfers",
-          url: "/users/create"
-        }
-      ]
-    },
-    {
-      title: "Customer",
-      url: "/",
-      icon: UserPlus,
-      isDisabled: true
-    },
-    {
-      title: "Supplier",
-      url: "/suppliers",
-      icon: Truck,
-      isDisabled: false
-    },
+          {
+            title: "Product Codes",
+            url: "/product-codes"
+          },
+          {
+            title: "Product Categories",
+            url: "/product-categories"
+          },
+          {
+            title: "Product Brands",
+            url: "/product-brands"
+          },
+          {
+            title: "Product Units",
+            url: "/product-units"
+          },
+          {
+            title: "Product Variations",
+            url: "/users",
+            isDisabled: true
+          },
+          {
+            title: "Product Warrants",
+            url: "/users",
+            isDisabled: true
+          },
+          {
+            title: "Print Barcode/QrCode",
+            url: "/users",
+            isDisabled: true
+          },
+          {
+            title: "Product Alert",
+            url: "/users",
+            isDisabled: true
+          }
+        ]
+      },
+      {
+        title: "Inventory",
+        url: "/",
+        icon: Box,
+        isDisabled: false,
+        subLinks: [
+          {
+            title: "Record Stock",
+            url: "/stocks/record"
+          },
+          {
+            title: "Stock List",
+            url: "/stocks"
+          },
+          {
+            title: "Stock Adjustment",
+            url: "/users",
+            isDisabled: true
+          }
+        ]
+      },
+      {
+        title: "Stock Transfer",
+        url: "/",
+        icon: ArrowRightLeft,
+        isVisible: false,
+        isDisabled: true,
+        subLinks: [
+          {
+            title: "List stock transfers",
+            url: "/users/create"
+          },
+          {
+            title: "Add stock transfers",
+            url: "/users/create"
+          },
+          {
+            title: "Received transfers",
+            url: "/users/create"
+          }
+        ]
+      },
+      {
+        title: "Customer",
+        url: "/",
+        icon: UserPlus,
+        isDisabled: true
+      },
+      {
+        title: "Supplier",
+        url: "/suppliers",
+        icon: Truck,
+        isDisabled: false
+      },
 
-    {
-      title: "Accounting",
-      url: "/",
-      icon: Calculator,
-      isDisabled: true,
-      subLinks: [
-        {
-          title: "Profit/Loss",
-          url: "/users/create"
-        },
-        {
-          title: "Sales Target",
-          url: "/users/create"
-        },
+      {
+        title: "Accounting",
+        url: "/",
+        icon: Calculator,
+        isDisabled: true,
+        subLinks: [
+          {
+            title: "Profit/Loss",
+            url: "/users/create"
+          },
+          {
+            title: "Sales Target",
+            url: "/users/create"
+          },
 
-        {
-          title: "Income/Expense",
-          url: "/users"
-        }
-      ]
-    },
-    {
-      title: "Installments",
-      url: "/",
-      icon: Puzzle,
-      isDisabled: true,
-      subLinks: [
-        {
-          title: "Profit/Loss",
-          url: "/users/create"
-        },
+          {
+            title: "Income/Expense",
+            url: "/users"
+          }
+        ]
+      },
+      {
+        title: "Installments",
+        url: "/",
+        icon: Puzzle,
+        isDisabled: true,
+        subLinks: [
+          {
+            title: "Profit/Loss",
+            url: "/users/create"
+          },
 
-        {
-          title: "Income/Expense",
-          url: "/users"
-        }
-      ]
-    },
-    {
-      title: "Expenditure",
-      url: "/",
-      icon: MinusCircle,
-      isDisabled: true,
-      subLinks: [
-        {
-          title: "Add Expense",
-          url: "/users/create"
-        },
+          {
+            title: "Income/Expense",
+            url: "/users"
+          }
+        ]
+      },
+      {
+        title: "Expenditure",
+        url: "/",
+        icon: MinusCircle,
+        isDisabled: true,
+        subLinks: [
+          {
+            title: "Add Expense",
+            url: "/users/create"
+          },
 
-        {
-          title: "Expense List",
-          url: "/users"
-        },
-        {
-          title: "Add Category",
-          url: "/users"
-        },
-        {
-          title: "Category List",
-          url: "/users"
-        },
-        {
-          title: "Summary",
-          url: "/users"
-        }
-      ]
-    },
-    {
-      title: "Analytics",
-      url: "/",
-      icon: ScanSearch,
-      isDisabled: true
-    },
-    {
-      title: "Reports",
-      url: "/",
-      icon: NotebookText,
-      isDisabled: true,
-      subLinks: [
-        {
-          title: "Create users",
-          url: "/users/create"
-        },
+          {
+            title: "Expense List",
+            url: "/users"
+          },
+          {
+            title: "Add Category",
+            url: "/users"
+          },
+          {
+            title: "Category List",
+            url: "/users"
+          },
+          {
+            title: "Summary",
+            url: "/users"
+          }
+        ]
+      },
+      {
+        title: "Analytics",
+        url: "/",
+        icon: ScanSearch,
+        isDisabled: true
+      },
+      {
+        title: "Reports",
+        url: "/",
+        icon: NotebookText,
+        isDisabled: true,
+        subLinks: [
+          {
+            title: "Create users",
+            url: "/users/create"
+          },
 
-        {
-          title: "List users",
-          url: "/users"
-        }
-      ]
-    }
-  ]
-});
+          {
+            title: "List users",
+            url: "/users"
+          }
+        ]
+      }
+    ]
+  };
+};
 export const generalSidebarRoutes = (): MenuSidebarRoutes => ({
   title: "General",
   routeLinks: [

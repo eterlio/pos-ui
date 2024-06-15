@@ -11,7 +11,7 @@ const DashboardSidebar = ({
   handleDisplaySidebar: MouseEventHandler;
 }) => {
   const { authUser } = useContext(StoreContext) as StoreContextProps;
-  const menuSidebarRoutesLinks = menuSidebarRoutes(authUser?.role || "");
+  const menuSidebarRoutesLinks = menuSidebarRoutes(authUser?.role || "", authUser?.permission?.access || "");
   const generalSidebarRoutesLinks = generalSidebarRoutes();
   return (
     <div
@@ -30,7 +30,7 @@ const DashboardSidebar = ({
               </div>
               <div className="menu-items">
                 <SidebarMenu title={menuSidebarRoutesLinks.title} routesData={menuSidebarRoutesLinks.routeLinks} />
-      
+
                 <SidebarMenu
                   title={generalSidebarRoutesLinks.title}
                   routesData={generalSidebarRoutesLinks.routeLinks}
@@ -40,7 +40,6 @@ const DashboardSidebar = ({
           </div>
         </div>
       </div>
-      
     </div>
   );
 };

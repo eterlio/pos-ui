@@ -59,7 +59,10 @@ export const createDefaultUser: () => UserProps = () => ({
   isLoggedIn: false,
   status: "pending",
   ...defaultPlugin,
-  fullName: ""
+  fullName: "",
+  accountId: "",
+  warehouseId: [],
+  currentWarehouse: ""
 });
 
 export const barCodeOptions: { label: string; value: BarcodeSymbology }[] = productBarcodeSymbology.map((code) => {

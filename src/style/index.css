@@ -76,6 +76,9 @@
     border-radius: 3px;
     @apply mb-3;
   }
+  .select_field-container .bg-gray-200{
+   @apply bg-gray-100 opacity-75 cursor-not-allowed;
+  }
   .table-head__title button {
     @apply text-[13px];
   }
