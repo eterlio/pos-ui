@@ -5,13 +5,13 @@ export interface OptionsProps {
   label: string;
   value: any;
 }
-type IconType = React.ComponentType<{ className?: string }>;
+export type IconType = React.ComponentType<{ className?: string }>;
 export interface DataFilterProps {
   column: string;
   title: string;
   options: {
     label: string;
-    value: string | boolean;
+    value: string;
     icon?: IconType;
   }[];
   isNumber?: boolean;
