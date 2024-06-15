@@ -131,7 +131,7 @@ export const menuSidebarRoutes = (userRole: string, userPermission: string): Men
             url: "/stocks/record"
           },
           {
-            title: "Stock List",
+            title: "Stock History",
             url: "/stocks"
           },
           {
