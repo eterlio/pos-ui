@@ -68,7 +68,7 @@ const StockEditFieldsScreen: FC<EditProductCategoryFieldsProps> = ({
   const productsOptions =
     productData?.data.map((product) => {
       return {
-        label: `${product.name}`,
+        label: `${product?.productCode?.code ? `${product?.productCode?.code} - ${product.name}` : product.name}`,
         value: product._id
       };
     }) || [];

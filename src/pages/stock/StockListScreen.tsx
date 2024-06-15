@@ -143,9 +143,13 @@ const StockListScreen = () => {
           <div className="my-5 text-center">
             <Button
               className="bg-transparent text-primary space-x-2 hover:bg-transparent"
-              onClick={() => navigate(`/stocks/${selectedStock._id}`)}
+              onClick={() => {
+                selectedStock.status === "pending"
+                  ? navigate(`/stocks/${selectedStock._id}`)
+                  : navigate(`/stocks/${selectedStock._id}/view`);
+              }}
             >
-              Edit Stock
+              {selectedStock.status === "pending" ? "Edit Stock" : "View Stock"}
             </Button>
           </div>
         </div>
