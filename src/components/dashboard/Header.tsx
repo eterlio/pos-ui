@@ -1,8 +1,8 @@
 import { Input } from "@/components/ui/input";
 import { MessageSquare, BellIcon, Menu } from "lucide-react";
-import { MouseEventHandler, useContext } from "react";
+import { MouseEventHandler } from "react";
 import UserNav from "./UserNav";
-import { StoreContext, StoreContextProps } from "@/utils/store";
+// import { StoreContext, StoreContextProps } from "@/utils/store";
 // import { eventSourceHandler } from "@/lib/eventManager";
 // import { EventSourceMessage } from "@microsoft/fetch-event-source";
 
@@ -17,7 +17,7 @@ const Header = ({
   showNotification?: boolean;
   displaySidebar?: boolean;
 }) => {
-  const { authUser } = useContext(StoreContext) as StoreContextProps;
+  // const { authUser } = useContext(StoreContext) as StoreContextProps;
 
   // useEffect(() => {
   //   eventSourceHandler.setHeaders({
