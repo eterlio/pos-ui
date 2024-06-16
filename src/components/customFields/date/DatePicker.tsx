@@ -16,6 +16,7 @@ interface DatePickerProps {
   isRequired?: boolean;
   id?: string;
   fieldKey: string;
+  className?: string;
 }
 const DatePicker: FC<DatePickerProps> = ({
   value = undefined,
@@ -25,7 +26,8 @@ const DatePicker: FC<DatePickerProps> = ({
   label,
   isRequired,
   id,
-  fieldKey
+  fieldKey,
+  className
 }) => {
   const [openPopOver, setOpenPopOver] = useState<boolean>(false);
 
@@ -38,7 +40,7 @@ const DatePicker: FC<DatePickerProps> = ({
     }
   };
   return (
-    <div>
+    <div className={className}>
       {label && (
         <div className="my-2">
           <InputLabel id={id} required={isRequired || false} label={label} />
@@ -50,8 +52,8 @@ const DatePicker: FC<DatePickerProps> = ({
             variant={"outline"}
             className={`w-full justify-start text-left font-normal h-10 py-2 px-3 rounded-[3px] 
               ${
-                !value && "text-muted-foreground "
-              } disabled:bg-gray-100 disabled:opacity-75 text-gray-500 disabled:cursor-not-allowed`}
+                !value && "text-muted-foreground"
+              } disabled:bg-gray-100 disabled:opacity-75 text-gray-500 disabled:cursor-not-allowed ${className}`}
             disabled={disabled}
           >
             <CalendarIcon className="mr-2 h-4 w-4" size={16} />

@@ -77,6 +77,11 @@ export const menuSidebarRoutes = (userRole: string, userPermission: string): Men
             isDisabled: false
           },
           {
+            title: "Change  Product",
+            url: "/products/create",
+            isDisabled: false
+          },
+          {
             title: "Import Products",
             url: "/users",
             isDisabled: true

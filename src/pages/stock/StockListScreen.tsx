@@ -79,7 +79,6 @@ const StockListScreen = () => {
       actionButton={{
         createButton: { name: "Record Stock", onClick: () => navigate("/stocks/record"), disabled: isFetching }
       }}
-      isLoading={isFetching}
     >
       <Drawer
         description=""

@@ -78,7 +78,6 @@ const ListUsersScreen = () => {
     <DashboardLayout
       pageTitle="Users List"
       actionButton={{ createButton: { name: "Create user", onClick: () => navigate("/users/create") } }}
-      isLoading={isFetching}
     >
       <Modal
         showModal={modalData.showModal}
