@@ -1,7 +1,11 @@
 import { Input } from "@/components/ui/input";
 import { MessageSquare, BellIcon, Menu } from "lucide-react";
-import { MouseEventHandler } from "react";
+import { MouseEventHandler, useContext, useEffect } from "react";
 import UserNav from "./UserNav";
+import { StoreContext, StoreContextProps } from "@/utils/store";
+import { eventSourceHandler } from "@/lib/eventManager";
+import { EventSourceMessage } from "@microsoft/fetch-event-source";
+
 const Header = ({
   handleDisplaySidebar,
   showHeaderSearchBar,
@@ -13,6 +17,24 @@ const Header = ({
   showNotification?: boolean;
   displaySidebar?: boolean;
 }) => {
+  const { authUser } = useContext(StoreContext) as StoreContextProps;
+
+  useEffect(() => {
+    eventSourceHandler.setHeaders({
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${authUser?.accessToken}`
+    });
+
+    const handleMessage = (msg: EventSourceMessage) => {
+      console.log(msg);
+    };
+
+    eventSourceHandler.start(handleMessage);
+
+    return () => {
+      eventSourceHandler.stop();
+    };
+  }, []);
   return (
     <div className="header-container bg-white sticky top-0 z-[5]">
       <header className="flex h-[56px] items-center justify-between px-8  sticky top-0" role="banner">
@@ -20,7 +42,11 @@ const Header = ({
           {/* <Menu className={`cursor-pointer ${displaySidebar && 'block'} md:hidden block`} onClick={handleDisplaySidebar} /> */}
           {displaySidebar && <Menu className="cursor-pointer" onClick={handleDisplaySidebar} />}
           {showHeaderSearchBar && (
-            <Input type="email" placeholder="Search..." className="bg-gray-50 border-gray-50 lg:flex md:w-[300px] lg:w-[300px]" />
+            <Input
+              type="email"
+              placeholder="Search..."
+              className="bg-gray-50 border-gray-50 lg:flex md:w-[300px] lg:w-[300px]"
+            />
           )}
         </div>
         <div className="flex items-center justify-end flex-shrink-0 gap-5">
