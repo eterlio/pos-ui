@@ -1,7 +1,6 @@
-import { fetchEventSource, EventSourceMessage, EventStreamContentType } from "@microsoft/fetch-event-source";
+import { fetchEventSource, EventSourceMessage } from "@microsoft/fetch-event-source";
 const { VITE_BASE_API_URL } = import.meta.env;
 
-class RetriableError extends Error {}
 class FatalError extends Error {}
 
 type Headers = { [key: string]: string };
@@ -12,10 +11,6 @@ class EventSourceHandler {
   private headers: Headers = {};
   private method: string = "GET";
   private url: string = "";
-
-  private constructor() {
-    // Private constructor to prevent direct instantiation
-  }
 
   public static getInstance(): EventSourceHandler {
     if (!EventSourceHandler.instance) {
@@ -36,19 +31,20 @@ class EventSourceHandler {
     if (!this.url) {
       throw new Error("URL is not set. Please set the URL before starting the event source.");
     }
-
+    let ctrl = new AbortController();
     try {
       await fetchEventSource(this.url, {
         headers: this.headers,
         method: this.method,
-        async onopen(response) {
-          if (response.ok && response.headers.get("content-type") === EventStreamContentType) {
-            return; // everything's good
-          } else if (response.status >= 400 && response.status < 500 && response.status !== 429) {
-            throw new FatalError();
-          } else {
-            throw new RetriableError();
-          }
+        openWhenHidden: true,
+        async onopen() {
+          // if (response.ok && response.headers.get("content-type") === EventStreamContentType) {
+          //   return; // everything's good
+          // } else if (response.status >= 400 && response.status < 500 && response.status !== 429) {
+          //   throw new FatalError();
+          // } else {
+          //   throw new RetriableError();
+          // }
         },
         onmessage(msg) {
           if (msg.event === "FatalError") {
@@ -57,7 +53,8 @@ class EventSourceHandler {
           onMessageCallback(msg);
         },
         onclose() {
-          throw new RetriableError();
+          ctrl.abort();
+          ctrl = new AbortController();
         },
         onerror(err) {
           if (err instanceof FatalError) {
@@ -65,7 +62,8 @@ class EventSourceHandler {
           } else {
             // do nothing to automatically retry
           }
-        }
+        },
+        signal: ctrl.signal
       });
     } catch (err) {
       console.error("Error occurred in SSE connection:", err);
