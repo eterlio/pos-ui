@@ -15,6 +15,7 @@ export interface DataFilterProps {
     icon?: IconType;
   }[];
   isNumber?: boolean;
+  isDate?: boolean;
   extra?: {
     mainIcon?: IconType;
   };

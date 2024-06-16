@@ -9,17 +9,22 @@ import IsBetweenFilter from "./IsBetweenFilter";
 import { useSetQueryParam } from "./hooks/useSetQueryParam";
 import { DataFilterProps } from "./type";
 import { toast } from "sonner";
+import DatePicker from "../customFields/date/DatePicker";
+import { HandlerProps } from "../customFields/type";
+import { format } from "date-fns";
 
 interface DataFacetedFilterForNumbersProps {
   filter: DataFilterProps;
+  isDate?: boolean;
 }
+
 interface FilterGroup {
   label: string;
   value: FilterGroupValues;
 }
-[];
 
 type FilterGroupValues = "isBetween" | "isGreater" | "isEql" | "isLess";
+
 const filterGroups: FilterGroup[] = [
   {
     label: "is between",
@@ -38,7 +43,8 @@ const filterGroups: FilterGroup[] = [
     value: "isLess"
   }
 ];
-const DataFacetedFilterForNumbers: React.FC<DataFacetedFilterForNumbersProps> = ({ filter }) => {
+
+const DataFacetedFilterForNumberDate: React.FC<DataFacetedFilterForNumbersProps> = ({ filter, isDate }) => {
   const { removeQueryParam, setQueryParam, getQueryParam } = useSetQueryParam();
   const queryKeyMapper = {
     isEql: "eq",
@@ -54,13 +60,13 @@ const DataFacetedFilterForNumbers: React.FC<DataFacetedFilterForNumbersProps> = 
   const [value, setValue] = useState<FilterGroupValues | null>(null);
   const [label, setLabel] = useState("");
   const [inputValue, setInputValue] = useState("");
-
+  const [singleDateValue, setSingleDateValue] = useState<Date>();
   const [isBetweenValues, setIsBetweenValues] = useState<{
-    lesserValue?: string;
-    higherValue?: string;
+    lesserValue?: string | Date;
+    higherValue?: string | Date;
   }>({
-    lesserValue: less || "",
-    higherValue: high || ""
+    lesserValue: isDate && less ? new Date(less) : less || "",
+    higherValue: isDate && high ? new Date(high) : high || ""
   });
   const [facetData, setFacetData] = useState<string>("");
 
@@ -69,16 +75,18 @@ const DataFacetedFilterForNumbers: React.FC<DataFacetedFilterForNumbersProps> = 
     setOpen((open) => !open);
     const labelValue = filterGroups.find((group) => group.label === data);
     if (labelValue) {
-      setValue(labelValue?.value);
+      setValue(labelValue.value);
     }
     const queryKey = getQueryKeyMapper(labelValue!.value);
     // Auto set values if it's in query string
     const selectValue = getQueryParam(`${filter.column}_${queryKey}`);
     setInputValue(selectValue || "");
   }, []);
+
   const handleInputChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   }, []);
+
   const formatFilterDisplay = (value: FilterGroupValues) => {
     if (!value) return "";
     const mapper = {
@@ -93,6 +101,7 @@ const DataFacetedFilterForNumbers: React.FC<DataFacetedFilterForNumbersProps> = 
   const getQueryKeyMapper = (key: FilterGroupValues) => {
     return queryKeyMapper[key];
   };
+
   const closeFilter = () => {
     setParentOpen(false);
     let queryKey = "";
@@ -102,7 +111,7 @@ const DataFacetedFilterForNumbers: React.FC<DataFacetedFilterForNumbersProps> = 
 
       removeQueryParam(`${filter.column}_lte`);
       removeQueryParam(`${filter.column}_gte`);
-      queryKey = getQueryKeyMapper(value)
+      queryKey = getQueryKeyMapper(value);
       const objectMapperValues = Object.values(queryKeyMapper);
       objectMapperValues.forEach((key) => {
         removeQueryParam(`${filter.column}_${key}`);
@@ -111,20 +120,34 @@ const DataFacetedFilterForNumbers: React.FC<DataFacetedFilterForNumbersProps> = 
 
     if (value === "isBetween" && isBetweenValues && isBetweenValues.higherValue && isBetweenValues.lesserValue) {
       const { higherValue, lesserValue } = isBetweenValues;
-      if (lesserValue > higherValue) {
-        return toast.warning("Warning", {
-          description: "lesser value shouldn't be greater than higher number"
-        });
+      if (isDate) {
+        if (new Date(lesserValue) > new Date(higherValue)) {
+          return toast.warning("Warning", {
+            description: "Lesser value shouldn't be greater than higher value"
+          });
+        }
+        setQueryParam(`${filter.column}_gte`, new Date(lesserValue).toISOString());
+        setQueryParam(`${filter.column}_lte`, new Date(higherValue).toISOString());
+        setFacetData(`${format(lesserValue, "dd-MM-y")} ${symbol} ${format(higherValue, "dd-MM-y")}`);
+      } else {
+        if (Number(lesserValue) > Number(higherValue)) {
+          return toast.warning("Warning", {
+            description: "Lesser value shouldn't be greater than higher value"
+          });
+        }
+        setQueryParam(`${filter.column}_gte`, `${lesserValue}`);
+        setQueryParam(`${filter.column}_lte`, `${higherValue}`);
+        setFacetData(`${lesserValue} ${symbol} ${higherValue}`);
       }
-      setQueryParam(`${filter.column}_gte`, `${lesserValue}`);
-      setQueryParam(`${filter.column}_lte`, `${higherValue}`);
-      setFacetData(`${lesserValue} ${symbol} ${higherValue}`);
     } else if (value && inputValue) {
-      console.log({ queryKey, inputValue });
-
       setQueryParam(`${filter.column}_${queryKey}`, inputValue);
+      setFacetData(`${symbol} ${inputValue}`);
+    } else if (isDate && singleDateValue) {
+      setQueryParam(`${filter.column}_eq`, singleDateValue.toISOString());
+      setFacetData(`${symbol} ${format(singleDateValue, "dd-MM-y")}`);
     }
   };
+
   const resetFilter = () => {
     if (value) {
       const queryKey = getQueryKeyMapper(value);
@@ -141,23 +164,32 @@ const DataFacetedFilterForNumbers: React.FC<DataFacetedFilterForNumbersProps> = 
     setInputValue("");
     setLabel("");
     setFacetData("");
+    setSingleDateValue(undefined);
+    setIsBetweenValues({ lesserValue: "", higherValue: "" });
   };
 
   const handleIsBetweenValues = ({ name, value }: any) => {
-    setIsBetweenValues((prev) => {
-      return {
-        ...prev,
-        [name]: value
-      };
-    });
+    setIsBetweenValues((prev) => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const disableApplyFilterButton = () => {
-    if (value && value === "isBetween") {
-      return !!(isBetweenValues && isBetweenValues.higherValue && isBetweenValues.lesserValue);
+    if (value === "isBetween") {
+      if (isDate) {
+        return !!(isBetweenValues.higherValue && isBetweenValues.lesserValue);
+      }
+      return !!(isBetweenValues.higherValue && isBetweenValues.lesserValue);
     }
+
+    if (isDate) {
+      return !!singleDateValue;
+    }
+
     return !!inputValue;
   };
+
   return (
     <Popover open={parentOpen} onOpenChange={setParentOpen}>
       <PopoverTrigger asChild>
@@ -166,9 +198,9 @@ const DataFacetedFilterForNumbers: React.FC<DataFacetedFilterForNumbersProps> = 
           {filter.title} {facetData && facetData}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80">
+      <PopoverContent className="min-w-80 w-auto">
         <div className="grid gap-4">
-          <div className=" flex items-center gap-5">
+          <div className="flex items-center gap-5">
             <p className="text-sm text-muted-foreground">Set filter</p>
             <h4 className="font-medium leading-none">{filter.title} Filter</h4>
           </div>
@@ -189,16 +221,18 @@ const DataFacetedFilterForNumbers: React.FC<DataFacetedFilterForNumbersProps> = 
                 <Command>
                   <CommandGroup>
                     <CommandList>
-                      {filterGroups &&
-                        filterGroups.length > 0 &&
-                        filterGroups.map((framework: FilterGroup) => (
-                          <CommandItem key={framework.value} onSelect={handleItemSelect} className="cursor-pointer">
-                            {framework.label}
-                            <CheckIcon
-                              className={cn("ml-auto h-4 w-4", label === framework.value ? "opacity-100" : "opacity-0")}
-                            />
-                          </CommandItem>
-                        ))}
+                      {filterGroups.map((framework: FilterGroup) => (
+                        <CommandItem
+                          key={framework.value}
+                          onSelect={() => handleItemSelect(framework.label)}
+                          className="cursor-pointer"
+                        >
+                          {framework.label}
+                          <CheckIcon
+                            className={cn("ml-auto h-4 w-4", label === framework.value ? "opacity-100" : "opacity-0")}
+                          />
+                        </CommandItem>
+                      ))}
                     </CommandList>
                   </CommandGroup>
                 </Command>
@@ -211,9 +245,25 @@ const DataFacetedFilterForNumbers: React.FC<DataFacetedFilterForNumbersProps> = 
                   <div className="flex items-center gap-2">
                     <CornerDownRight size={22} />
                     {value === "isBetween" ? (
-                      <IsBetweenFilter column={filter.column} handleIsBetweenValues={handleIsBetweenValues} />
+                      <IsBetweenFilter
+                        column={filter.column}
+                        handleIsBetweenValues={handleIsBetweenValues}
+                        isDate={isDate}
+                      />
                     ) : (
-                      <Input className="h-10" value={inputValue} onChange={handleInputChange} type="number" />
+                      <>
+                        {isDate && (
+                          <DatePicker
+                            fieldKey="date"
+                            className="w-full"
+                            value={singleDateValue}
+                            onChange={(data: HandlerProps) => setSingleDateValue(data.value)}
+                          />
+                        )}
+                        {!isDate && (
+                          <Input className="h-10" value={inputValue} onChange={handleInputChange} type="number" />
+                        )}
+                      </>
                     )}
                   </div>
                   <Button onClick={closeFilter} disabled={!disableApplyFilterButton()}>
@@ -229,4 +279,4 @@ const DataFacetedFilterForNumbers: React.FC<DataFacetedFilterForNumbersProps> = 
   );
 };
 
-export default DataFacetedFilterForNumbers;
+export default DataFacetedFilterForNumberDate;

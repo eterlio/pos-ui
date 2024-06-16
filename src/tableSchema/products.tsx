@@ -3,7 +3,7 @@ import { DataTableColumnHeader } from "@/components/table/DataTableColumnHeader"
 import { format } from "date-fns";
 import { ProductProps, ProductStatus } from "@/interfaces/products";
 import TableStatus from "@/components/TableStatus";
-import { Settings2 } from "lucide-react";
+import { Calendar, Currency, Settings2 } from "lucide-react";
 import { DataFilterProps } from "@/components/table/type";
 
 export const PRODUCT_STATUS_OPTIONS = [
@@ -34,9 +34,18 @@ export const productTableFilters: DataFilterProps[] = [
     options: [],
     title: "Unit Price",
     isNumber: true,
-    // extra: {
-    //   // mainIcon: I
-    // }
+    extra: {
+      mainIcon: Currency
+    }
+  },
+  {
+    column: "createdAt",
+    options: [],
+    title: "Created At",
+    isDate: true,
+    extra: {
+      mainIcon: Calendar
+    }
   }
 ];
 const statusColors: { [key in ProductStatus]: { bg: string; text: string; circleBg?: string } } = {
