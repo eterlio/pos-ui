@@ -9,7 +9,7 @@ interface DrawerProps {
   open?: boolean;
   children?: ReactNode;
   handleDrawerClose: () => void;
-  position: "top" | "right" | "bottom" | "left";
+  position?: "top" | "right" | "bottom" | "left";
 }
 const Drawer: FC<DrawerProps> = ({
   open,
@@ -40,7 +40,6 @@ const Drawer: FC<DrawerProps> = ({
               <SheetTitle className="text-center text-xl">{title}</SheetTitle>
               <SheetDescription>{description}</SheetDescription>
             </SheetHeader>
-            <div className="flex-1"></div>
             {children}
           </div>
         )}

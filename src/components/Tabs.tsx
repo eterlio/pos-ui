@@ -19,7 +19,7 @@ const Tabs: React.FC<TabsProps> = ({ children }) => {
 
   return (
     <div className="mx-auto">
-      <div className="flex border-b border-gray-300 gap-3 overscroll-x-auto">
+      <div className="flex border-b border-gray-300 gap-3">
         {children.map((child) => (
           <button
             key={child.props.label}

@@ -1,4 +1,5 @@
-import { MessageSquare, BellIcon } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { MessageSquare, BellIcon, Menu } from "lucide-react";
 import { MouseEventHandler } from "react";
 import UserNav from "./UserNav";
 import { Link } from "react-router-dom";
@@ -7,11 +8,11 @@ import { Link } from "react-router-dom";
 // import { EventSourceMessage } from "@microsoft/fetch-event-source";
 
 const Header = ({
-  // handleDisplaySidebar,
-  // showHeaderSearchBar,
-  showNotification
-}: // displaySidebar
-{
+  handleDisplaySidebar,
+  showHeaderSearchBar = true,
+  showNotification,
+  displaySidebar
+}: {
   handleDisplaySidebar: MouseEventHandler;
   showHeaderSearchBar?: boolean;
   showNotification?: boolean;
@@ -38,7 +39,7 @@ const Header = ({
   return (
     <div className="header-container bg-white sticky top-0 z-[5]">
       <header className="flex h-[56px] items-center justify-between px-8  sticky top-0" role="banner">
-        {/* <div className="flex flex-1 items-center gap-5 mr-2">
+        <div className="flex flex-1 items-center gap-5 mr-2">
           {displaySidebar && <Menu className="cursor-pointer" onClick={handleDisplaySidebar} />}
           {showHeaderSearchBar && (
             <Input
@@ -47,13 +48,13 @@ const Header = ({
               className="bg-gray-50 border-gray-50 lg:flex md:w-[300px] lg:w-[300px]"
             />
           )}
-        </div> */}
-        <Link
-          className="flex items-center justify-center gap-5 ml-5 rounded border-dotted border-[1.9px] min-w-20 px-1 py-0.5 text-center border-primary text-primary"
-          to="/pos"
-        >
-          POS
-        </Link>
+          <Link
+            className="flex items-center justify-center gap-5 ml-5 rounded border-dotted border-[1.9px] min-w-20 px-1 py-0.5 text-center border-primary text-primary"
+            to="/pos"
+          >
+            POS
+          </Link>
+        </div>
         <div className="flex items-center justify-end flex-shrink-0 gap-5">
           {showNotification && (
             <>

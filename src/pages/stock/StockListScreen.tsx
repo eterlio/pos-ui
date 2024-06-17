@@ -101,7 +101,7 @@ const StockListScreen = () => {
           </div>
         </div>
         <div className="h-full flex flex-col mt-5">
-          <div className="flex-1 overflow-y-scroll">
+          <div className="flex-1">
             {selectedStock?.products &&
               selectedStock.products.length > 0 &&
               selectedStock.products.map((product, index) => {
