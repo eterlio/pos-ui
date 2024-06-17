@@ -6,7 +6,7 @@ import ButtonWithIcon from "../ButtonWithIcon";
 import Loader from "../Loader";
 
 interface HeaderTitleProps {
-  pageTitle: string;
+  pageTitle?: string;
   pageDescription?: string;
   showPageExporter?: boolean;
   actionButton?: ActionButtonProps;
@@ -15,7 +15,7 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({ pageTitle, pageDescription, s
   return (
     <div className="mb-3 lg:flex items-center justify-between sm:block">
       <div className="title sm:mb-3">
-        <h6 className="font-semibold text-2xl">{pageTitle}</h6>
+        <h6 className="font-semibold text-2xl">{pageTitle && pageTitle}</h6>
         <p className="text-[12px]">{pageDescription || ""}</p>
       </div>
       {showPageExporter && (
