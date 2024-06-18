@@ -9,9 +9,13 @@ import { Validator } from "@/validator";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import ProductEditFields from "./ProductEditFields";
+import { UploadedFileProps } from "@/components/FileDropzone";
+import { useState } from "react";
+import { isObject } from "lodash";
 
 const CreateProductScreen = () => {
   const navigate = useNavigate();
+  const [productImage, setProductImage] = useState<File>();
   const handleFieldChange = (data: HandlerProps) => {
     const { key, value } = data;
     if (key && key === "canExpire" && !value) {
@@ -69,9 +73,23 @@ const CreateProductScreen = () => {
     }
     resetError();
 
+    if (!productImage) {
+      return toast.error("Error", {
+        description: "Product image is required"
+      });
+    }
     const payload = objectDifference(productDefaults(), formValues);
+    const formData = new FormData();
+    formData.append("product_image", productImage || "");
+    for (const data in payload) {
+      if (isObject(payload[data])) {
+        formData.append(data, JSON.stringify(payload[data]));
+      } else {
+        formData.append(data, payload[data]);
+      }
+    }
     mutate(
-      { payload },
+      { payload: formData },
       {
         onSuccess() {
           toast.success("Success", {
@@ -81,6 +99,9 @@ const CreateProductScreen = () => {
         }
       }
     );
+  };
+  const fileUploadHandler = (data: UploadedFileProps) => {
+    setProductImage(data.uploadedFile);
   };
   return (
     <ProductEditFields
@@ -93,6 +114,7 @@ const CreateProductScreen = () => {
       pageTitle="Create Product"
       formTitle="Product Information"
       pageDescription="Fill the form to create a product"
+      handleImageUpload={fileUploadHandler}
     />
   );
 };
