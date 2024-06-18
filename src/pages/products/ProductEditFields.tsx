@@ -22,6 +22,7 @@ import CheckBoxField from "@/components/customFields/combo/CheckBoxField";
 import DatePicker from "@/components/customFields/date/DatePicker";
 import { barCodeOptions, productStatusOptions } from "@/defaults";
 import DimensionField from "@/components/customFields/dimension/DimensionField";
+import FileDropzone, { UploadedFileProps } from "@/components/FileDropzone";
 
 interface EditProductFieldsProps {
   buttonTitle: string;
@@ -34,6 +35,7 @@ interface EditProductFieldsProps {
   disabledButton?: boolean;
   formTitle: string;
   pageDescription: string;
+  handleImageUpload: ({ fileURL, uploadedFile }: UploadedFileProps) => void;
 }
 const ProductEditFields: FC<EditProductFieldsProps> = ({
   handleFormFieldChange,
@@ -45,7 +47,8 @@ const ProductEditFields: FC<EditProductFieldsProps> = ({
   pageTitle,
   disabledButton,
   formTitle,
-  pageDescription
+  pageDescription,
+  handleImageUpload
 }) => {
   const { data: categoryData } = useGeneralQuery<GetManyProps<ProductCategoryProps>>({
     queryKey: ["productCategories", {}],
@@ -254,22 +257,17 @@ const ProductEditFields: FC<EditProductFieldsProps> = ({
 
           <div className="right-content">
             {/* Product Images */}
-            {/* <div className="photo mb-3">
+            <div className="photo mb-3">
               <TitleHeader text="Product Images" />
-              <div className="border border-gray-100 rounded-sm p-4 space-y-3">
-                <div className="flex space-x-4">
-                  <div className="border border-gray-300 rounded-sm w-32 h-32 flex items-center justify-center">
-                    Click to upload or drag and drop
-                  </div>
-                  <div className="border border-gray-300 rounded-sm w-32 h-32 flex items-center justify-center">
-                    Replace
-                  </div>
-                  <div className="border border-gray-300 rounded-sm w-32 h-32 flex items-center justify-center">
-                    Remove
-                  </div>
-                </div>
+              <div className="">
+                <FileDropzone
+                  onChange={handleImageUpload}
+                  showPreview
+                  maxFileSize={5}
+                  allowedFileExtensions={["jpg", "jpeg", "png"]}
+                />
               </div>
-            </div> */}
+            </div>
             {/* Pricing */}
             <div className="pricing mb-3">
               <TitleHeader text="Pricing" />
