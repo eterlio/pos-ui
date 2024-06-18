@@ -49,7 +49,6 @@ export const initialRequestState: RequestStateProps = {
 };
 
 export const createDefaultUser: () => UserProps = () => ({
-  id: "",
   firstName: "",
   lastName: "",
   email: "",
@@ -60,7 +59,10 @@ export const createDefaultUser: () => UserProps = () => ({
   isLoggedIn: false,
   status: "pending",
   ...defaultPlugin,
-  fullName: ""
+  fullName: "",
+  accountId: "",
+  warehouseId: [],
+  currentWarehouse: ""
 });
 
 export const barCodeOptions: { label: string; value: BarcodeSymbology }[] = productBarcodeSymbology.map((code) => {
@@ -91,7 +93,6 @@ export const productDefaults = (): ProductProps => {
     supplierId: "",
     unitId: "",
     accountId: "",
-    _id: "",
     availability: "offlineOnly",
     canExpire: false,
     expirationDate: null,
@@ -106,7 +107,6 @@ export const productDefaults = (): ProductProps => {
       length: 0,
       width: 0
     },
-    id: "",
     isFeatured: false,
     primaryImageId: "",
     secondaryImages: [],
@@ -144,13 +144,14 @@ export const stockDataDefault = (): StockDataProps => {
     quantityReceived: 0,
     remarks: "",
     section: "",
-    status: "partially received"
+    status: "partially received",
+    batchId: ""
   };
 };
 export const stockDefault = (): StockProps => {
   return {
     accountId: "",
-    batchId: "",
+    deliveryId: "",
     stockData: [stockDataDefault()],
     supplierId: "",
     warehouseId: "",

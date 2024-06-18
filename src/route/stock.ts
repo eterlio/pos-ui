@@ -2,6 +2,7 @@ import { RoutesProps } from "@/interfaces/route";
 import RecordStockScreen from "@/pages/stock/RecordStockScreen";
 import StockListScreen from "@/pages/stock/StockListScreen";
 import UpdateStockScreen from "@/pages/stock/UpdateStockScreen";
+import ViewStockScreen from "@/pages/stock/ViewStockScreen";
 
 export const STOCK_ROUTES: RoutesProps[] = [
   {
@@ -21,5 +22,11 @@ export const STOCK_ROUTES: RoutesProps[] = [
     url: "/stocks/:id",
     requireAuth: true,
     permission: ["stocks", "update"]
+  },
+  {
+    component: ViewStockScreen,
+    url: "/stocks/:id/view",
+    requireAuth: true,
+    permission: ["stocks", "read"]
   }
 ];

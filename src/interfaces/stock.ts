@@ -12,14 +12,13 @@ export interface StockDataProps {
   quantityExpected: number;
   quantityReceived: number;
   status?: StockDataStatus;
+  batchId?: string;
 }
 
 export type StockStatus = "pending" | "approved" | "rejected";
 
 export interface StockProps extends DefaultPluginProps {
-  _id?: string;
-  id?: string;
-  batchId: string;
+  deliveryId: string;
   stockData: StockDataProps[];
   receivedDate?: Date;
   supplierId: string;

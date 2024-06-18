@@ -68,7 +68,7 @@ const StockEditFieldsScreen: FC<EditProductCategoryFieldsProps> = ({
   const productsOptions =
     productData?.data.map((product) => {
       return {
-        label: `${product.name}`,
+        label: `${product?.productCode?.code ? `${product?.productCode?.code} - ${product.name}` : product.name}`,
         value: product._id
       };
     }) || [];
@@ -96,11 +96,12 @@ const StockEditFieldsScreen: FC<EditProductCategoryFieldsProps> = ({
           <h1 className="text-xl font-light mb-2">{formTitle}</h1>
           <div className="my-5 grid md:grid-cols-3 gap-5">
             <InputField
-              fieldKey="batchId"
+              fieldKey="deliveryId"
               handleInputChange={handleFormFieldChange}
-              label="Batch Id"
-              value={formFields?.batchId}
+              label="Delivery Code"
+              value={formFields?.deliveryId}
               isRequired
+              disabled={isLoading || Boolean(formFields?.status && formFields?.status !== "pending")}
             />
             <SelectField
               fieldKey="supplierId"
@@ -111,6 +112,7 @@ const StockEditFieldsScreen: FC<EditProductCategoryFieldsProps> = ({
               selectValue={formFields?.supplierId}
               isSearchable
               isRequired
+              isDisabled={isLoading || Boolean(formFields?.status && formFields?.status !== "pending")}
             />
             <DatePicker
               fieldKey="receivedDate"
@@ -118,6 +120,7 @@ const StockEditFieldsScreen: FC<EditProductCategoryFieldsProps> = ({
               label="Received Date"
               value={formFields?.receivedDate}
               isRequired
+              disabled={isLoading || Boolean(formFields?.status && formFields?.status !== "pending")}
             />
           </div>
           <div>
@@ -127,6 +130,7 @@ const StockEditFieldsScreen: FC<EditProductCategoryFieldsProps> = ({
               label="Truck Number"
               value={formFields?.truckNumber}
               isRequired
+              disabled={isLoading || Boolean(formFields?.status && formFields?.status !== "pending")}
             />
           </div>
           <div className="stockData">
@@ -153,6 +157,20 @@ const StockEditFieldsScreen: FC<EditProductCategoryFieldsProps> = ({
                         selectValue={data?.productId}
                         isSearchable
                         isRequired
+                        isDisabled={isLoading || Boolean(formFields?.status && formFields?.status !== "pending")}
+                      />
+                      <InputField
+                        fieldKey={`batchId`}
+                        handleInputChange={(fieldData) =>
+                          handleFormFieldChange({
+                            key: fieldData.key,
+                            value: { fieldKey: "stockData", index, value: fieldData.value }
+                          })
+                        }
+                        label="Batch Code"
+                        value={data?.batchId}
+                        isRequired
+                        disabled={isLoading || Boolean(formFields?.status && formFields?.status !== "pending")}
                       />
                       <NumberField
                         fieldKey={`quantityExpected`}
@@ -166,6 +184,7 @@ const StockEditFieldsScreen: FC<EditProductCategoryFieldsProps> = ({
                         value={data?.quantityExpected}
                         isRequired
                         min={0}
+                        disabled={isLoading || Boolean(formFields?.status && formFields?.status !== "pending")}
                       />
                       <NumberField
                         fieldKey={`quantityReceived`}
@@ -179,6 +198,7 @@ const StockEditFieldsScreen: FC<EditProductCategoryFieldsProps> = ({
                         value={data?.quantityReceived}
                         isRequired
                         min={0}
+                        disabled={isLoading || Boolean(formFields?.status && formFields?.status !== "pending")}
                       />
                       <InputField
                         fieldKey={`section`}
@@ -190,6 +210,7 @@ const StockEditFieldsScreen: FC<EditProductCategoryFieldsProps> = ({
                         }
                         label="Section"
                         value={data?.section}
+                        disabled={isLoading || Boolean(formFields?.status && formFields?.status !== "pending")}
                       />
                     </div>
                     <div>
@@ -203,25 +224,34 @@ const StockEditFieldsScreen: FC<EditProductCategoryFieldsProps> = ({
                         fieldKey={`remarks`}
                         label="Remarks"
                         value={data?.remarks}
+                        disabled={isLoading || Boolean(formFields?.status && formFields?.status !== "pending")}
                       />
                     </div>
-                    <div className="flex items-end justify-end mt-3">
-                      <span
-                        className="cursor-pointer h-7 w-7 border rounded-full flex items-center justify-center peer hover:bg-red-500"
-                        onClick={() => handleRemoveStockDataForm(index)}
-                      >
-                        <X className="text-gray peer-hover:text-white" size={18} />
-                      </span>
-                    </div>
+                    {formFields?.status && formFields?.status === "pending" && (
+                      <div className="flex items-end justify-end mt-3">
+                        <span
+                          className="cursor-pointer h-7 w-7 border rounded-full flex items-center justify-center peer hover:bg-red-500"
+                          onClick={() => handleRemoveStockDataForm(index)}
+                        >
+                          <X className="text-gray peer-hover:text-white" size={18} />
+                        </span>
+                      </div>
+                    )}
                   </div>
                 );
               })}
             </div>
-            <div className="add-stock__button flex items-end justify-end">
-              <Button className="bg-transparent hover:bg-transparent text-primary h-0" onClick={handleAddStockDataForm}>
-                <Plus size={18} /> <span>Add stock</span>
-              </Button>
-            </div>
+            {formFields?.status && formFields?.status === "pending" && (
+              <div className="add-stock__button flex items-end justify-end">
+                <Button
+                  className="bg-transparent hover:bg-transparent text-primary h-0"
+                  onClick={handleAddStockDataForm}
+                  disabled={isLoading || Boolean(formFields?.status && formFields?.status !== "pending")}
+                >
+                  <Plus size={18} /> <span>Add stock</span>
+                </Button>
+              </div>
+            )}
           </div>
         </div>
         <div className="mt-4 flex items-end justify-end gap-5">

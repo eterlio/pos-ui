@@ -7,9 +7,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useGeneralQuery } from "@/hooks/request/useGeneralQuery";
 import { objectDifference } from "@/helpers";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import ProductEditFields from "./ProductEditFields";
 import { ProductProps } from "@/interfaces/products";
+import { isObject } from "lodash";
+import { UploadedFileProps } from "@/components/FileDropzone";
 
 interface ValidatorProps {
   name: string;
@@ -17,6 +19,7 @@ interface ValidatorProps {
 }
 const UpdateProductScreen = () => {
   const params = useParams<{ id: string }>();
+  const [productImage, setProductImage] = useState<File>();
   const productId = params.id;
   const buttonTitle = "Update";
   const { addErrors, errors, resetError } = useError<ValidatorProps>();
@@ -72,7 +75,7 @@ const UpdateProductScreen = () => {
   };
 
   const payload = objectDifference(data, formValues);
-  
+
   const onsubmitHandler = () => {
     validator.validate();
 
@@ -81,9 +84,22 @@ const UpdateProductScreen = () => {
     } else {
       resetError();
     }
-
+    if (!productImage) {
+      return toast.error("Error", {
+        description: "Product image is required"
+      });
+    }
+    const formData = new FormData();
+    formData.append("product_image", productImage || "");
+    for (const data in payload) {
+      if (isObject(payload[data])) {
+        formData.append(data, JSON.stringify(payload[data]));
+      } else {
+        formData.append(data, payload[data]);
+      }
+    }
     mutate(
-      { payload },
+      { payload: formData },
       {
         onSuccess() {
           toast.success("Success", {
@@ -99,6 +115,9 @@ const UpdateProductScreen = () => {
       setFormValues(data);
     }
   }, [params.id, data]);
+  const fileUploadHandler = (data: UploadedFileProps) => {
+    setProductImage(data.uploadedFile);
+  };
   return (
     <ProductEditFields
       pageTitle="Update Product"
@@ -111,6 +130,7 @@ const UpdateProductScreen = () => {
       disabledButton={!Object.keys(payload).length}
       formTitle="Product information"
       pageDescription="Update product information"
+      handleImageUpload={fileUploadHandler}
     />
   );
 };

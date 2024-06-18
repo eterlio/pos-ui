@@ -21,18 +21,20 @@ export interface UserProps extends DefaultPluginProps {
   password: string;
   role?: UserRole;
   gender?: Gender;
-
   address?: AddressProps;
   phone?: PhoneProps;
   status?: UserStatus;
   isLoggedIn?: boolean;
-  userPermissions?: string;
+
   userPermission?: {
     [key in PermissionString]?: PermissionOperation[];
   };
   // virtuals
   permission?: any;
   fullName?: string;
+  accountId?: string;
+	warehouseId?: string[];
+	currentWarehouse?: string;
 }
 
 export interface AuthUserResponse extends UserProps {

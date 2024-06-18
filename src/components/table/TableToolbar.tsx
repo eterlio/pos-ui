@@ -5,7 +5,7 @@ import { Input } from "../ui/input";
 import { DataTableViewOptions } from "../table/DataTableViewOptions";
 
 import { DataTableFacetedFilter } from "./TableFacetedFilter";
-import DataFacetedFilterForNumbers from "./DataFacetedFilterForNumbers";
+import DataFacetedFilterForNumberDate from "./DataFacetedFilterForNumberDate";
 import { useCallback, useState } from "react";
 import { useSetQueryParam } from "./hooks/useSetQueryParam";
 
@@ -21,7 +21,6 @@ interface DataTableToolbarProps<TData> {
   searchSelectionOptions?: OptionsProps[];
   showSelectColumns?: boolean;
 }
-
 export function DataTableToolbar<TData>({
   table,
   showExportButton = false,
@@ -80,19 +79,21 @@ export function DataTableToolbar<TData>({
             {filters &&
               filters.length > 0 &&
               filters.map((filter, index) => {
-                return !filter.isNumber
-                  ? table.getColumn(filter.column) && (
-                      <DataTableFacetedFilter
-                        column={filter.column}
-                        title={filter.title}
-                        options={filter.options}
-                        extra={filter.extra}
-                        key={index}
-                      />
-                    )
-                  : table.getColumn(filter.column) && (
-                      <DataFacetedFilterForNumbers key={index} filter={filter} />
-                    );
+                if (!table.getColumn(filter.column)) return null;
+
+                if (filter.isNumber || filter.isDate) {
+                  return <DataFacetedFilterForNumberDate key={index} filter={filter} isDate={filter.isDate} />;
+                }
+
+                return (
+                  <DataTableFacetedFilter
+                    column={filter.column}
+                    title={filter.title}
+                    options={filter.options}
+                    extra={filter.extra}
+                    key={index}
+                  />
+                );
               })}
           </div>
           <div className="reset">

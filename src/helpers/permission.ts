@@ -25,6 +25,7 @@ export const hasPermission = (
   if (!userPermission || !permissions) return false;
 
   const [permissionService, permissionOperation] = permissions;
+  if (userPermission === "*" && permissionService != "calendar") return true;
   return userPermission.includes(String.fromCharCode(PERMISSIONS[permissionService][permissionOperation]));
 };
 

@@ -9,7 +9,7 @@ import { GetManyProps } from "@/hooks/types";
 import { useSetQueryParam } from "@/hooks/useSetQueryParam";
 import { ModalActionButtonProps } from "@/interfaces";
 import { ProductProps } from "@/interfaces/products";
-import { productTableSchema } from "@/tableSchema/products";
+import { productTableFilters, productTableSchema } from "@/tableSchema/products";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -91,7 +91,6 @@ const ProductListsScreen = () => {
           loading: isFetching
         }
       }}
-      isLoading={isFetching}
     >
       <Modal
         showModal={modalData.showModal}
@@ -110,6 +109,12 @@ const ProductListsScreen = () => {
           isLoading={isFetching}
           actionButtons={rowActions}
           handleRowClick={handleEditRowActionClick}
+          filters={productTableFilters}
+          showSearchSelection
+          searchSelectionOptions={[
+            { label: "Product Name", value: "name" },
+            { label: "All Field", value: "" }
+          ]}
         />
       </Container>
     </DashboardLayout>

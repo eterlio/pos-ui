@@ -40,7 +40,7 @@ const StockListScreen = () => {
     {
       label: "View",
       action: (data: Record<string, any>) => {
-        setSelectedStock(data);
+        navigate(`/stocks/${data.id}/view`);
       }
     },
     {
@@ -68,7 +68,7 @@ const StockListScreen = () => {
         onSuccess(data) {
           const stock = data.data.response as StockProps;
           addToOrUpdateList<StockProps>(["stocks", queryObject], stock);
-          setOpenDrawer(()=> false);
+          setOpenDrawer(() => false);
         }
       }
     );
@@ -79,11 +79,10 @@ const StockListScreen = () => {
       actionButton={{
         createButton: { name: "Record Stock", onClick: () => navigate("/stocks/record"), disabled: isFetching }
       }}
-      isLoading={isFetching}
     >
       <Drawer
         description=""
-        title={selectedStock?.batchId || ""}
+        title={selectedStock?.deliveryId || ""}
         handleDrawerClose={() => setOpenDrawer(!openDrawer)}
         open={openDrawer}
       >
@@ -114,6 +113,7 @@ const StockListScreen = () => {
                       quantityExpected: stock?.quantityExpected,
                       quantityReceived: stock?.quantityReceived,
                       status: stock?.status,
+                      batchId: stock?.batchId,
                       remark: stock?.remarks
                     }}
                     key={index}
@@ -142,9 +142,13 @@ const StockListScreen = () => {
           <div className="my-5 text-center">
             <Button
               className="bg-transparent text-primary space-x-2 hover:bg-transparent"
-              onClick={() => navigate(`/stocks/${selectedStock._id}`)}
+              onClick={() => {
+                selectedStock.status === "pending"
+                  ? navigate(`/stocks/${selectedStock._id}`)
+                  : navigate(`/stocks/${selectedStock._id}/view`);
+              }}
             >
-              Edit Stock
+              {selectedStock.status === "pending" ? "Edit Stock" : "View Stock"}
             </Button>
           </div>
         </div>
