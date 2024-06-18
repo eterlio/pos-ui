@@ -2,13 +2,14 @@ import { Input } from "@/components/ui/input";
 import { MessageSquare, BellIcon, Menu } from "lucide-react";
 import { MouseEventHandler } from "react";
 import UserNav from "./UserNav";
+import { Link } from "react-router-dom";
 // import { StoreContext, StoreContextProps } from "@/utils/store";
 // import { eventSourceHandler } from "@/lib/eventManager";
 // import { EventSourceMessage } from "@microsoft/fetch-event-source";
 
 const Header = ({
   handleDisplaySidebar,
-  showHeaderSearchBar,
+  showHeaderSearchBar = true,
   showNotification,
   displaySidebar
 }: {
@@ -47,6 +48,12 @@ const Header = ({
               className="bg-gray-50 border-gray-50 lg:flex md:w-[300px] lg:w-[300px]"
             />
           )}
+          <Link
+            className="flex items-center justify-center gap-5 ml-5 rounded border-dotted border-[1.9px] min-w-20 px-1 py-0.5 text-center border-primary text-primary"
+            to="/pos"
+          >
+            POS
+          </Link>
         </div>
         <div className="flex items-center justify-end flex-shrink-0 gap-5">
           {showNotification && (

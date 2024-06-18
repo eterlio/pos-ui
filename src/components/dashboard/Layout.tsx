@@ -14,13 +14,14 @@ interface DashboardLayoutProps {
   showScrollToTopButton?: boolean;
   showSidebar?: boolean;
   showHeader?: boolean;
-  pageTitle: string;
+  pageTitle?: string;
   pageDescription?: string;
   showPageExporter?: boolean;
   actionButton?: ActionButtonProps;
   showHeaderSearchBar?: boolean;
   showNotification?: boolean;
   isLoading?: boolean;
+  fullWidth?: boolean;
 }
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({
@@ -34,7 +35,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   actionButton,
   showHeaderSearchBar = true,
   showNotification = true,
-  isLoading
+  isLoading,
+  fullWidth = false
 }) => {
   const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
   const handleDisplaySidebar = () => {
@@ -60,7 +62,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         {showSidebar && <Sidebar displaySidebar={displaySidebar} handleDisplaySidebar={handleDisplaySidebar} />}
         <div
           className={`main-content relative flex h-full max-w-full flex-1 overflow-hidden ml-0 ${
-            displaySidebar ? "ml-0" : "md:ml-[260px] lg:ml-[260px]"
+            displaySidebar || !showSidebar ? "ml-0" : "md:ml-[260px] lg:ml-[260px]"
           }`}
           ref={mainRef}
         >
@@ -75,13 +77,13 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                     displaySidebar={displaySidebar}
                   />
                 )}
-                <Content>
-                  <HeaderTitle
+                <Content fullWidth={fullWidth}>
+                 {pageTitle && <HeaderTitle
                     pageTitle={pageTitle}
                     pageDescription={pageDescription}
                     showPageExporter={showPageExporter}
                     actionButton={actionButton}
-                  />
+                  />}
                   {/* <BreadCrumb /> */}
                   {children}
                 </Content>

@@ -16,7 +16,9 @@ interface CustomFieldProps extends InputProps {
     element: LucideIcon;
     show?: boolean;
     position: "left" | "right";
+    className?: string;
   };
+  className?: string;
 }
 
 const CustomField: FC<CustomFieldProps> = ({
@@ -31,6 +33,7 @@ const CustomField: FC<CustomFieldProps> = ({
   fieldKey,
   type,
   icon,
+  className,
   ...props
 }) => {
   const handleInputFieldChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -56,7 +59,9 @@ const CustomField: FC<CustomFieldProps> = ({
       <div className="relative">
         {icon && icon.show && icon.position === "left" && (
           <div
-            className="absolute flex items-center justify-center top-1 left-1 h-[33px] w-[33px] bg-gray-100 rounded-bl-sm rounded-tl-sm"
+            className={`absolute flex items-center justify-center top-1 left-1 h-[33px] w-[33px] bg-gray-100 rounded-bl-sm rounded-tl-sm ${
+              icon.className || ""
+            }`}
             style={{
               lineHeight: "2.5rem"
             }}
@@ -71,7 +76,7 @@ const CustomField: FC<CustomFieldProps> = ({
           onBlur={onBlur}
           onChange={handleInputFieldChange}
           disabled={disabled}
-          className={`${inputPaddingLeft} ${inputPaddingRight}`}
+          className={`${inputPaddingLeft} ${inputPaddingRight} ${className || ""}`}
           {...props}
           id={id}
         />

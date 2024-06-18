@@ -1,8 +1,9 @@
 import { ReactNode } from "react";
 interface ContentProps {
   children: ReactNode;
+  fullWidth?: boolean;
 }
-const Content: React.FC<ContentProps> = ({ children }) => {
+const Content: React.FC<ContentProps> = ({ children, fullWidth }) => {
   const userDetails: Record<string, any> = {};
   return (
     <>
@@ -11,7 +12,7 @@ const Content: React.FC<ContentProps> = ({ children }) => {
           <p className="text-yellow-900">Your account is not verified yet. Check your email to verify account</p>
         </div>
       )}
-      <div className="dashboard-content p-8">{children}</div>
+      <div className={`dashboard-content ${!fullWidth && "p-6"}`}>{children}</div>
     </>
   );
 };

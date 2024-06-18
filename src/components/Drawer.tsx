@@ -9,8 +9,17 @@ interface DrawerProps {
   open?: boolean;
   children?: ReactNode;
   handleDrawerClose: () => void;
+  position?: "top" | "right" | "bottom" | "left";
 }
-const Drawer: FC<DrawerProps> = ({ open, loading, description, title, children, handleDrawerClose }) => {
+const Drawer: FC<DrawerProps> = ({
+  open,
+  loading,
+  description,
+  title,
+  children,
+  handleDrawerClose,
+  position = "right"
+}) => {
   return (
     <Sheet
       open={open}
@@ -20,7 +29,7 @@ const Drawer: FC<DrawerProps> = ({ open, loading, description, title, children, 
         handleDrawerClose();
       }}
     >
-      <SheetContent className="sm:max-w-[450px] w-full overflow-y-auto">
+      <SheetContent className="sm:max-w-[450px] w-full overflow-y-auto" side={position}>
         {loading ? (
           <div className="flex items-center justify-center h-full">
             <FetchLoader />
@@ -31,7 +40,6 @@ const Drawer: FC<DrawerProps> = ({ open, loading, description, title, children, 
               <SheetTitle className="text-center text-xl">{title}</SheetTitle>
               <SheetDescription>{description}</SheetDescription>
             </SheetHeader>
-            <div className="flex-1"></div>
             {children}
           </div>
         )}

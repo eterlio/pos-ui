@@ -5,6 +5,7 @@ import { USER_ROUTES } from "./users";
 import { PRODUCT_ENDPOINTS } from "./product";
 import { SUPPLIERS_ROUTES } from "./suppliers";
 import { STOCK_ROUTES } from "./stock";
+import { POS_ROUTES } from "./pos";
 import Test from "@/pages/Test";
 
 export const ROUTES: RoutesProps[] = [
@@ -14,6 +15,7 @@ export const ROUTES: RoutesProps[] = [
   ...PRODUCT_ENDPOINTS,
   ...SUPPLIERS_ROUTES,
   ...STOCK_ROUTES,
+  ...POS_ROUTES,
   {
     component: Test,
     url: "/test"
