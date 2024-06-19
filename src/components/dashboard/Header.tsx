@@ -45,7 +45,7 @@ const Header = ({
             <Input
               type="email"
               placeholder="Search..."
-              className="bg-gray-50 border-gray-50 lg:flex md:w-[300px] lg:w-[300px]"
+              className="bg-gray-50 border-gray-50 hidden md:w-[300px] lg:w-[300px]"
             />
           )}
           <Link
