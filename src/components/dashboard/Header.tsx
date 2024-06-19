@@ -1,11 +1,11 @@
 import { Input } from "@/components/ui/input";
 import { MessageSquare, BellIcon, Menu } from "lucide-react";
-import { MouseEventHandler } from "react";
+import { MouseEventHandler, useContext, useEffect } from "react";
 import UserNav from "./UserNav";
 import { Link } from "react-router-dom";
-// import { StoreContext, StoreContextProps } from "@/utils/store";
-// import { eventSourceHandler } from "@/lib/eventManager";
-// import { EventSourceMessage } from "@microsoft/fetch-event-source";
+import { StoreContext, StoreContextProps } from "@/utils/store";
+import { eventSourceHandler } from "@/lib/eventManager";
+import { EventSourceMessage } from "@microsoft/fetch-event-source";
 
 const Header = ({
   handleDisplaySidebar,
@@ -18,24 +18,29 @@ const Header = ({
   showNotification?: boolean;
   displaySidebar?: boolean;
 }) => {
-  // const { authUser } = useContext(StoreContext) as StoreContextProps;
+  const { authUser, setNotificationData, notifications, setHasUnreadNotificationData, hasUnreadNotification } =
+    useContext(StoreContext) as StoreContextProps;
 
-  // useEffect(() => {
-  //   eventSourceHandler.setHeaders({
-  //     "Content-Type": "application/json",
-  //     Authorization: `Bearer ${authUser?.accessToken}`
-  //   });
+  useEffect(() => {
+    eventSourceHandler.setHeaders({
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${authUser?.accessToken}`
+    });
 
-  //   const handleMessage = (msg: EventSourceMessage) => {
-  //     console.log(msg);
-  //   };
+    const handleMessage = (msg: EventSourceMessage) => {
+      if (msg && msg.event && msg.event === "stock-taken") {
+        const notification = JSON.parse(msg.data);
+        setNotificationData(notification);
+        setHasUnreadNotificationData(true);
+      }
+    };
 
-  //   eventSourceHandler.start(handleMessage);
+    eventSourceHandler.start(handleMessage);
 
-  //   return () => {
-  //     eventSourceHandler.stop();
-  //   };
-  // }, []);
+    return () => {
+      eventSourceHandler.stop();
+    };
+  }, []);
   return (
     <div className="header-container bg-white sticky top-0 z-[5]">
       <header className="flex h-[56px] items-center justify-between px-8  sticky top-0" role="banner">
@@ -62,7 +67,9 @@ const Header = ({
                 <MessageSquare size={18} />
               </div>
               <div className="notification-icon w-8 h-8 bg-gray-50 rounded-full flex items-center justify-center relative">
-                <span className="w-2 h-2 block absolute top-[7px] right-[10px] rounded-full bg-green-400"></span>
+                {hasUnreadNotification && (
+                  <span className="w-2 h-2 block absolute top-[7px] right-[10px] rounded-full bg-green-400"></span>
+                )}
                 <BellIcon size={18} />
               </div>
             </>
