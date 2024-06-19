@@ -1,5 +1,6 @@
 import { PermissionOperation, PermissionString } from "@/helpers/permission";
 import { AddressProps, DefaultPluginProps, PhoneProps } from ".";
+import { SettingsProps } from "./settings";
 
 export type UserRole = "admin" | "support" | "manager";
 
@@ -33,10 +34,16 @@ export interface UserProps extends DefaultPluginProps {
   permission?: any;
   fullName?: string;
   accountId?: string;
-	warehouseId?: string[];
-	currentWarehouse?: string;
+  warehouseId?: string[];
+  currentWarehouse?: string;
 }
 
 export interface AuthUserResponse extends UserProps {
   accessToken: string;
+}
+
+export interface InitData {
+  settings: SettingsProps | null;
+  authUser: UserProps;
+  hasUnreadNotification: boolean;
 }

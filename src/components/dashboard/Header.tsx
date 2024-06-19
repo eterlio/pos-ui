@@ -18,7 +18,8 @@ const Header = ({
   showNotification?: boolean;
   displaySidebar?: boolean;
 }) => {
-  const { authUser, setNotificationData, notifications } = useContext(StoreContext) as StoreContextProps;
+  const { authUser, setNotificationData, notifications, setHasUnreadNotificationData, hasUnreadNotification } =
+    useContext(StoreContext) as StoreContextProps;
 
   useEffect(() => {
     eventSourceHandler.setHeaders({
@@ -27,10 +28,10 @@ const Header = ({
     });
 
     const handleMessage = (msg: EventSourceMessage) => {
-      console.log(msg);
       if (msg && msg.event && msg.event === "stock-taken") {
         const notification = JSON.parse(msg.data);
         setNotificationData(notification);
+        setHasUnreadNotificationData(true);
       }
     };
 
@@ -66,7 +67,7 @@ const Header = ({
                 <MessageSquare size={18} />
               </div>
               <div className="notification-icon w-8 h-8 bg-gray-50 rounded-full flex items-center justify-center relative">
-                {notifications && notifications.length && (
+                {hasUnreadNotification && (
                   <span className="w-2 h-2 block absolute top-[7px] right-[10px] rounded-full bg-green-400"></span>
                 )}
                 <BellIcon size={18} />
