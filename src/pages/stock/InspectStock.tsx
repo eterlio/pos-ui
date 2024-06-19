@@ -113,7 +113,8 @@ const InspectStock: FC<InspectStockProps> = ({ selectedStock, handleDrawerOpen, 
                 : navigate(`/stocks/${selectedStock._id}/view`);
             }}
           >
-            {selectedStock.status === "pending" ? "Edit Stock" : "View Stock"}
+            {selectedStock.status === "pending" && "Edit Stock"}
+ {selectedStock.status !== "pending" && type !=="view" && "View Stock"}
           </Button>
         </div>
       </div>
