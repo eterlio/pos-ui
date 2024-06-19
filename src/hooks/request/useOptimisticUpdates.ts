@@ -34,6 +34,12 @@ export function useOptimisticUpdates() {
       };
     });
   };
+  const updateSingleItem = <T extends Entity>(key: any[], item: T) => {
+    //@ts-ignore
+    queryClient.setQueryData<T>(key, (data) => {
+      return { ...data, ...item };
+    });
+  };
 
-  return { addToOrUpdateList, removeItemFromList };
+  return { addToOrUpdateList, removeItemFromList, updateSingleItem };
 }

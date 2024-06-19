@@ -1,10 +1,13 @@
 import ViewElement from "@/components/ViewElement";
 import DashboardLayout from "@/components/dashboard/Layout";
 import PageContainer from "@/components/dashboard/PageContainer";
+import { Button } from "@/components/ui/button";
 import { useGeneralQuery } from "@/hooks/request/useGeneralQuery";
 import { StockDataProps, StockProps } from "@/interfaces/stock";
 import { format } from "date-fns";
 import { useParams } from "react-router-dom";
+import InspectStock from "./InspectStock";
+import { useState } from "react";
 
 const ViewStockScreen = () => {
   const params = useParams<{ id: string }>();
@@ -18,10 +21,23 @@ const ViewStockScreen = () => {
     approved: "text-green-500",
     rejected: "text-red-500"
   };
+  const [openDrawer, setOpenDrawer] = useState(false);
+
+  const handleDrawerOpen = () => {
+    setOpenDrawer(!openDrawer);
+  };
   return (
     <DashboardLayout pageTitle="Stock Data" pageDescription="Summary of the stock" isLoading={isFetching}>
       <PageContainer>
-        <h1 className="text-xl font-light mb-2">Stock Information</h1>
+        {data && data._id && (
+          <InspectStock handleDrawerOpen={handleDrawerOpen} type="view" selectedStock={data} openDrawer={openDrawer} />
+        )}
+        <div className="flex justify-between items-center">
+          <h1 className="text-xl font-light mb-2">Stock Information</h1>
+          <Button className="h-8" variant={"outline"} onClick={handleDrawerOpen}>
+            Inspect Stock
+          </Button>
+        </div>
         {data?.status && <h1 className={`${statusMapper[data.status]}`}>{data.status.toUpperCase()}</h1>}
         <div className="my-5 grid md:grid-cols-3 gap-5">
           <ViewElement title="Delivery Code" description={data?.deliveryId} />
@@ -36,7 +52,7 @@ const ViewStockScreen = () => {
           {((data?.stockData as StockDataProps[]) || []).map((item, index) => {
             const product = data?.products?.find((product) => product.id === item.productId);
             return (
-              <div className="mb-4">
+              <div className="mb-4" key={index}>
                 <h1>Stock Item #{index + 1}</h1>
                 <div className="grid md:grid-cols-3 gap-5">
                   <ViewElement title="Product" description={product?.name} />
