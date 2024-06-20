@@ -20,7 +20,7 @@ export const useBaseRequestService = (
     useToken: false
   }
 ) => {
-  const { saveAuthUser, authUser, setSettingsData, setHasUnreadNotificationData } = useContext(
+  const { saveAuthUser, authUser } = useContext(
     StoreContext
   ) as StoreContextProps;
   const axiosInstance = axios.create({
