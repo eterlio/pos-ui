@@ -59,9 +59,7 @@ const LoginScreen = () => {
         <Preloader />
       ) : (
         <>
-          <div className="min-h-full flex-1 hidden md:block w-full bg-[url('@/assets/authBg.jpg')] bg-cover bg-blend-darken bg-no-repeat brightness-50">
-            
-          </div>
+          <div className="min-h-full flex-1 hidden md:block w-full bg-[url('@/assets/authBg.jpg')] bg-cover bg-blend-darken bg-no-repeat brightness-50"></div>
           <div className="flex items-center justify-center p-2 flex-1">
             <div className="md:max-w-[450px] m-auto p-5 w-full">
               <div className="heading my-4 space-y-1">

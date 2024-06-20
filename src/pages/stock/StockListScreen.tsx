@@ -62,7 +62,7 @@ const StockListScreen = () => {
         <Table
           columns={stockDataSchema}
           data={data?.data || []}
-          isLoading={false}
+          isLoading={isFetching}
           loadingText="Fetching product code data"
           showExportButton
           paginator={data?.paginator}

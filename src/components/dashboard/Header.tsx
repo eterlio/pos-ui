@@ -18,7 +18,7 @@ const Header = ({
   showNotification?: boolean;
   displaySidebar?: boolean;
 }) => {
-  const { authUser, setNotificationData, notifications, setHasUnreadNotificationData, hasUnreadNotification } =
+  const { authUser, setNotificationData, setHasUnreadNotificationData, hasUnreadNotification } =
     useContext(StoreContext) as StoreContextProps;
 
   useEffect(() => {
