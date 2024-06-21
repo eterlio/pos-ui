@@ -20,7 +20,7 @@ export const useBaseRequestService = (
     useToken: false
   }
 ) => {
-  const { saveAuthUser, authUser } = useContext(
+  const { saveAuthUser, authUser, setHasUnreadNotificationData, setSettingsData } = useContext(
     StoreContext
   ) as StoreContextProps;
   const axiosInstance = axios.create({
@@ -76,12 +76,18 @@ export const useBaseRequestService = (
   };
   const getAuth = async () => {
     try {
-      const { data } = await axiosInstance.get<BaseResponse<InitData>>("/auth");
+      const { data } = await axiosInstance.get<BaseResponse<AuthUserResponse>>("/auth");
       return data.response;
     } catch (error) {
       throw error;
     }
   };
 
-  return { axiosInstance, refreshToken, getAuth };
+  const getInitData = async () => {
+    const { data } = await axiosInstance.get<BaseResponse<InitData>>("/init");
+    setHasUnreadNotificationData(data.response.hasUnreadNotification);
+    setSettingsData(data.response.settings);
+  };
+
+  return { axiosInstance, refreshToken, getAuth, getInitData };
 };

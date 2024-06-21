@@ -1,12 +1,13 @@
 import React, { ReactNode } from "react";
 
 interface TabProps {
-  label: string;
+  label: ReactNode;
   children: ReactNode;
+  value: string;
 }
 
-const Tab: React.FC<TabProps> = ({ label, children }) => {
-  return <div aria-label={label}>{children}</div>;
+const Tab: React.FC<TabProps> = ({ children }) => {
+  return <>{children}</>;
 };
 
 export default Tab;

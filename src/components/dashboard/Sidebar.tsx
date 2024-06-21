@@ -30,7 +30,6 @@ const DashboardSidebar = ({
               </div>
               <div className="menu-items">
                 <SidebarMenu title={menuSidebarRoutesLinks.title} routesData={menuSidebarRoutesLinks.routeLinks} />
-
                 <SidebarMenu
                   title={generalSidebarRoutesLinks.title}
                   routesData={generalSidebarRoutesLinks.routeLinks}

@@ -8,12 +8,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 export const PersistLogin = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-  const {
-    authUser: auth,
-    setHasUnreadNotificationData,
-    setSettingsData
-  } = useContext(StoreContext) as StoreContextProps;
-
+  const { authUser: auth } = useContext(StoreContext) as StoreContextProps;
   const { getAuth } = useBaseRequestService({
     useToken: true,
     tokenType: "accessToken"
@@ -21,9 +16,7 @@ export const PersistLogin = () => {
 
   const verifyUserIsAuthenticated = async () => {
     try {
-      const data = await getAuth();
-      setHasUnreadNotificationData(data.hasUnreadNotification);
-      setSettingsData(data.settings);
+      await getAuth();
     } catch (e) {
       if (e instanceof AxiosError && e.response?.status === 403 && !auth) {
         navigate("/auth/login");

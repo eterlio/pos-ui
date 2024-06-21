@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useState, memo } from "react";
 import { Link } from "react-router-dom";
 import { ChevronRight, ChevronDown, Minus } from "lucide-react";
 import { MenuSidebarRoute, SubLink } from "@/route/sidebar";
@@ -85,4 +85,4 @@ const SidebarMenuItem: React.FC<MenuSidebarRoute> = ({
   );
 };
 
-export default SidebarMenuItem;
+export default memo(SidebarMenuItem);

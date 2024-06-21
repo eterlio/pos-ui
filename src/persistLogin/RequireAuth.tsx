@@ -1,14 +1,11 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useLocation, Navigate, Outlet } from "react-router-dom";
 
-import {
-  PermissionOperation,
-  PermissionString,
-  hasPermission,
-} from "@/helpers/permission";
+import { PermissionOperation, PermissionString, hasPermission } from "@/helpers/permission";
 import { Meta } from "@/interfaces/route";
 import { UserRole } from "@/interfaces/users";
 import { StoreContext, StoreContextProps } from "@/utils/store";
+import { useBaseRequestService } from "@/hooks/request/useAxiosPrivate";
 
 interface RequireAuthProps {
   permission: [PermissionString, PermissionOperation];
@@ -16,18 +13,20 @@ interface RequireAuthProps {
   meta?: Meta;
 }
 
-const RequireAuth: React.FC<RequireAuthProps> = ({
-  permission,
-  allowedRoles,
-  meta,
-}) => {
-  const {authUser: auth } = useContext(StoreContext) as StoreContextProps;
+const RequireAuth: React.FC<RequireAuthProps> = ({ permission, allowedRoles, meta }) => {
+  const { authUser: auth } = useContext(StoreContext) as StoreContextProps;
   const location = useLocation();
   const userRole = auth?.role;
-  const permissionVerified = hasPermission(
-    String(auth?.permission?.access),
-    permission
-  );  
+  const permissionVerified = hasPermission(String(auth?.permission?.access), permission);
+
+  const { getInitData } = useBaseRequestService({
+    useToken: true,
+    tokenType: "accessToken"
+  });
+
+  useEffect(() => {
+    getInitData();
+  }, [location.pathname]);
 
   // Check if userRole is admin or support
   if (userRole && ["admin", "support"].includes(userRole)) {
@@ -49,10 +48,9 @@ const RequireAuth: React.FC<RequireAuthProps> = ({
       return <Navigate to="/notFound" state={{ from: location }} replace />;
     }
   }
-  if (userRole && !permissionVerified){
+  if (userRole && !permissionVerified) {
     return <Navigate to="/unauthorized" state={{ from: location }} replace />;
   }
-
 
   // Default case: navigate to login if none of the conditions are met
   return <Navigate to="/auth/login" state={{ from: location }} replace />;
