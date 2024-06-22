@@ -89,12 +89,12 @@ const SellProductScreen = () => {
             <div className="products">
               <div>
                 <Tabs>
-                  <Tab label="Tiles">
+                  <Tab label="Tiles" value="tiles">
                     <div className="py-4">
                       <ProductDetails />
                     </div>
                   </Tab>
-                  <Tab label="Doors">
+                  <Tab label="Doors" value="doors">
                     <div className="py-4">
                       <ProductDetails />
                     </div>
