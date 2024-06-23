@@ -23,7 +23,7 @@ const UpdateProductScreen = () => {
   const productId = params.id;
   const buttonTitle = "Update";
   const { addErrors, errors, resetError } = useError<ValidatorProps>();
-  const { data } = useGeneralQuery<ProductProps>({
+  const { data, isFetching } = useGeneralQuery<ProductProps>({
     queryKey: ["product", productId],
     url: `/products/${productId}`
   });
@@ -126,8 +126,8 @@ const UpdateProductScreen = () => {
       handleFormFieldChange={handleFormFieldChange}
       onsubmitHandler={onsubmitHandler}
       errors={errors as Record<string, any>}
-      isLoading={isPending}
-      disabledButton={!Object.keys(payload).length}
+      isLoading={isFetching}
+      disabledButton={!Object.keys(payload).length || isPending}
       formTitle="Product information"
       pageDescription="Update product information"
       handleImageUpload={fileUploadHandler}
