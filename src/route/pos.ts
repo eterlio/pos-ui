@@ -4,7 +4,6 @@ export const POS_ROUTES: RoutesProps[] = [
   {
     component: SellProductScreen,
     url: "/pos",
-    requireAuth: true,
-    permission: ["pos", "read"]
+    requireAuth: true
   }
 ];

@@ -11,8 +11,10 @@ const DashboardSidebar = ({
   handleDisplaySidebar: MouseEventHandler;
 }) => {
   const { authUser } = useContext(StoreContext) as StoreContextProps;
+
   const menuSidebarRoutesLinks = menuSidebarRoutes(authUser?.role || "", authUser?.permission?.access || "");
-  const generalSidebarRoutesLinks = generalSidebarRoutes();
+  const generalSidebarRoutesLinks = generalSidebarRoutes(authUser?.role);
+
   return (
     <div
       className={`flex-shrink-0 overflow-x-hidden dark ${

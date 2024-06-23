@@ -3,23 +3,26 @@ import SidebarMenuItem from "./SidebarMenuItem";
 import { MenuSidebarRoute } from "@/route/sidebar";
 
 interface SidebarMenuProps {
-  title: string;
-  routesData: MenuSidebarRoute[];
+  title?: string;
+  routesData?: MenuSidebarRoute[];
 }
 
 const SidebarMenu: React.FC<SidebarMenuProps> = ({ title, routesData }) => {
   const processedItems = useMemo(() => {
-    return routesData.map((item) => ({
-      ...item
-    }));
+    if (routesData && routesData.length) {
+      return routesData.map((item) => ({
+        ...item
+      }));
+    }
+    return [];
   }, []);
 
   return (
     <div className="my-5">
-      <p className="section-title  pl-3 text-[0.655rem] text-white font-bold">{title}</p>
+      <p className="section-title  pl-3 text-[0.655rem] text-white font-bold">{title && title}</p>
       <ul>
         {processedItems &&
-          processedItems.length &&
+          processedItems.length > 0 &&
           processedItems.map((data, index) => {
             return (
               <SidebarMenuItem

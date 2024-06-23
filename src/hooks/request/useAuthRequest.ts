@@ -40,7 +40,13 @@ export const useAuthLogin = () => {
         description: "Login success. Redirecting User"
       });
       saveAuthUser(authData);
-      navigate(`/dashboard/${authData.role}`);
+      if (authData.role) {
+        if (authData.role === "admin") {
+          navigate(`/dashboard/admin`);
+        } else {
+          navigate(`/dashboard/${authData.role}`);
+        }
+      }
       queryClient.invalidateQueries({ queryKey: ["auth"] });
     }
   });
