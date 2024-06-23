@@ -14,9 +14,12 @@ export type PermissionString =
   | "suppliers"
   | "warehouses"
   | "customers"
+  | "expenditures"
   | "salesTarget"
   | "stocks"
-  | "pos";
+  | "inventory"
+  | "stockAdjustments"
+  | "invoice";
 export type IPermission = Record<PermissionString, Record<PermissionOperation, number>>;
 export const permissionOperations: PermissionOperation[] = ["create", "read", "update", "delete"];
 export const hasPermission = (
@@ -38,11 +41,16 @@ export const PERMISSIONS_LIST: PermissionString[] = [
   "productCategory",
   "productBrand",
   "productCode",
+  "productWarranty",
   "productUnit",
   "products",
   "suppliers",
   "stocks",
-  "pos"
+  "stockAdjustments",
+  "salesTarget",
+  "inventory",
+  "invoice",
+  "customers"
 ];
 
 export const PERMISSIONS = structurePermissionsObject(PERMISSIONS_LIST);

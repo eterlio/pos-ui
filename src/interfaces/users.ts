@@ -2,11 +2,11 @@ import { PermissionOperation, PermissionString } from "@/helpers/permission";
 import { AddressProps, DefaultPluginProps, PhoneProps } from ".";
 import { SettingsProps } from "./settings";
 
-export type UserRole = "admin" | "support" | "manager";
+export type UserRole = "admin" | "support" | "manager" | "super-admin" | "sales-personnel";
 
-export const userRoles: UserRole[] = ["admin", "support"];
+export const userRoles: UserRole[] = ["admin", "support", "manager", "super-admin", "sales-personnel"];
 
-export const specialRoles: UserRole[] = userRoles.filter((role: UserRole) => ["admin", "support"].includes(role));
+export const specialRoles: UserRole[] = userRoles.filter((role: UserRole) => ["support", "super-admin"].includes(role));
 
 export type Gender = "male" | "female" | "non-binary" | "other";
 export const genders: Gender[] = ["female", "male", "non-binary", "other"];

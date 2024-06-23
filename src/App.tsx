@@ -5,6 +5,7 @@ import { RoutesProps } from "./interfaces/route";
 import PersistLogin from "./persistLogin/PersistLogin";
 import RequireAuth from "./persistLogin/RequireAuth";
 import NotFoundScreen from "./components/NotFound";
+import Unauthorized from "./components/Unauthorized";
 
 function App() {
   return (
@@ -12,7 +13,11 @@ function App() {
       {ROUTES.map((route: RoutesProps, index: number) => {
         return route.requireAuth ? (
           <Route element={<PersistLogin />} key={index}>
-            <Route element={<RequireAuth permission={route.permission!} meta={route.meta} />}>
+            <Route
+              element={
+                <RequireAuth permission={route.permission!} meta={route.meta} allowedRoles={route.allowedRoles} />
+              }
+            >
               <Route path={route.url} element={<route.component />} />
             </Route>
           </Route>
@@ -21,6 +26,7 @@ function App() {
         );
       })}
 
+      <Route path="/unauthorized" element={<Unauthorized />} />
       <Route path="*" element={<NotFoundScreen />} />
     </CustomSwitch>
   );

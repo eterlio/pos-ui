@@ -3,7 +3,7 @@ import { useLocation, Navigate, Outlet } from "react-router-dom";
 
 import { PermissionOperation, PermissionString, hasPermission } from "@/helpers/permission";
 import { Meta } from "@/interfaces/route";
-import { UserRole } from "@/interfaces/users";
+import { UserRole, specialRoles } from "@/interfaces/users";
 import { StoreContext, StoreContextProps } from "@/utils/store";
 import { useBaseRequestService } from "@/hooks/request/useAxiosPrivate";
 
@@ -17,7 +17,8 @@ const RequireAuth: React.FC<RequireAuthProps> = ({ permission, allowedRoles, met
   const { authUser: auth } = useContext(StoreContext) as StoreContextProps;
   const location = useLocation();
   const userRole = auth?.role;
-  const permissionVerified = hasPermission(String(auth?.permission?.access), permission);
+  const permissionVerified =
+    permission && permission.length ? hasPermission(String(auth?.permission?.access), permission) : true;
 
   const { getInitData } = useBaseRequestService({
     useToken: true,
@@ -29,27 +30,28 @@ const RequireAuth: React.FC<RequireAuthProps> = ({ permission, allowedRoles, met
   }, [location.pathname]);
 
   // Check if userRole is admin or support
-  if (userRole && ["admin", "support"].includes(userRole)) {
+  if (userRole && [...specialRoles, "admin"].includes(userRole)) {
     return <Outlet context={{ meta }} />;
   }
 
   // Check if userRole exists and no specific permission is required
-  if (userRole && !permission) {
+  if (userRole && !permission && !allowedRoles?.length) {
     return <Outlet context={{ meta }} />;
   }
 
   // Check if userRole has the required permission
   if (userRole && permissionVerified) {
-    // Check if allowedRoles is not defined or userRole is in allowedRoles
-    if (!allowedRoles || allowedRoles.includes(userRole as UserRole)) {
+    if (!allowedRoles || !allowedRoles.length) {
+      return <Outlet context={{ meta }} />;
+    }
+    if (allowedRoles && allowedRoles.length && allowedRoles.includes(userRole as UserRole)) {
       return <Outlet context={{ meta }} />;
     } else {
-      // UserRole is not in allowedRoles, navigate to unauthorized
-      return <Navigate to="/notFound" state={{ from: location }} replace />;
+      return <Navigate to="/unauthorized" state={{ from: location }} />;
     }
   }
   if (userRole && !permissionVerified) {
-    return <Navigate to="/unauthorized" state={{ from: location }} replace />;
+    return <Navigate to="/unauthorized" state={{ from: location }} />;
   }
 
   // Default case: navigate to login if none of the conditions are met
