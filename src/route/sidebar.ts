@@ -55,7 +55,6 @@ export const menuSidebarRoutes = (userRole: string, userPermission: string): Men
             url: "/users/create",
             isVisible: hasPermission(userPermission, ["users", "create"])
           },
-
           {
             title: "List users",
             url: "/users",
@@ -92,7 +91,6 @@ export const menuSidebarRoutes = (userRole: string, userPermission: string): Men
             url: "/import-products",
             isDisabled: true
           },
-
           {
             title: "Product Codes",
             url: "/product-codes",
@@ -117,7 +115,6 @@ export const menuSidebarRoutes = (userRole: string, userPermission: string): Men
             title: "Product Variations",
             url: "/users",
             isDisabled: true
-            // isVisible:  hasPermission(userPermission, ["produ", "read"])
           },
           {
             title: "Product Warrants",
@@ -197,29 +194,34 @@ export const menuSidebarRoutes = (userRole: string, userPermission: string): Men
         isDisabled: false,
         isVisible: hasPermission(userPermission, ["suppliers", "read"])
       },
-
-      {
-        title: "Accounting",
-        url: "/",
-        icon: Calculator,
-        isDisabled: true,
-        isVisible: false,
-        subLinks: [
-          {
-            title: "Profit/Loss",
-            url: "/users/create"
-          },
-          {
-            title: "Sales Target",
-            url: "/users/create"
-          },
-
-          {
-            title: "Income/Expense",
-            url: "/users"
-          }
-        ]
-      },
+      ...(userRole === "admin"
+        ? [
+            {
+              title: "Accounting",
+              url: "/",
+              icon: Calculator,
+              isDisabled: false,
+              isVisible: true,
+              subLinks: [
+                {
+                  title: "Profit/Loss",
+                  url: "/users/create",
+                  isDisabled: true
+                },
+                {
+                  title: "Sales Target",
+                  url: "/users/create",
+                  isDisabled: true
+                },
+                {
+                  title: "Income/Expense",
+                  url: "/users",
+                  isDisabled: true
+                }
+              ]
+            }
+          ]
+        : []),
       {
         title: "Installments",
         url: "/",
@@ -231,7 +233,6 @@ export const menuSidebarRoutes = (userRole: string, userPermission: string): Men
             title: "Profit/Loss",
             url: "/users/create"
           },
-
           {
             title: "Income/Expense",
             url: "/users"
@@ -248,7 +249,6 @@ export const menuSidebarRoutes = (userRole: string, userPermission: string): Men
             title: "Add Expense",
             url: "/users/create"
           },
-
           {
             title: "Expense List",
             url: "/users"
@@ -283,7 +283,6 @@ export const menuSidebarRoutes = (userRole: string, userPermission: string): Men
             title: "Create users",
             url: "/users/create"
           },
-
           {
             title: "List users",
             url: "/users"
@@ -293,6 +292,7 @@ export const menuSidebarRoutes = (userRole: string, userPermission: string): Men
     ]
   };
 };
+
 export const generalSidebarRoutes = (userRole?: UserRole) => {
   if (userRole && [...specialRoles, "admin"].includes(userRole)) {
     return {
