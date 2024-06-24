@@ -182,9 +182,9 @@ export const menuSidebarRoutes = (userRole: string, userPermission: string): Men
       },
       {
         title: "Customer",
-        url: "/",
+        url: "/customers",
         icon: UserPlus,
-        isDisabled: true,
+        isDisabled: false,
         isVisible: hasPermission(userPermission, ["customers", "read"])
       },
       {
