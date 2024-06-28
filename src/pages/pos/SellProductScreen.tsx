@@ -11,12 +11,63 @@ import Drawer from "@/components/Drawer";
 import SelectField from "@/components/customFields/Select/SelectField";
 import { Slider } from "@/components/ui/slider";
 import PrimaryButton from "@/components/PrimaryButton";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { uniqueId } from "lodash";
+
+type Product = {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+};
+interface SalesProps {
+  customer: string;
+  products: Product[];
+  discount?: {
+    type: "fixed" | "percentage";
+    amount: number;
+  };
+  tax: 0;
+  modeOfPayment: "cash" | "mobile money" | "bank";
+}
 const SellProductScreen = () => {
+  const [currentTab, setCurrentTab] = useState("");
+
+  const initialProducts = Array.from({ length: 20 }, (_, i) => ({
+    id: uniqueId(),
+    name: `Product ${i + 1}`,
+    price: 20.0 + i,
+    quantity: Math.floor(Math.random() * 2000)
+  }));
+
+  // Simulate fetching more products
+  const fetchMoreProducts = () => {
+    setTimeout(() => {
+      setProducts((prev) => {
+        console.log(prev);
+        return [
+          ...prev,
+          ...Array.from({ length: 20 }, (_, i) => ({
+            id: uniqueId(),
+            name: `Product ${prev.length + 1}`,
+            price: 20.0 + i,
+            quantity: Math.floor(Math.random() * 2000)
+          }))
+        ];
+      });
+    }, 1000);
+  };
+  const [products, setProducts] = useState<Product[]>(initialProducts);
   const [showFilter, setShowFilter] = useState(false);
+
   const handleFilterShow = () => {
     setShowFilter(true);
   };
+
   const handleSelectChange = () => {};
+
+  const handlePayItem = () => {};
+  const handleItems = () => {};
   return (
     <DashboardLayout showSidebar={false} fullWidth showHeaderSearchBar={false}>
       {/* <Nav></Nav> */}
@@ -61,47 +112,60 @@ const SellProductScreen = () => {
           </div>
         </div>
       </Drawer>
-      <div className="min-h-screen h-screen overflow-hidden">
-        <div className="flex justify-between h-full border">
-          <section className="products-section w-[70%] bg-white p-10">
-            <div className="search flex justify-between sticky top-0">
-              <div>
-                <h1 className="text-xl font-semibold">POS</h1>
+      <div className="min-h-screen h-screen">
+        <div className="h-full border">
+          <section id="products-section" className="products-section md:w-[70%] bg-white p-10 h-full overflow-x-scroll">
+            <InfiniteScroll
+              dataLength={products.length} //This is important field to render the next data
+              next={fetchMoreProducts}
+              hasMore={products.length < 120}
+              loader={<h4>Loading...</h4>}
+              endMessage={
+                <p style={{ textAlign: "center" }}>
+                  <b>Yay! You have seen it all</b>
+                </p>
+              }
+              scrollableTarget="products-section"
+            >
+              <div className="search flex justify-between">
+                <div>
+                  <h1 className="text-xl font-semibold">POS</h1>
+                </div>
+                <div className="flex gap-5">
+                  <CustomField
+                    handleInputChange={() => {}}
+                    fieldKey=""
+                    type="text"
+                    icon={{ element: Search, position: "left", show: true, className: "bg-transparent" }}
+                    placeholder="Search"
+                    className="bg-gray-50 flex-1 w-full"
+                  />
+                  <Button
+                    className="filter shadow w-[50px] h-10 rounded flex items-center justify-center text-gray-600 bg-white hover:text-white"
+                    onClick={handleFilterShow}
+                  >
+                    <Settings2 size={20} />
+                  </Button>
+                </div>
               </div>
-              <div className="flex gap-5">
-                <CustomField
-                  handleInputChange={() => {}}
-                  fieldKey=""
-                  type="text"
-                  icon={{ element: Search, position: "left", show: true, className: "bg-transparent" }}
-                  placeholder="Search"
-                  className="bg-gray-50 flex-1 w-full"
-                />
-                <Button
-                  className="filter shadow w-[50px] h-10 rounded flex items-center justify-center text-gray-600 bg-white hover:text-white"
-                  onClick={handleFilterShow}
-                >
-                  <Settings2 size={20} />
-                </Button>
-              </div>
-            </div>
 
-            <div className="products">
-              <div>
-                <Tabs>
-                  <Tab label="Tiles" value="tiles">
-                    <div className="py-4">
-                      <ProductDetails />
-                    </div>
-                  </Tab>
-                  <Tab label="Doors" value="doors">
-                    <div className="py-4">
-                      <ProductDetails />
-                    </div>
-                  </Tab>
-                </Tabs>
+              <div className="products">
+                <div>
+                  <Tabs getActiveTab={(tab) => setCurrentTab(tab.value)}>
+                    <Tab label="Tiles" value="tiles">
+                      <div className="py-4">
+                        <ProductDetails products={products} />
+                      </div>
+                    </Tab>
+                    <Tab label="Doors" value="doors">
+                      <div className="py-4">
+                        <ProductDetails products={products} />
+                      </div>
+                    </Tab>
+                  </Tabs>
+                </div>
               </div>
-            </div>
+            </InfiniteScroll>
           </section>
           <OrderDetails />
         </div>

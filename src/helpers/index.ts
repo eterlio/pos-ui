@@ -8,7 +8,7 @@ export const formatCurrency = (amount: number, currency = "GHS") => {
   if (!amount) return 0;
   return amount.toLocaleString("en-US", {
     style: "currency",
-    currency,
+    currency: undefined,
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   });

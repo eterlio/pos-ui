@@ -1,11 +1,29 @@
+import { FC } from "react";
 import { OrderItem } from "./OrderItem";
 
-const OrderItems = () => {
+interface Item {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+}
+
+const OrderItems: FC<{ items: Item[]; removeItem: (id: string) => void }> = ({ items, removeItem }) => {
   return (
     <div className="flex-1 items-container overflow-y-scroll">
-      <h1>Items</h1>
-      <OrderItem />
-      <OrderItem />
+      {items.length > 0 && (
+        <>
+          <h1>Items</h1>
+          {items.map((item, index) => {
+            return <OrderItem item={item} key={index} removeItem={removeItem} />;
+          })}
+        </>
+      )}
+      {!items.length && (
+        <div className="flex items-center justify-center flex-1 h-full">
+          <h1 className="text-gray-500">Item carts is empty</h1>
+        </div>
+      )}
     </div>
   );
 };
