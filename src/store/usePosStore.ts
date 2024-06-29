@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import useProductStore from "./useProductStore";
 
 interface Product {
   id: string;
@@ -30,6 +31,8 @@ type Action = {
   removeItems: () => void;
   getItemTotalAmount: () => number;
   getTotalItems: () => number;
+  incrementItemQuantity: (id: string, quantity: number) => void;
+  decrementItemQuantity: (id: string, quantity: number) => void;
 };
 
 // Initial state
@@ -44,9 +47,16 @@ const initialState: State = {
 // Create the Zustand store
 const usePosStore = create<State & Action>()((set, get) => ({
   ...initialState,
-  addItem: (item) =>
+  addItem: (item) => {
+    const { decrementProductQuantity, getProductById } = useProductStore.getState();
+
     set((state) => {
       const existingItem = state.items.find((i) => i.id === item.id);
+      const product = getProductById(item.id);
+
+      if (product && product.productQuantity) {
+        decrementProductQuantity(item.id, item.quantity);
+      }
 
       if (existingItem) {
         // Item already exists, update quantity
@@ -56,7 +66,8 @@ const usePosStore = create<State & Action>()((set, get) => ({
         // Item does not exist, add it to the list
         return { ...state, items: [...state.items, item] };
       }
-    }),
+    });
+  },
   updateItem: (id, productData) =>
     set((state) => {
       const updatedItems = state.items.map((p) => (p.id === id ? { ...p, ...productData } : p));
@@ -74,6 +85,28 @@ const usePosStore = create<State & Action>()((set, get) => ({
   },
   getTotalItems: () => {
     return get().items.reduce((total, item) => total + item.quantity, 0);
+  },
+  incrementItemQuantity: (id, amount) => {
+    const { decrementProductQuantity } = useProductStore.getState();
+
+    set((state) => {
+      const updatedItems = state.items.map((item) =>
+        item.id === id ? { ...item, quantity: item.quantity + amount } : item
+      );
+      decrementProductQuantity(id, amount);
+      return { ...state, items: updatedItems };
+    });
+  },
+  decrementItemQuantity: (id, amount) => {
+    const { incrementProductQuantity } = useProductStore.getState();
+
+    set((state) => {
+      const updatedItems = state.items.map((item) =>
+        item.id === id ? { ...item, quantity: item.quantity - amount } : item
+      );
+      incrementProductQuantity(id, amount);
+      return { ...state, items: updatedItems };
+    });
   }
 }));
 

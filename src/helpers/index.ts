@@ -4,7 +4,7 @@ import { parseISO, format, formatDistanceToNow } from "date-fns";
 import { isEmpty, transform } from "lodash";
 import { capitalize, words } from "lodash";
 
-export const formatCurrency = (amount: number, currency = "GHS") => {
+export const formatCurrency = (amount: number) => {
   if (!amount) return 0;
   return amount.toLocaleString("en-US", {
     style: "currency",

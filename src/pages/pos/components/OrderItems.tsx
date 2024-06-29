@@ -8,14 +8,14 @@ interface Item {
   quantity: number;
 }
 
-const OrderItems: FC<{ items: Item[]; removeItem: (id: string) => void }> = ({ items, removeItem }) => {
+const OrderItems: FC<{ items: Item[] }> = ({ items }) => {
   return (
     <div className="flex-1 items-container overflow-y-scroll">
       {items.length > 0 && (
         <>
           <h1>Items</h1>
           {items.map((item, index) => {
-            return <OrderItem item={item} key={index} removeItem={removeItem} />;
+            return <OrderItem item={item} key={index} />;
           })}
         </>
       )}

@@ -6,96 +6,121 @@ import { Button } from "@/components/ui/button";
 import Tabs from "@/components/Tabs";
 import Tab from "@/components/Tab";
 import ProductDetails from "./components/ProductDetails";
-import { useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Drawer from "@/components/Drawer";
 import SelectField from "@/components/customFields/Select/SelectField";
 import { Slider } from "@/components/ui/slider";
 import PrimaryButton from "@/components/PrimaryButton";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { uniqueId } from "lodash";
+import { startCase } from "lodash";
+import { useGeneralQuery } from "@/hooks/request/useGeneralQuery";
+import { GetManyProps } from "@/hooks/types";
+import { ProductCategoryProps } from "@/interfaces/productCategories";
+import { ProductProps } from "@/interfaces/products";
+import useProductStore from "@/store/useProductStore";
 
-type Product = {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
+type ProductQueryProps = {
+  deleted: boolean;
+  limit: number;
+  currentPage: number;
+  categoryId?: string;
 };
-interface SalesProps {
-  customer: string;
-  products: Product[];
-  discount?: {
-    type: "fixed" | "percentage";
-    amount: number;
-  };
-  tax: 0;
-  modeOfPayment: "cash" | "mobile money" | "bank";
-}
+
 const SellProductScreen = () => {
-  const [currentTab, setCurrentTab] = useState("");
+  const { products, updateProducts, setProducts } = useProductStore();
+  const [currentTab, setCurrentTab] = useState("all");
+  const initialProductQueryState = useCallback(
+    () => ({
+      deleted: false,
+      limit: 30,
+      currentPage: 1,
+      categoryId: "all"
+    }),
+    [currentTab]
+  );
 
-  const initialProducts = Array.from({ length: 20 }, (_, i) => ({
-    id: uniqueId(),
-    name: `Product ${i + 1}`,
-    price: 20.0 + i,
-    quantity: Math.floor(Math.random() * 2000)
-  }));
+  const [productQuery, setProductQuery] = useState<ProductQueryProps>(initialProductQueryState());
 
-  // Simulate fetching more products
-  const fetchMoreProducts = () => {
-    setTimeout(() => {
-      setProducts((prev) => {
-        console.log(prev);
-        return [
-          ...prev,
-          ...Array.from({ length: 20 }, (_, i) => ({
-            id: uniqueId(),
-            name: `Product ${prev.length + 1}`,
-            price: 20.0 + i,
-            quantity: Math.floor(Math.random() * 2000)
-          }))
-        ];
-      });
-    }, 1000);
+  const handleSetActiveTab = (tab: Record<string, any>) => {
+    setCurrentTab(tab.value);
+    let query = {
+      ...initialProductQueryState(),
+      categoryId: tab.value
+    };
+
+    setProductQuery(query);
+    setProducts([]);
   };
-  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const queryObject = { deleted: false };
+  const { data: productCategories, isFetching: categoriesFetching } = useGeneralQuery<
+    GetManyProps<ProductCategoryProps>
+  >({
+    queryKey: ["productCategories", queryObject],
+    url: "/product-categories",
+    query: queryObject,
+    enabled: !!Object.keys(queryObject).length
+  });
+
+  const { data: productsData } = useGeneralQuery<GetManyProps<ProductProps>>({
+    queryKey: ["products", productQuery],
+    url: "/products/general",
+    query: productQuery,
+    enabled: !!Object.keys(productQuery).length,
+    requireAuth: true,
+    staleTime: 0
+  });
+
+  const categories = productCategories?.data || [];
   const [showFilter, setShowFilter] = useState(false);
+
+  useEffect(() => {
+    if (productsData) {
+      updateProducts(productsData.data || []);
+    }
+  }, [productsData, updateProducts]);
 
   const handleFilterShow = () => {
     setShowFilter(true);
   };
 
-  const handleSelectChange = () => {};
+  const handleSelectChange = () => {
+    // Implement your select change logic
+  };
 
-  const handlePayItem = () => {};
-  const handleItems = () => {};
+  const handleFetchNextProduct = () => {
+    setProductQuery((prev) => ({
+      ...prev,
+      limit: prev.limit + 20,
+      currentPage: prev.currentPage + 1
+    }));
+  };
+
+  useEffect(() => {
+    setProducts(productsData?.data || []);
+  }, [productQuery, currentTab, productsData, setProducts]);
+
   return (
-    <DashboardLayout showSidebar={false} fullWidth showHeaderSearchBar={false}>
-      {/* <Nav></Nav> */}
+    <DashboardLayout showSidebar={false} fullWidth showHeaderSearchBar={false} isLoading={categoriesFetching}>
       <Drawer
-        description="Select fields to filter out products base on filter selected"
+        description="Select fields to filter out products based on filter selected"
         position="left"
         title="Filter"
         handleDrawerClose={() => setShowFilter(!showFilter)}
         open={showFilter}
       >
-        <div className=" mb-3">
+        <div className="mb-3">
           <SelectField onChange={handleSelectChange} fieldKey="" options={[]} isMulti label="Brand" />
           <SelectField onChange={handleSelectChange} fieldKey="" options={[]} isMulti label="Code" />
           <SelectField onChange={handleSelectChange} fieldKey="" options={[]} isMulti label="Unit" />
           <div className="mt-5">
             <h1>Price Range</h1>
-            {/* <div className="flex items-center justify-between bg-red-200">
-          <NumberField fieldKey="" handleInputChange={handleSelectChange} label="Min Price"/>
-          <span className="flex items-center justify-center w-full h-full"><Minus size={18} strokeWidth={1.5} /></span>
-          <NumberField fieldKey="" handleInputChange={handleSelectChange} label="Max Price"/>
-        </div> */}
             <div className="flex items-center justify-between my-2">
               <div>
                 <p className="text-[12px] font-light">Min</p>
                 <span className="text-[12px] font-semibold">0</span>
               </div>
               <div>
-                <p className="text-[12px] font-light">Min</p>
+                <p className="text-[12px] font-light">Max</p>
                 <span className="text-[12px] font-semibold">10,000</span>
               </div>
             </div>
@@ -116,15 +141,10 @@ const SellProductScreen = () => {
         <div className="h-full border">
           <section id="products-section" className="products-section md:w-[70%] bg-white p-10 h-full overflow-x-scroll">
             <InfiniteScroll
-              dataLength={products.length} //This is important field to render the next data
-              next={fetchMoreProducts}
-              hasMore={products.length < 120}
-              loader={<h4>Loading...</h4>}
-              endMessage={
-                <p style={{ textAlign: "center" }}>
-                  <b>Yay! You have seen it all</b>
-                </p>
-              }
+              dataLength={products.length}
+              next={handleFetchNextProduct}
+              hasMore={(productsData?.paginator.totalDocuments || 0) > products.length}
+              loader={<h4>Fetching more products...</h4>}
               scrollableTarget="products-section"
             >
               <div className="search flex justify-between">
@@ -148,20 +168,21 @@ const SellProductScreen = () => {
                   </Button>
                 </div>
               </div>
-
               <div className="products">
                 <div>
-                  <Tabs getActiveTab={(tab) => setCurrentTab(tab.value)}>
-                    <Tab label="Tiles" value="tiles">
+                  <Tabs getActiveTab={handleSetActiveTab} defaultTab={"all"}>
+                    <Tab label={"All"} value={"all"} key="all">
                       <div className="py-4">
                         <ProductDetails products={products} />
                       </div>
                     </Tab>
-                    <Tab label="Doors" value="doors">
-                      <div className="py-4">
-                        <ProductDetails products={products} />
-                      </div>
-                    </Tab>
+                    {categories.map((category, index) => (
+                      <Tab label={startCase(category?.name || "")} value={category?._id || ""} key={index}>
+                        <div className="py-4">
+                          <ProductDetails products={products} />
+                        </div>
+                      </Tab>
+                    ))}
                   </Tabs>
                 </div>
               </div>

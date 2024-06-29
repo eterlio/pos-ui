@@ -1,4 +1,4 @@
-import React, { useState, ReactElement, MouseEvent, useEffect } from "react";
+import React, { useState, ReactElement, MouseEvent } from "react";
 
 interface TabProps {
   label: React.ReactNode;
@@ -7,14 +7,25 @@ interface TabProps {
 }
 
 interface TabsProps {
-  children: ReactElement<TabProps>[] | ReactElement<TabProps>;
+  children: ReactElement<TabProps>[] | ReactElement<TabProps> | any;
   getActiveTab?: (tab: { value: string }) => void;
+  defaultTab?: string;
 }
 
-const Tabs: React.FC<TabsProps> = ({ children, getActiveTab }) => {
+const Tabs: React.FC<TabsProps> = ({ children, getActiveTab, defaultTab }) => {
   const childrenArray = React.Children.toArray(children) as ReactElement<TabProps>[];
 
-  const [activeTab, setActiveTab] = useState(childrenArray.length > 0 ? childrenArray[0].props.value : "");
+  const [activeTab, setActiveTab] = useState(
+    defaultTab || (childrenArray.length > 0 ? childrenArray[0].props.value : "")
+  );
+
+  // useEffect(() => {
+  //   if (getActiveTab) {
+  //     getActiveTab({
+  //       value: activeTab
+  //     });
+  //   }
+  // }, []);
 
   const handleClick = (e: MouseEvent<HTMLButtonElement>, newActiveTab: string) => {
     e.preventDefault();
@@ -26,11 +37,6 @@ const Tabs: React.FC<TabsProps> = ({ children, getActiveTab }) => {
     }
   };
 
-  useEffect(() => {
-    if (getActiveTab) {
-      getActiveTab({ value: activeTab });
-    }
-  }, []);
   return (
     <div>
       <div className="flex border-b border-gray-300 gap-3">

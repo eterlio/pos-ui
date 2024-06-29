@@ -8,8 +8,8 @@ export const userRoles: UserRole[] = ["admin", "support", "manager", "super-admi
 
 export const specialRoles: UserRole[] = userRoles.filter((role: UserRole) => ["support", "super-admin"].includes(role));
 
-export type Gender = "male" | "female" | "non-binary" | "other";
-export const genders: Gender[] = ["female", "male", "non-binary", "other"];
+export type Gender = "male" | "female";
+export const genders: Gender[] = ["female", "male"];
 export type UserStatus = "active" | "suspended" | "pending" | "inactive";
 
 export const userStatuses: UserStatus[] = ["active", "suspended", "pending", "inactive"];

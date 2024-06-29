@@ -3,6 +3,8 @@ import { Trash2 } from "lucide-react";
 import Tile from "@/assets/tile.jpg";
 import { FC } from "react";
 import { Button } from "@/components/ui/button";
+import usePosStore from "@/store/usePosStore";
+import useProductStore from "@/store/useProductStore";
 
 interface Item {
   id: string;
@@ -11,17 +13,20 @@ interface Item {
   quantity: number;
 }
 
-export const OrderItem: FC<{ item: Item; removeItem: (id: string) => void }> = ({ item, removeItem }) => {
+export const OrderItem: FC<{ item: Item }> = ({ item }) => {
+  const { removeItem, incrementItemQuantity, decrementItemQuantity } = usePosStore();
+  const { getProductById } = useProductStore();
   const handleIncrement = () => {
-    console.log("Increment");
+    incrementItemQuantity(item.id, 1);
   };
 
   const handleDecrement = () => {
-    console.log("Decrement");
+    decrementItemQuantity(item.id, 1);
   };
   const handleItemRemove = () => {
     removeItem(item.id);
   };
+  const product = getProductById(item.id);
   return (
     <div className="border-b my-3 item-container p-0.5">
       <div className="min-h-[70px] flex justify-between gap-4 my-4">
@@ -32,9 +37,13 @@ export const OrderItem: FC<{ item: Item; removeItem: (id: string) => void }> = (
           <p>{item.name}</p>
           <div className="flex flex-1 items-end">
             <div className="flex flex-1 gap-2">
-              <QuantityButton isIncrement={false} onClick={handleDecrement} />
-              <p>1</p>
-              <QuantityButton isIncrement={true} onClick={handleIncrement} />
+              <QuantityButton isIncrement={false} onClick={handleDecrement} disabled={item.quantity === 1} />
+              <p>{item.quantity || 0}</p>
+              <QuantityButton
+                isIncrement={true}
+                onClick={handleIncrement}
+                disabled={product?.productQuantity?.availableQuantity === 0}
+              />
             </div>
           </div>
         </div>
@@ -59,17 +68,19 @@ export const OrderItem: FC<{ item: Item; removeItem: (id: string) => void }> = (
 interface QuantityButtonProps {
   isIncrement: boolean;
   onClick: () => void;
+  disabled?: boolean;
 }
 
-const QuantityButton: React.FC<QuantityButtonProps> = ({ isIncrement, onClick }) => {
+const QuantityButton: React.FC<QuantityButtonProps> = ({ isIncrement, onClick, disabled }) => {
   return (
-    <span
-      className={`w-[23px] h-[23px] rounded-[100%] flex items-center justify-center cursor-pointer ${
-        isIncrement ? "bg-primary text-white" : "bg-gray-300 text-primary"
+    <button
+      className={`w-[25px] h-[25px] rounded-full flex items-center justify-center cursor-pointer ${
+        isIncrement ? "bg-primary text-white" : "bg-gray-300 text-primary disabled:opacity-40"
       }`}
       onClick={onClick}
+      disabled={disabled}
     >
       {isIncrement ? "+" : "-"}
-    </span>
+    </button>
   );
 };
