@@ -10,6 +10,7 @@ import {
 import { startCase } from "lodash";
 import { SupplierProps } from "@/interfaces/supplier";
 import { StockDataProps, StockProps } from "@/interfaces/stock";
+import { CustomerProps } from "@/interfaces/customer";
 
 export const defaultPlugin: DefaultPluginProps = {
   createdAt: new Date(),
@@ -159,5 +160,20 @@ export const stockDefault = (): StockProps => {
     ...defaultPlugin,
     receivedDate: new Date(),
     status: "pending"
+  };
+};
+
+export const defaultCustomer = (): CustomerProps => {
+  return {
+    ...defaultPlugin,
+    accountId: "",
+    warehouseId: "",
+    email: "",
+    firstName: "",
+    gender: undefined,
+    lastName: "",
+    address,
+    phone,
+    dateOfBirth: undefined
   };
 };
