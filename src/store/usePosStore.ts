@@ -1,22 +1,41 @@
 import { create } from "zustand";
 import useProductStore from "./useProductStore";
-
-interface Product {
+import { toast } from "sonner";
+import { set as setValue } from "lodash";
+interface ItemProps {
   id: string;
   name: string;
   price: number;
   quantity: number;
 }
+export type ModeOfPaymentProps = "cash" | "mobile money" | "cheque" | "bank";
 
-interface SalesProps {
-  customer: string;
-  items: Product[];
+type MobileMoneyPayment = {
+  networkType: "MTN" | "VODAFONE" | "AIRTEL TIGO";
+  mobileMoneyNumber: string;
+  transactionId: string;
+};
+type BankPayment = {
+  bankName: string;
+  bankAccountNumber: number;
+};
+type ChequePayment = {
+  bankName: string;
+  chequeNumber: number;
+};
+export interface SalesProps {
+  customerId: string;
+  items: ItemProps[];
   discount?: {
     type: "fixed" | "percentage";
     amount: number;
   };
   tax: number;
-  modeOfPayment?: "cash" | "mobile money" | "bank";
+  modeOfPayment?: ModeOfPaymentProps;
+  amountPaid: number;
+  mobileMoneyPayment?: MobileMoneyPayment;
+  bankPayment?: BankPayment;
+  chequePayment?: ChequePayment;
 }
 
 // Define the state type
@@ -24,24 +43,32 @@ type State = SalesProps;
 
 // Define the actions type
 type Action = {
-  addItem: (product: Product) => void;
-  updateItem: (id: string, productData: Partial<Product>) => void;
-  updateItems: (products: Product[]) => void;
+  addItem: (product: ItemProps) => void;
+  updateItem: (id: string, productData: Partial<ItemProps>) => void;
+  updateItems: (products: ItemProps[]) => void;
   removeItem: (id: string) => void;
   removeItems: () => void;
   getItemTotalAmount: () => number;
   getTotalItems: () => number;
   incrementItemQuantity: (id: string, quantity: number) => void;
   decrementItemQuantity: (id: string, quantity: number) => void;
+  setItemQuantity: (id: string, quantity: number) => void;
+  getState: () => State;
+  setState: (newState: Partial<State>) => void;
+  resetState: () => void;
 };
 
 // Initial state
-const initialState: State = {
-  customer: "",
+export const initialState: State = {
+  customerId: "",
   items: [],
   tax: 0,
-  modeOfPayment: undefined,
-  discount: undefined
+  modeOfPayment: "cash",
+  discount: undefined,
+  amountPaid: 0,
+  bankPayment: undefined,
+  chequePayment: undefined,
+  mobileMoneyPayment: undefined
 };
 
 // Create the Zustand store
@@ -74,11 +101,15 @@ const usePosStore = create<State & Action>()((set, get) => ({
       return { ...state, items: updatedItems };
     }),
   updateItems: (items) => set(() => ({ items })),
-  removeItem: (id) =>
+  removeItem: (id) => {
+    const { incrementProductQuantity } = useProductStore.getState();
     set((state) => {
       const filteredProducts = state.items.filter((p) => p.id !== id);
+      const item = state.items.find((i) => i.id === id);
+      incrementProductQuantity(id, item?.quantity || 0);
       return { ...state, items: filteredProducts };
-    }),
+    });
+  },
   removeItems: () => set(() => ({ items: [] })),
   getItemTotalAmount: () => {
     return get().items.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -107,6 +138,40 @@ const usePosStore = create<State & Action>()((set, get) => ({
       incrementProductQuantity(id, amount);
       return { ...state, items: updatedItems };
     });
+  },
+  setItemQuantity: (id, quantity) => {
+    const { getProductById, decrementProductQuantity } = useProductStore.getState();
+
+    set((state) => {
+      let product = getProductById(id);
+      if (quantity > (product?.productQuantity?.availableQuantity || 0)) {
+        toast.warning("Quantity", {
+          description: "Quantity selected is more than quantity available"
+        });
+        return state;
+      }
+      if (isNaN(quantity)) return state;
+
+      decrementProductQuantity(id, quantity);
+      const updatedItems = state.items.map((item) => (item.id === id ? { ...item, quantity } : item));
+      return { ...state, items: updatedItems };
+    });
+  },
+  setState: (newState) =>
+    set((state) => {
+      const keys = Object.keys(newState);
+      for (const k of keys) {
+        setValue(state, k, newState[k as keyof SalesProps]);
+      }
+      return { ...state };
+    }),
+  getState() {
+    return get();
+  },
+  resetState() {
+    set(() => ({
+      ...initialState
+    }));
   }
 }));
 

@@ -7,8 +7,7 @@ import { ProductProps } from "@/interfaces/products";
 
 const ProductDetail: FC<{ product: ProductProps }> = ({ product }) => {
   const { name, productSellingPrice, productQuantity: { availableQuantity: quantity = 0 } = {}, _id } = product;
-  const { addItem, items } = usePosStore();
-  console.log("Current Products:", items);
+  const { addItem } = usePosStore();
   const handleAddProduct = () => {
     addItem({ id: _id || "", name, price: productSellingPrice, quantity: 1 });
   };
