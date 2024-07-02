@@ -2,7 +2,7 @@ import SelectField from "@/components/customFields/Select/SelectField";
 import OrderItems from "./OrderItems";
 import OrderSummary from "./OrderSummary";
 import { Button } from "@/components/ui/button";
-import usePosStore, { SalesProps, initialState } from "@/store/usePosStore";
+import usePosStore, { initialState } from "@/store/usePosStore";
 import { Plus } from "lucide-react";
 import Modal from "@/components/Modal";
 import { ModalActionButtonProps, OptionsProps } from "@/interfaces";
