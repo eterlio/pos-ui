@@ -32,6 +32,29 @@ type ModalObjectMapperProps = {
     disabled?: boolean;
   };
 };
+const printPDF = async (base64: any) => {
+  // Decode base64 string to binary data
+  const binaryString = window.atob(base64);
+  const len = binaryString.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+
+  // Create a Blob from the binary data
+  const blob = new Blob([bytes], { type: "application/pdf" });
+
+  // Create a URL for the Blob
+  const url = window.URL.createObjectURL(blob);
+
+  // Open a new tab and display the PDF
+  const newTab = window.open(url, "_blank");
+  if (!newTab) {
+    // Handle the case where popups are blocked
+    alert("Please allow popups for this website");
+  }
+};
+
 const OrderDetails = () => {
   const { formValues, updateFormFieldValue, setFormValues } = useFormFieldUpdate(defaultCustomer());
   const [openModal, setOpenModal] = useState(false);
@@ -39,7 +62,7 @@ const OrderDetails = () => {
   const { items, getItemTotalAmount, getTotalItems, setState, getState, resetState } = usePosStore();
   const totalAmount = getItemTotalAmount();
   const totalItems = getTotalItems();
-  const { isPending: makeSalesRequest, mutate: salesMutation } = useGeneralMutation<SalesProps>({
+  const { isPending: makeSalesRequest, mutate: salesMutation } = useGeneralMutation<string>({
     httpMethod: "post",
     mutationKey: ["createSales"],
     url: "/sales"
@@ -77,9 +100,10 @@ const OrderDetails = () => {
         salesMutation(
           { payload },
           {
-            onSuccess() {
+            async onSuccess(data) {
               setOpenModal(false);
               resetState();
+              await printPDF(data?.data?.response);
             }
           }
         );
