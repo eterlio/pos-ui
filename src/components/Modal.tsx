@@ -33,7 +33,7 @@ const Modal: FC<ModalProps> = ({
   return (
     <AlertDialog open={showModal}>
       <AlertDialogTrigger asChild>
-        <AlertDialogContent>
+        <AlertDialogContent className="max-h-[98vh] overflow-auto">
           <AlertDialogHeader>
             <AlertDialogTitle className={`my-3 ${titleClassName || ""}`}>{modalTitle && modalTitle}</AlertDialogTitle>
             <AlertDialogDescription

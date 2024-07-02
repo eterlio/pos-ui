@@ -1,3 +1,4 @@
+import { formatCurrency } from "@/helpers";
 import { FC } from "react";
 
 interface OrderSummaryProps {
@@ -16,7 +17,7 @@ const OrderSummary: FC<OrderSummaryProps> = ({ totalItemAmount, totalItems }) =>
           </div>
           <div className="flex justify-between items-center">
             <p className="text-gray-500 font-light">Sub Total</p>
-            <p className="font-semibold">&#8373;{totalItemAmount.toFixed(2)}</p>
+            <p className="font-semibold">{formatCurrency(totalItemAmount)}</p>
           </div>
           <div className="flex justify-between items-center">
             <p className="text-gray-500 font-light">Discount</p>
@@ -30,7 +31,7 @@ const OrderSummary: FC<OrderSummaryProps> = ({ totalItemAmount, totalItems }) =>
         <div className="lower mt-4 text-[13px] border-t border-t-gray-600 border-dashed w-full">
           <div className="flex justify-between items-center mt-2">
             <p className="text-gray-700">Total</p>
-            <p className="font-semibold">&#8373;{totalItemAmount.toFixed(2)}</p>
+            <p className="font-semibold">{formatCurrency(totalItemAmount)}</p>
           </div>
         </div>
       </div>
@@ -39,4 +40,3 @@ const OrderSummary: FC<OrderSummaryProps> = ({ totalItemAmount, totalItems }) =>
 };
 
 export default OrderSummary;
-//code, category, brand, min amount, max amount, min weight, max weight

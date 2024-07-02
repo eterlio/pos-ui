@@ -4,14 +4,8 @@ import { parseISO, format, formatDistanceToNow } from "date-fns";
 import { isEmpty, transform } from "lodash";
 import { capitalize, words } from "lodash";
 
-export const formatCurrency = (amount: number) => {
-  if (!amount) return 0;
-  return amount.toLocaleString("en-US", {
-    style: "currency",
-    currency: undefined,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
+export const formatCurrency = (value: number, currency = "GHS") => {
+  return new Intl.NumberFormat("en-GH", { style: "currency", currency }).format(value);
 };
 
 export function formatQueryParams(params?: Record<string, any>): string {
@@ -214,3 +208,40 @@ export const addressValidationProps = {
     "address.state": "State"
   }
 };
+export const BANK_NAME_OPTIONS = [
+  { label: "Absa Bank Ghana Ltd", value: "Absa Bank Ghana Ltd" },
+  { label: "Access Bank", value: "Access Bank" },
+  { label: "ADB Bank Limited", value: "ADB Bank Limited" },
+  { label: "ARB Apex Bank", value: "ARB Apex Bank" },
+  { label: "Bank of Africa Ghana", value: "Bank of Africa Ghana" },
+  { label: "Bank of Ghana", value: "Bank of Ghana" },
+  { label: "Best Point Savings & Loans", value: "Best Point Savings & Loans" },
+  { label: "BSIC Ghana Limited", value: "BSIC Ghana Limited" },
+  { label: "CAL Bank Limited", value: "CAL Bank Limited" },
+  { label: "Consolidated Bank Ghana Limited", value: "Consolidated Bank Ghana Limited" },
+  { label: "Ecobank Ghana Limited", value: "Ecobank Ghana Limited" },
+  { label: "FBNBank Ghana Limited", value: "FBNBank Ghana Limited" },
+  { label: "Fidelity Bank Ghana Limited", value: "Fidelity Bank Ghana Limited" },
+  { label: "First Atlantic Bank Limited", value: "First Atlantic Bank Limited" },
+  { label: "First National Bank Ghana Limited", value: "First National Bank Ghana Limited" },
+  { label: "GCB Bank Limited", value: "GCB Bank Limited" },
+  { label: "Guaranty Trust Bank (Ghana) Limited", value: "Guaranty Trust Bank (Ghana) Limited" },
+  { label: "National Investment Bank Limited", value: "National Investment Bank Limited" },
+  { label: "OmniBank Ghana Limited", value: "OmniBank Ghana Limited" },
+  { label: "Prudential Bank Limited", value: "Prudential Bank Limited" },
+  { label: "Republic Bank (GH) Limited", value: "Republic Bank (GH) Limited" },
+  { label: "Services Integrity Savings and Loans", value: "Services Integrity Savings and Loans" },
+  { label: "Société Générale Ghana Limited", value: "Société Générale Ghana Limited" },
+  { label: "Stanbic Bank Ghana Limited", value: "Stanbic Bank Ghana Limited" },
+  { label: "Standard Chartered Bank Ghana Limited", value: "Standard Chartered Bank Ghana Limited" },
+  { label: "United Bank for Africa Ghana Limited", value: "United Bank for Africa Ghana Limited" },
+  { label: "Universal Merchant Bank Ghana Limited", value: "Universal Merchant Bank Ghana Limited" },
+  { label: "Zenith Bank Ghana", value: "Zenith Bank Ghana" }
+];
+
+export const TELECOM_NAME_OPTIONS = [
+  { label: "MTN", value: "MTN" },
+  { label: "VODAFONE", value: "VODAFONE" },
+  { label: "AIRTEL TIGO", value: "AIRTEL TIGO" }
+];
+
