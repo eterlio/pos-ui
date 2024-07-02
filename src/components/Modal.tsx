@@ -49,7 +49,7 @@ const Modal: FC<ModalProps> = ({
                   <div key={button.type}>
                     {button.type === "cancel" && (
                       <AlertDialogCancel
-                        className={button.className || ""}
+                        className={`w-full ${button?.className}`}
                         onClick={button.action}
                         disabled={button.disabled || button.loading}
                       >
@@ -61,7 +61,7 @@ const Modal: FC<ModalProps> = ({
                     )}
                     {button.type === "action" && (
                       <AlertDialogAction
-                        className={button.className || ""}
+                        className={`w-full #{button?.className}`}
                         onClick={button.action}
                         disabled={button.disabled || button.loading}
                       >
