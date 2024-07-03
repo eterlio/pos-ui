@@ -4,11 +4,12 @@ import InputField from "@/components/customFields/input/InputField";
 import NumberField from "@/components/customFields/input/NumberField";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import OrderSummary from "./OrderSummary";
-import usePosStore, { ModeOfPaymentProps } from "@/store/usePosStore";
+import usePosStore from "@/store/usePosStore";
 import { HandlerProps } from "@/components/customFields/type";
 import { BANK_NAME_OPTIONS, TELECOM_NAME_OPTIONS, formatCurrency } from "@/helpers";
 import { FC } from "react";
 import { OptionsProps } from "@/interfaces";
+import { ModeOfPaymentProps } from "@/interfaces/sales";
 
 interface PayNowProps {
   customers: OptionsProps[];
@@ -171,6 +172,12 @@ const PayNowModal: FC<PayNowProps> = ({ customers }) => {
         {!hasArrears && (
           <div className="flex items-center justify-between gap-x-3">
             <h1 className="font-bold text-sm flex-1">Change to give:</h1>
+            <p className="text-right flex-1">{formatCurrency(changeAmount)}</p>
+          </div>
+        )}
+        {hasArrears && (
+          <div className="flex items-center justify-between gap-x-3">
+            <h1 className="font-bold text-sm flex-1 text-red-500">Arrears</h1>
             <p className="text-right flex-1">{formatCurrency(changeAmount)}</p>
           </div>
         )}

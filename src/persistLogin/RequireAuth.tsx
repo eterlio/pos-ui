@@ -3,7 +3,7 @@ import { useLocation, Navigate, Outlet } from "react-router-dom";
 
 import { PermissionOperation, PermissionString, hasPermission } from "@/helpers/permission";
 import { Meta } from "@/interfaces/route";
-import { UserRole, specialRoles } from "@/interfaces/users";
+import { UserRole, specialRoles } from "@/interfaces/user";
 import { StoreContext, StoreContextProps } from "@/utils/store";
 import { useBaseRequestService } from "@/hooks/request/useAxiosPrivate";
 

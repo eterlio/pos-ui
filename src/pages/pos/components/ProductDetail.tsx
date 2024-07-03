@@ -6,11 +6,13 @@ import usePosStore from "@/store/usePosStore";
 import { ProductProps } from "@/interfaces/products";
 
 const ProductDetail: FC<{ product: ProductProps }> = ({ product }) => {
-  const { name, productSellingPrice, productQuantity: { availableQuantity: quantity = 0 } = {}, _id } = product;
+  const { productSellingPrice, productQuantity: { availableQuantity: quantity = 0 } = {}, _id } = product;
   const { addItem } = usePosStore();
+  const productName = product?.productCode?.code ? `${product?.productCode?.code} - ${product.name}` : product.name;
   const handleAddProduct = () => {
-    addItem({ id: _id || "", name, price: productSellingPrice, quantity: 1 });
+    addItem({ id: _id || "", name: productName, price: productSellingPrice, quantity: 1 });
   };
+
   return (
     <div
       className={`min-h-[200px] h-[300px] p-2 flex flex-col shadow border rounded-md relative ${
@@ -21,7 +23,7 @@ const ProductDetail: FC<{ product: ProductProps }> = ({ product }) => {
         <img src={Tile} alt="" className="h-full w-full rounded-md" />
       </div>
       <div className="product-content flex-1">
-        <p className="title text-sm">{name}</p>
+        <p className="title text-sm">{productName}</p>
         <h1 className="price font-semibold mt-2">&#8373;{productSellingPrice.toFixed(2)}</h1>
       </div>
       <div className="flex flex-1 my-2 items-center justify-end">

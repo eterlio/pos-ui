@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 // import { GetManyProps } from "../types";
-import { UserProps } from "@/interfaces/users";
+import { UserProps } from "@/interfaces/user";
 import { useBaseRequestService } from "./useAxiosPrivate";
 import { getErrorMessageFromApi } from "@/utils";
 import { toast } from "sonner";

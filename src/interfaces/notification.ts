@@ -1,5 +1,5 @@
 import { DefaultPluginProps } from ".";
-import { UserRole } from "./users";
+import { UserRole } from "./user";
 
 export interface NotificationProps extends DefaultPluginProps {
   id?: string;

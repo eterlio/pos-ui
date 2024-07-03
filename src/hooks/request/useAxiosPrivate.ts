@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AuthUserResponse, InitData } from "@/interfaces/users";
+import { AuthUserResponse, InitData } from "@/interfaces/user";
 import { BaseResponse } from "@/helpers/baseResponse";
 import { useContext } from "react";
 import { StoreContext, StoreContextProps } from "@/utils/store";

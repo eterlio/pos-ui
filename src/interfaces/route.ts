@@ -1,5 +1,5 @@
 import { PermissionOperation, PermissionString } from "@/helpers/permission";
-import { UserRole } from "./users";
+import { UserRole } from "./user";
 
 export interface Meta {
   breadcrumbs: {

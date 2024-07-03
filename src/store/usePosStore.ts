@@ -2,27 +2,14 @@ import { create } from "zustand";
 import useProductStore from "./useProductStore";
 import { toast } from "sonner";
 import { set as setValue } from "lodash";
+import { BankPaymentProps, ChequePaymentProps, MobileMoneyPaymentProps, ModeOfPaymentProps } from "@/interfaces/sales";
 interface ItemProps {
   id: string;
   name: string;
   price: number;
   quantity: number;
 }
-export type ModeOfPaymentProps = "cash" | "mobile money" | "cheque" | "bank";
 
-type MobileMoneyPayment = {
-  networkType: "MTN" | "VODAFONE" | "AIRTEL TIGO";
-  mobileMoneyNumber: string;
-  transactionId: string;
-};
-type BankPayment = {
-  bankName: string;
-  bankAccountNumber: number;
-};
-type ChequePayment = {
-  bankName: string;
-  chequeNumber: number;
-};
 export interface SalesProps {
   customerId: string;
   items: ItemProps[];
@@ -33,9 +20,9 @@ export interface SalesProps {
   tax: number;
   modeOfPayment?: ModeOfPaymentProps;
   amountPaid: number;
-  mobileMoneyPayment?: MobileMoneyPayment;
-  bankPayment?: BankPayment;
-  chequePayment?: ChequePayment;
+  mobileMoneyPayment?: MobileMoneyPaymentProps;
+  bankPayment?: BankPaymentProps;
+  chequePayment?: ChequePaymentProps;
 }
 
 // Define the state type

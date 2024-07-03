@@ -8,7 +8,7 @@ import { useError } from "@/hooks/useError";
 import { useFormFieldUpdate } from "@/hooks/useFormFieldUpdate";
 import { useEffect } from "react";
 import { objectDifference } from "@/helpers";
-import { UserProps } from "@/interfaces/users";
+import { UserProps } from "@/interfaces/user";
 import { toast } from "sonner";
 
 const UpdateUserScreen = () => {

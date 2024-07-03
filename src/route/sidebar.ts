@@ -1,5 +1,5 @@
 import { hasPermission } from "@/helpers/permission";
-import { UserRole, specialRoles } from "@/interfaces/users";
+import { UserRole, specialRoles } from "@/interfaces/user";
 import {
   ArrowRightLeft,
   Box,

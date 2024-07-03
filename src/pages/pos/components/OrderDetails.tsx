@@ -2,7 +2,7 @@ import SelectField from "@/components/customFields/Select/SelectField";
 import OrderItems from "./OrderItems";
 import OrderSummary from "./OrderSummary";
 import { Button } from "@/components/ui/button";
-import usePosStore, { SalesProps, initialState } from "@/store/usePosStore";
+import usePosStore, { initialState } from "@/store/usePosStore";
 import { Plus } from "lucide-react";
 import Modal from "@/components/Modal";
 import { ModalActionButtonProps, OptionsProps } from "@/interfaces";
@@ -20,6 +20,7 @@ import { formatCurrency, objectDifference } from "@/helpers";
 import { GENDER_OPTIONS } from "@/utils";
 import PayNowModal from "./PayNowModal";
 import { pick } from "lodash";
+import { toast } from "sonner";
 
 type ModalType = "payment" | "customer";
 type ModalObjectMapperProps = {
@@ -104,6 +105,9 @@ const OrderDetails = () => {
               setOpenModal(false);
               resetState();
               await printPDF(data?.data?.response);
+              toast.success("Success", {
+                description: "Sales recorded"
+              });
             }
           }
         );
@@ -180,6 +184,7 @@ const OrderDetails = () => {
       setOpenModal(true);
     };
   };
+  const handleHoldProducts = () => {};
   return (
     <>
       <Modal
@@ -254,6 +259,14 @@ const OrderDetails = () => {
         <div className="flex-1 h-full flex flex-col justify-end">
           <OrderSummary totalItems={totalItems} totalItemAmount={totalAmount} />
           <div className="pay-button mb-3 flex items-center gap-4">
+            <Button
+              variant={"outline"}
+              className="w-full flex gap-2 items-center"
+              disabled={totalAmount === 0}
+              onClick={handleHoldProducts}
+            >
+              <span>Hold</span>
+            </Button>
             <Button
               className="w-full flex gap-2 items-center"
               disabled={totalAmount === 0}

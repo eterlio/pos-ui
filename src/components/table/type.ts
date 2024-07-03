@@ -44,6 +44,7 @@ export interface DataTableProps<TData, TValue> {
   description?: string;
   isLoading?: boolean;
   loadingText?: string;
+  showSearch?: boolean;
 }
 
 export interface Paginator {
