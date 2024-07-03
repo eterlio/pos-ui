@@ -7,7 +7,7 @@ export const useGeneralQuery = <T>(queryData: {
   queryKey: any[];
   url: string;
   requireAuth?: boolean;
-  query?: Record<string, string | number | boolean>;
+  query?: Record<string, string | number | boolean | Date>;
   enabled?: boolean;
   staleTime?: number;
 }) => {
@@ -19,13 +19,13 @@ export const useGeneralQuery = <T>(queryData: {
     : useBaseRequestService();
 
   let dataEnabled = false;
+
   const [, key] = queryKey;
+
   if (typeof key === "string") {
     dataEnabled = !!key;
   } else if (isActualObject(key)) {
     dataEnabled = !!Object.keys(key).length;
-  } else {
-    dataEnabled = !!key;
   }
   const { data, isFetching, isRefetching, error, refetch } = useQuery({
     queryKey,

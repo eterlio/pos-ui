@@ -1,6 +1,6 @@
 import { NotificationProps } from "@/interfaces/notification";
 import { SettingsProps } from "@/interfaces/settings";
-import { AuthUserResponse } from "@/interfaces/users";
+import { AuthUserResponse } from "@/interfaces/user";
 import { createContext, useState } from "react";
 
 export type StoreContextProps = {

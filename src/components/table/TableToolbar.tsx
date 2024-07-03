@@ -20,6 +20,7 @@ interface DataTableToolbarProps<TData> {
   showSearchSelection?: boolean;
   searchSelectionOptions?: OptionsProps[];
   showSelectColumns?: boolean;
+  showSearch?: boolean;
 }
 export function DataTableToolbar<TData>({
   table,
@@ -27,7 +28,8 @@ export function DataTableToolbar<TData>({
   filters,
   searchSelectionOptions,
   showSearchSelection,
-  showSelectColumns = true
+  showSelectColumns = true,
+  showSearch = true
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
   const { setQueryParam, getQueryParam } = useSetQueryParam();
@@ -54,7 +56,7 @@ export function DataTableToolbar<TData>({
     <>
       <div className="flex flex-col lg:flex-row items-center justify-between mb-5">
         <div className="flex flex-1 items-center">
-          {showSearchSelection && (
+          {showSearchSelection && showSearch && (
             <Dropdown
               options={searchSelectionOptions}
               icon={<ListFilter />}
@@ -63,12 +65,14 @@ export function DataTableToolbar<TData>({
               defaultValue={searchSelection}
             />
           )}
-          <Input
-            placeholder="Search..."
-            value={value}
-            onChange={handleOnChange}
-            className="h-10 w-full lg:w-[250px] my-2 lg:my-0 rounded-l-none border border-gray-100"
-          />
+          {showSearch && (
+            <Input
+              placeholder="Search..."
+              value={value}
+              onChange={handleOnChange}
+              className="h-10 w-full lg:w-[250px] my-2 lg:my-0 rounded-l-none border border-gray-100"
+            />
+          )}
         </div>
         {showSelectColumns && <DataTableViewOptions table={table} showExportButton={showExportButton} />}
       </div>

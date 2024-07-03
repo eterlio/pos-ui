@@ -1,4 +1,4 @@
-import { UserProps } from "@/interfaces/users";
+import { UserProps } from "@/interfaces/user";
 import { AddressProps, DefaultPluginProps, PhoneProps, RequestStateProps } from "../interfaces";
 import {
   BarcodeSymbology,

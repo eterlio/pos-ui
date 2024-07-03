@@ -1,11 +1,11 @@
 import { AddressProps, PhoneProps, UploadedFileProps } from "@/interfaces";
-import { UserRole, specialRoles } from "@/interfaces/users";
+import { UserRole, specialRoles } from "@/interfaces/user";
 import { parseISO, format, formatDistanceToNow } from "date-fns";
 import { isEmpty, transform } from "lodash";
 import { capitalize, words } from "lodash";
 
 export const formatCurrency = (value: number, currency = "GHS") => {
-  return new Intl.NumberFormat("en-GH", { style: "currency", currency }).format(value);
+  return new Intl.NumberFormat("en-GH", { style: "currency", currency }).format(!value ? 0 : value);
 };
 
 export function formatQueryParams(params?: Record<string, any>): string {
@@ -244,4 +244,3 @@ export const TELECOM_NAME_OPTIONS = [
   { label: "VODAFONE", value: "VODAFONE" },
   { label: "AIRTEL TIGO", value: "AIRTEL TIGO" }
 ];
-

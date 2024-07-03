@@ -7,7 +7,7 @@ import EditUserFields from "./EditUserFields";
 import { useHandlerUserFormFieldValidation } from "@/hooks/useHandlerUserFormFieldValidation";
 import { useError } from "@/hooks/useError";
 import { useFormFieldUpdate } from "@/hooks/useFormFieldUpdate";
-import { UserProps } from "@/interfaces/users";
+import { UserProps } from "@/interfaces/user";
 import { createDefaultUser } from "@/defaults";
 import { objectDifference } from "@/helpers";
 

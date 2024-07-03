@@ -1,7 +1,7 @@
 import { DefaultPluginProps } from ".";
 import { ProductProps } from "./products";
 import { SupplierProps } from "./supplier";
-import { UserProps } from "./users";
+import { UserProps } from "./user";
 
 export type StockDataStatus = "received" | "partially received";
 
