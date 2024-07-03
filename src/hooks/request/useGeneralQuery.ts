@@ -21,7 +21,7 @@ export const useGeneralQuery = <T>(queryData: {
   let dataEnabled = false;
 
   const [, key] = queryKey;
-  console.log(key);
+
   if (typeof key === "string") {
     dataEnabled = !!key;
   } else if (isActualObject(key)) {
