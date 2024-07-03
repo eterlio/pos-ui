@@ -1,5 +1,6 @@
 import Loader from "@/components/Loader";
 import Table from "@/components/table/Table";
+import { formatCurrency } from "@/helpers";
 import { useGeneralQuery } from "@/hooks/request/useGeneralQuery";
 import { GetManyProps } from "@/hooks/types";
 import { useSetQueryParam } from "@/hooks/useSetQueryParam";
@@ -29,7 +30,12 @@ const SalesReport = () => {
           </div>
         </div>
       )}
-
+      <div className="flex mb-5 justify-end">
+        <h1>
+          <span>Total Sales: </span>
+          <span className="font-bold">{formatCurrency((data as any)?.totalAmount)}</span>
+        </h1>
+      </div>
       <Table columns={salesTableSchema} data={data?.data || []} paginator={data?.paginator} />
     </>
   );
