@@ -27,6 +27,7 @@ export const useGeneralQuery = <T>(queryData: {
   } else if (isActualObject(key)) {
     dataEnabled = !!Object.keys(key).length;
   }
+
   const { data, isFetching, isRefetching, error, refetch } = useQuery({
     queryKey,
     staleTime,

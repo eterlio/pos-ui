@@ -25,7 +25,8 @@ const UpdateProductScreen = () => {
   const { addErrors, errors, resetError } = useError<ValidatorProps>();
   const { data, isFetching } = useGeneralQuery<ProductProps>({
     queryKey: ["product", productId],
-    url: `/products/${productId}`
+    url: `/products/${productId}`,
+    enabled: !!productId
   });
 
   const { formValues, updateFormFieldValue, setFormValues } = useFormFieldUpdate(data);

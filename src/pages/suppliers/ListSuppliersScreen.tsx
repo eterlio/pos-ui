@@ -85,7 +85,7 @@ const ListSuppliersScreen = () => {
     <DashboardLayout
       pageTitle="Suppliers"
       actionButton={{
-        createButton: { name: "Create Supplier", onClick: () => navigate("/suppliers/create") }
+        createButton: { name: "Create Supplier", onClick: () => navigate("/suppliers/create"), disabled: isFetching }
       }}
     >
       <Modal

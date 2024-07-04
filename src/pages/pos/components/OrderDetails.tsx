@@ -17,7 +17,7 @@ import { defaultCustomer } from "@/defaults";
 import { useFormFieldUpdate } from "@/hooks/useFormFieldUpdate";
 import { HandlerProps } from "@/components/customFields/type";
 import { formatCurrency, objectDifference } from "@/helpers";
-import { GENDER_OPTIONS } from "@/utils";
+import { GENDER_OPTIONS, printPDF } from "@/utils";
 import PayNowModal from "./PayNowModal";
 import { pick } from "lodash";
 import { toast } from "sonner";
@@ -32,28 +32,6 @@ type ModalObjectMapperProps = {
     loading?: boolean;
     disabled?: boolean;
   };
-};
-const printPDF = async (base64: any) => {
-  // Decode base64 string to binary data
-  const binaryString = window.atob(base64);
-  const len = binaryString.length;
-  const bytes = new Uint8Array(len);
-  for (let i = 0; i < len; i++) {
-    bytes[i] = binaryString.charCodeAt(i);
-  }
-
-  // Create a Blob from the binary data
-  const blob = new Blob([bytes], { type: "application/pdf" });
-
-  // Create a URL for the Blob
-  const url = window.URL.createObjectURL(blob);
-
-  // Open a new tab and display the PDF
-  const newTab = window.open(url, "_blank");
-  if (!newTab) {
-    // Handle the case where popups are blocked
-    alert("Please allow popups for this website");
-  }
 };
 
 const OrderDetails = () => {
@@ -104,7 +82,7 @@ const OrderDetails = () => {
             async onSuccess(data) {
               setOpenModal(false);
               resetState();
-              await printPDF(data?.data?.response);
+              printPDF(data?.data?.response);
               toast.success("Success", {
                 description: "Sales recorded"
               });
@@ -184,7 +162,9 @@ const OrderDetails = () => {
       setOpenModal(true);
     };
   };
-  const handleHoldProducts = () => {};
+  const handleHoldProducts = () => {
+    alert("This feature will be out soon");
+  };
   return (
     <>
       <Modal

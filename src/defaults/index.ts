@@ -11,7 +11,9 @@ import { startCase } from "lodash";
 import { SupplierProps } from "@/interfaces/supplier";
 import { StockDataProps, StockProps } from "@/interfaces/stock";
 import { CustomerProps } from "@/interfaces/customer";
+import { MOP } from "@/interfaces/sales";
 
+export const mopArr: MOP[] = ["cash", "mobile money", "bank", "cheque"];
 export const defaultPlugin: DefaultPluginProps = {
   createdAt: new Date(),
   updatedBy: "",

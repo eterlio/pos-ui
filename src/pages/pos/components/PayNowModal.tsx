@@ -9,7 +9,7 @@ import { HandlerProps } from "@/components/customFields/type";
 import { BANK_NAME_OPTIONS, TELECOM_NAME_OPTIONS, formatCurrency } from "@/helpers";
 import { FC } from "react";
 import { OptionsProps } from "@/interfaces";
-import { ModeOfPaymentProps } from "@/interfaces/sales";
+import { MOP } from "@/interfaces/sales";
 
 interface PayNowProps {
   customers: OptionsProps[];
@@ -27,7 +27,7 @@ const PayNowModal: FC<PayNowProps> = ({ customers }) => {
   const hasArrears = changeAmount < 0;
 
   const handleTabChange = (mop: string) => {
-    const modeOfPayment = mop as ModeOfPaymentProps;
+    const modeOfPayment = mop as MOP;
     switch (modeOfPayment) {
       case "cash":
         setState({
@@ -138,6 +138,12 @@ const PayNowModal: FC<PayNowProps> = ({ customers }) => {
               handleInputChange={handleFieldChange}
               label="Bank account number"
               value={state?.bankPayment?.bankAccountNumber}
+            />
+            <InputField
+              fieldKey="bankPayment.transactionNumber"
+              handleInputChange={handleFieldChange}
+              label="Bank transaction number"
+              value={state?.bankPayment?.transactionNumber}
             />
           </TabsContent>
           <TabsContent value="cheque">

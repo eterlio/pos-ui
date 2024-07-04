@@ -1,42 +1,77 @@
-import Loader from "@/components/Loader";
 import Table from "@/components/table/Table";
+import { DataFilterProps } from "@/components/table/type";
 import { formatCurrency } from "@/helpers";
+import { useBaseRequestService } from "@/hooks/request/useAxiosPrivate";
 import { useGeneralQuery } from "@/hooks/request/useGeneralQuery";
 import { GetManyProps } from "@/hooks/types";
 import { useSetQueryParam } from "@/hooks/useSetQueryParam";
 import { SalesProps } from "@/interfaces/sales";
 import { salesTableSchema } from "@/tableSchema/sales";
-import { addDays } from "date-fns";
-import { useEffect } from "react";
-const SalesReport = () => {
-  const { queryObject, setQueryParam } = useSetQueryParam();
-  useEffect(() => {
-    setQueryParam("createdAt_gte", new Date().toLocaleDateString());
-    setQueryParam("createdAt_lt", addDays(new Date(), 1).toLocaleDateString());
-  }, []);
+import { printPDF } from "@/utils";
+import { FC, useState } from "react";
+import { toast } from "sonner";
+interface SalesReportProps {
+  filters?: DataFilterProps[];
+  isTodayReport?: boolean;
+}
+const SalesReport: FC<SalesReportProps> = ({ filters, isTodayReport }) => {
+  const [printLoading, setPrintLoading] = useState(false);
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const { queryObject } = useSetQueryParam();
+
+  const { axiosInstance } = useBaseRequestService({ useToken: true, tokenType: "accessToken" });
   const { data, isFetching } = useGeneralQuery<GetManyProps<SalesProps>>({
     queryKey: ["sales", queryObject],
     url: "/sales",
-    query: queryObject,
-    enabled: !!Object.keys(queryObject).length
+    query: queryObject
   });
+  const rowActions = [
+    {
+      label: "View",
+      action: () => {
+        setOpenDrawer(!openDrawer);
+      }
+    },
+    {
+      label: "Print",
+      action: async (data: Record<string, any>) => {
+        try {
+          setPrintLoading(true);
+          const { data: response } = await axiosInstance.get(`/pdf/print/${data.id}/sales-receipt`);
+          printPDF(response.response);
+          toast.success("Success", {
+            description: "Sales receipt printed"
+          });
+        } catch (error: any) {
+          toast.error("Error", {
+            description: error.message
+          });
+        } finally {
+          setPrintLoading(false);
+        }
+      }
+    }
+  ];
+
   return (
     <>
-      {isFetching && (
-        <div className="loading h-full flex-1 flex items-center justify-center">
-          <div className="space-y-4 flex items-center justify-center flex-col">
-            <Loader className="!w-10 !h-10" />
-            <h1>Fetching sales report</h1>
-          </div>
+      {isTodayReport && (
+        <div className="flex mb-5 justify-end">
+          <h1>
+            <span>Total Sales: </span>
+            <span className="font-bold">{formatCurrency((data as any)?.totalAmount)}</span>
+          </h1>
         </div>
       )}
-      <div className="flex mb-5 justify-end">
-        <h1>
-          <span>Total Sales: </span>
-          <span className="font-bold">{formatCurrency((data as any)?.totalAmount)}</span>
-        </h1>
-      </div>
-      <Table columns={salesTableSchema} data={data?.data || []} paginator={data?.paginator} />
+      <Table
+        columns={salesTableSchema}
+        data={data?.data || []}
+        paginator={data?.paginator}
+        actionButtons={rowActions}
+        isLoading={isFetching || printLoading}
+        loadingText={isFetching ? "Fetching sales report" : printLoading ? "Printing receipt" : ""}
+        filters={filters}
+      />
     </>
   );
 };

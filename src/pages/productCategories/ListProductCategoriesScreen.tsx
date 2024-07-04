@@ -85,7 +85,11 @@ const ListProductCategoriesScreen = () => {
     <DashboardLayout
       pageTitle="Product Categories"
       actionButton={{
-        createButton: { name: "Create Product Category", onClick: () => navigate("/product-categories/create") }
+        createButton: {
+          name: "Create Product Category",
+          onClick: () => navigate("/product-categories/create"),
+          disabled: isFetching
+        }
       }}
     >
       <Modal

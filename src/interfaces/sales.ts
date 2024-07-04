@@ -15,7 +15,7 @@ export interface Discount {
   type: "fixed" | "percentage";
   amount: number;
 }
-export type ModeOfPaymentProps = "cash" | "mobile money" | "cheque" | "bank";
+export type MOP = "cash" | "mobile money" | "cheque" | "bank";
 export interface SalesProps extends DefaultPluginProps {
   _id?: string;
   customerId: string;
@@ -24,7 +24,7 @@ export interface SalesProps extends DefaultPluginProps {
   arrears: number;
   accountId?: string;
   warehouseId?: string;
-  modeOfPayment: ModeOfPaymentProps;
+  modeOfPayment: MOP;
   invoiceId: string;
   receiptNumber?: string;
 
@@ -42,6 +42,7 @@ export type MobileMoneyPaymentProps = {
 export type BankPaymentProps = {
   bankName: string;
   bankAccountNumber: number;
+  transactionNumber: string;
 };
 export type ChequePaymentProps = {
   bankName: string;

@@ -23,7 +23,8 @@ const UpdateProductUnitScreen = () => {
   const { addErrors, errors, resetError } = useError<ValidatorProps>();
   const { data } = useGeneralQuery<ProductUnitProps>({
     queryKey: ["productUnit", unitId],
-    url: `/product-units/${unitId}`
+    url: `/product-units/${unitId}`,
+    enabled: !!unitId
   });
 
   const { formValues, updateFormFieldValue, setFormValues } = useFormFieldUpdate(data);

@@ -77,7 +77,9 @@ const ListUsersScreen = () => {
   return (
     <DashboardLayout
       pageTitle="Users List"
-      actionButton={{ createButton: { name: "Create user", onClick: () => navigate("/users/create") } }}
+      actionButton={{
+        createButton: { name: "Create user", onClick: () => navigate("/users/create"), disabled: isFetching }
+      }}
     >
       <Modal
         showModal={modalData.showModal}

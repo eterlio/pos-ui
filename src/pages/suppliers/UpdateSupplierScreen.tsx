@@ -20,7 +20,8 @@ const UpdateSupplierScreen = () => {
   const { addErrors, errors, resetError } = useError<any>();
   const { data } = useGeneralQuery<SupplierProps>({
     queryKey: ["supplier", supplierId],
-    url: `/suppliers/${supplierId}`
+    url: `/suppliers/${supplierId}`,
+    enabled: true
   });
 
   const { formValues, updateFormFieldValue, setFormValues } = useFormFieldUpdate(data!);
@@ -55,7 +56,7 @@ const UpdateSupplierScreen = () => {
   };
 
   const payload = objectDifference(data, formValues);
-  
+
   const onsubmitHandler = () => {
     validator.validate();
 

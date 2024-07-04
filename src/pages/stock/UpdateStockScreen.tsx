@@ -17,7 +17,8 @@ const UpdateStockScreen = () => {
   const buttonTitle = "Update Stock";
   const { data, isFetching } = useGeneralQuery<StockProps>({
     queryKey: ["stock", stockId],
-    url: `/stocks/${stockId}`
+    url: `/stocks/${stockId}`,
+    enabled: !!stockId
   });
 
   const { formValues, updateFormFieldValue, setFormValues } = useFormFieldUpdate(data);
@@ -45,7 +46,7 @@ const UpdateStockScreen = () => {
   };
 
   const payload = objectDifference(data, formValues);
-  
+
   const onsubmitHandler = () => {
     mutate(
       { payload },

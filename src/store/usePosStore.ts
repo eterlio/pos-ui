@@ -2,7 +2,7 @@ import { create } from "zustand";
 import useProductStore from "./useProductStore";
 import { toast } from "sonner";
 import { set as setValue } from "lodash";
-import { BankPaymentProps, ChequePaymentProps, MobileMoneyPaymentProps, ModeOfPaymentProps } from "@/interfaces/sales";
+import { BankPaymentProps, ChequePaymentProps, MOP, MobileMoneyPaymentProps } from "@/interfaces/sales";
 interface ItemProps {
   id: string;
   name: string;
@@ -18,7 +18,7 @@ export interface SalesProps {
     amount: number;
   };
   tax: number;
-  modeOfPayment?: ModeOfPaymentProps;
+  modeOfPayment?: MOP;
   amountPaid: number;
   mobileMoneyPayment?: MobileMoneyPaymentProps;
   bankPayment?: BankPaymentProps;

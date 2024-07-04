@@ -23,7 +23,8 @@ const UpdateProductCategoryScreen = () => {
   const { addErrors, errors, resetError } = useError<ValidatorProps>();
   const { data } = useGeneralQuery<ProductCategoryProps>({
     queryKey: ["productCategory", categoryId],
-    url: `/product-categories/${categoryId}`
+    url: `/product-categories/${categoryId}`,
+    enabled: !!categoryId
   });
 
   const { formValues, updateFormFieldValue, setFormValues } = useFormFieldUpdate(data);
