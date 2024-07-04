@@ -18,7 +18,6 @@ import { GetManyProps } from "@/hooks/types";
 import { ProductCategoryProps } from "@/interfaces/productCategories";
 import { ProductProps } from "@/interfaces/products";
 import useProductStore from "@/store/useProductStore";
-import { useNavigate } from "react-router-dom";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -28,7 +27,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
-import SalesReport from "../sales/SalesReport";
+import { useRoleRedirect } from "@/hooks/useRoleRedirect";
+import TodaySales from "../sales/component/TodaySales";
 type ProductQueryProps = {
   deleted: boolean;
   limit: number;
@@ -37,9 +37,9 @@ type ProductQueryProps = {
 };
 
 const SellProductScreen = () => {
+  const { redirectHome } = useRoleRedirect();
   const { products, updateProducts, setProducts } = useProductStore();
   const [currentTab, setCurrentTab] = useState("all");
-  const navigate = useNavigate();
   const initialProductQueryState = useCallback(
     () => ({
       deleted: false,
@@ -105,9 +105,8 @@ const SellProductScreen = () => {
       currentPage: prev.currentPage + 1
     }));
   };
-
   const handleGoBack = () => {
-    navigate(-1);
+    redirectHome();
   };
   useEffect(() => {
     setProducts(productsData?.data || []);
@@ -185,7 +184,8 @@ const SellProductScreen = () => {
                           <AlertDialogHeader>
                             <AlertDialogTitle className="text-center">Sales Report</AlertDialogTitle>
                           </AlertDialogHeader>
-                          <SalesReport />
+
+                          <TodaySales />
                         </div>
                         {/* CONTENT END */}
                         <AlertDialogFooter>

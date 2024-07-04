@@ -22,7 +22,8 @@ const UpdateProductBrandScreen = () => {
   const { addErrors, errors, resetError } = useError<ValidatorProps>();
   const { data } = useGeneralQuery<ProductCategoryProps>({
     queryKey: ["productBrand", brandId],
-    url: `/product-brands/${brandId}`
+    url: `/product-brands/${brandId}`,
+    enabled: !!brandId
   });
 
   const { formValues, updateFormFieldValue, setFormValues } = useFormFieldUpdate(data);

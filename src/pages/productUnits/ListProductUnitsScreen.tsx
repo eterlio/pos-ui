@@ -85,7 +85,11 @@ const ListProductUnitsScreen = () => {
     <DashboardLayout
       pageTitle="Product Units"
       actionButton={{
-        createButton: { name: "Create Product Unit", onClick: () => navigate("/product-units/create") }
+        createButton: {
+          name: "Create Product Unit",
+          onClick: () => navigate("/product-units/create"),
+          disabled: isFetching
+        }
       }}
     >
       <Modal

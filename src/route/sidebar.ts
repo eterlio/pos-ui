@@ -14,7 +14,8 @@ import {
   UsersIcon,
   MinusCircle,
   Puzzle,
-  LucideIcon
+  LucideIcon,
+  Coins
 } from "lucide-react";
 
 interface RouteLink {
@@ -179,6 +180,12 @@ export const menuSidebarRoutes = (userRole: string, userPermission: string): Men
             url: "/users/create"
           }
         ]
+      },
+      {
+        title: "Sales",
+        url: "/sales",
+        icon: Coins,
+        isVisible: hasPermission(userPermission, ["sales", "read"])
       },
       {
         title: "Customer",

@@ -88,7 +88,7 @@ const ProductListsScreen = () => {
         createButton: {
           name: "Create Product",
           onClick: () => navigate("/products/create"),
-          loading: isFetching
+          disabled: isFetching
         }
       }}
     >

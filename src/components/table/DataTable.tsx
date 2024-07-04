@@ -170,7 +170,7 @@ export function DataTable<TData, TValue>({
             {isLoading ? (
               <TableRow>
                 <TableCell colSpan={9}>
-                  <div className="flex justify-center items-center h-full flex-col gap-4">
+                  <div className="flex justify-center items-center h-full flex-col gap-4 min-h-[350px]">
                     <FetchLoader />
                     {loadingText && <h3>{loadingText}</h3>}
                   </div>

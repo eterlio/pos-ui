@@ -3,7 +3,35 @@ import { DataTableColumnHeader } from "@/components/table/DataTableColumnHeader"
 import { SalesProps } from "@/interfaces/sales";
 import { formatCurrency } from "@/helpers";
 import { startCase } from "lodash";
-
+import { DataFilterProps } from "@/components/table/type";
+import { mopArr } from "@/defaults";
+import { Calendar, HandCoins } from "lucide-react";
+import { format } from "date-fns";
+const MOP_OPTIONS = mopArr.map((mop) => {
+  return {
+    label: startCase(mop),
+    value: mop
+  };
+});
+export const salesTableFilters: DataFilterProps[] = [
+  {
+    column: "modeOfPayment",
+    options: MOP_OPTIONS,
+    title: "Mode of payment",
+    extra: {
+      mainIcon: HandCoins
+    }
+  },
+  {
+    column: "createdAt",
+    options: [],
+    title: "Recorded At",
+    isDate: true,
+    extra: {
+      mainIcon: Calendar
+    }
+  }
+];
 export const salesTableSchema: ColumnDef<SalesProps>[] = [
   {
     accessorKey: "receiptNumber",
@@ -62,6 +90,18 @@ export const salesTableSchema: ColumnDef<SalesProps>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Arrears" />,
     cell: ({ row }) => {
       return <div className="flex space-x-2">{formatCurrency(row.getValue("arrears"))}</div>;
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    }
+  },
+  {
+    accessorKey: "createdAt",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="CreatedAt" />,
+    enableHiding: true,
+    cell: ({ row }) => {
+      const date: Date = row.getValue("createdAt");
+      return <div className="flex space-x-2">{format(date, "dd-MM-y")}</div>;
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
