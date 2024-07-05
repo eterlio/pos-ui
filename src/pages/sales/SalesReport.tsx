@@ -13,8 +13,9 @@ import { toast } from "sonner";
 interface SalesReportProps {
   filters?: DataFilterProps[];
   isTodayReport?: boolean;
+  isAdmin?: boolean;
 }
-const SalesReport: FC<SalesReportProps> = ({ filters, isTodayReport }) => {
+const SalesReport: FC<SalesReportProps> = ({ filters, isTodayReport, isAdmin }) => {
   const [printLoading, setPrintLoading] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
   const { queryObject } = useSetQueryParam();
@@ -64,13 +65,19 @@ const SalesReport: FC<SalesReportProps> = ({ filters, isTodayReport }) => {
         </div>
       )}
       <Table
-        columns={salesTableSchema}
+        columns={salesTableSchema({ isAdmin })}
         data={data?.data || []}
         paginator={data?.paginator}
         actionButtons={rowActions}
         isLoading={isFetching || printLoading}
         loadingText={isFetching ? "Fetching sales report" : printLoading ? "Printing receipt" : ""}
         filters={filters}
+        showSearchSelection={isAdmin}
+        searchSelectionOptions={[
+          { label: "Customer", value: "customerId" },
+          { label: "All", value: "" },
+          { label: "Teller", value: "createdBy" }
+        ]}
       />
     </>
   );
