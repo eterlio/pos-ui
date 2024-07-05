@@ -1,5 +1,6 @@
 import { PERMISSIONS_LIST, PermissionString } from "@/helpers/permission";
 import { PhoneProps } from "@/interfaces";
+import { format, isValid, parseISO } from "date-fns";
 import { toLower, trim } from "lodash";
 
 export const getErrorMessageFromApi = (error: any) => {
@@ -147,4 +148,7 @@ export function downloadDocument(pdf: string, fileName: string) {
 
   // // Trigger the download
   downloadLink.click();
+}
+export function formatDate(date: string, formatType: string) {
+  return isValid(parseISO(date)) ? format(parseISO(date), formatType) : date;
 }
