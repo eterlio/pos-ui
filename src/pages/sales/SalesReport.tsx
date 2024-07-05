@@ -9,6 +9,7 @@ import { SalesProps } from "@/interfaces/sales";
 import { salesTableSchema } from "@/tableSchema/sales";
 import { printPDF } from "@/utils";
 import { FC, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 interface SalesReportProps {
   filters?: DataFilterProps[];
@@ -17,8 +18,8 @@ interface SalesReportProps {
 }
 const SalesReport: FC<SalesReportProps> = ({ filters, isTodayReport, isAdmin }) => {
   const [printLoading, setPrintLoading] = useState(false);
-  const [openDrawer, setOpenDrawer] = useState(false);
   const { queryObject } = useSetQueryParam();
+  const navigate = useNavigate();
 
   const { axiosInstance } = useBaseRequestService({ useToken: true, tokenType: "accessToken" });
   const { data, isFetching } = useGeneralQuery<GetManyProps<SalesProps>>({
@@ -29,8 +30,8 @@ const SalesReport: FC<SalesReportProps> = ({ filters, isTodayReport, isAdmin }) 
   const rowActions = [
     {
       label: "View",
-      action: () => {
-        setOpenDrawer(!openDrawer);
+      action: (data: Record<string, any>) => {
+        navigate(`/sales/${data._id}`);
       }
     },
     {
