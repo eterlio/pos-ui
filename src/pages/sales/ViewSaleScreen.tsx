@@ -12,7 +12,7 @@ const ViewSaleScreen = () => {
   const { data, isFetching } = useGeneralQuery<SalesProps>({
     queryKey: ["sales", id],
     url: `/sales/${id}`,
-    enabled: !!id
+    enabled: true
   });
 
   const discrepancy = (data?.amountPaid || 0) - (data?.invoiceData?.totalAmount || 0);

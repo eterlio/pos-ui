@@ -79,6 +79,7 @@ const SalesReport: FC<SalesReportProps> = ({ filters, isTodayReport, isAdmin }) 
           { label: "All", value: "" },
           { label: "Teller", value: "createdBy" }
         ]}
+        handleRowClick={(data: Record<string, any>) => navigate(`/sales/${data._id}`)}
       />
     </>
   );
