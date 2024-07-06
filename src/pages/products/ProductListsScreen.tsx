@@ -13,6 +13,7 @@ import { productTableFilters, productTableSchema } from "@/tableSchema/products"
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { usePermission } from "@/hooks/usePermission"; // Assuming this hook provides permission checks
 
 const ProductListsScreen = () => {
   const { removeItemFromList } = useOptimisticUpdates();
@@ -30,19 +31,24 @@ const ProductListsScreen = () => {
     query: queryObject,
     enabled: !!Object.keys(queryObject).length
   });
+
+  const { canCreateProducts, canUpdateProducts, canDeleteProducts } = usePermission(); // Assuming usePermission provides these checks
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
+
   const rowActions = [
     {
       label: "Edit",
-      action: handleEditRowActionClick
+      action: handleEditRowActionClick,
+      show: canUpdateProducts // Only show if user can update products
     },
     {
       label: "Delete",
       action: (data: Record<string, any>) => {
         setOpenModal(true);
         setSelectedProduct(data);
-      }
+      },
+      show: canDeleteProducts // Only show if user can delete products
     }
   ];
 
@@ -88,7 +94,7 @@ const ProductListsScreen = () => {
         createButton: {
           name: "Create Product",
           onClick: () => navigate("/products/create"),
-          disabled: isFetching
+          disabled: isFetching || !canCreateProducts // Disable if fetching or user can't create products
         }
       }}
     >
@@ -106,14 +112,14 @@ const ProductListsScreen = () => {
           allowRowSelect
           showSelectColumns
           showExportButton
-          isLoading={isFetching}
+          isLoading={isFetching || isPending}
           actionButtons={rowActions}
           handleRowClick={handleEditRowActionClick}
           filters={productTableFilters}
           showSearchSelection
           searchSelectionOptions={[
             { label: "Product Name", value: "name" },
-            { label: "All Field", value: "" }
+            { label: "All Fields", value: "" }
           ]}
         />
       </Container>

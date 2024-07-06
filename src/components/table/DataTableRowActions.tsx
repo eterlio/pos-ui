@@ -3,10 +3,12 @@ import { Button } from "../ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { FC, memo } from "react";
 import { ActionButton } from "./type";
+
 interface DataTableRowActionsProps {
   actionButtons: ActionButton[];
   row: any;
 }
+
 export const DataTableRowActions: FC<DataTableRowActionsProps> = memo(({ actionButtons, row }) => {
   return (
     <DropdownMenu>
@@ -18,8 +20,11 @@ export const DataTableRowActions: FC<DataTableRowActionsProps> = memo(({ actionB
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-[160px]">
         {actionButtons &&
-          actionButtons.length &&
+          actionButtons.length > 0 &&
           actionButtons.map((actionButton, index) => {
+            if (actionButton.show !== undefined && !actionButton.show) {
+              return null;
+            }
             return (
               <DropdownMenuItem
                 key={index + 1}
