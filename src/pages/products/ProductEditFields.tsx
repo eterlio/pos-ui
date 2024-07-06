@@ -54,31 +54,36 @@ const ProductEditFields: FC<EditProductFieldsProps> = ({
     queryKey: ["productCategories", {}],
     url: "/product-categories",
     query: { deleted: false, columns: "name" },
-    requireAuth: true
+    requireAuth: true,
+     enabled: true
   });
   const { data: unitData } = useGeneralQuery<GetManyProps<ProductUnitProps>>({
     queryKey: ["productUnits", {}],
     url: "/product-units",
     query: { deleted: false, columns: "name,title" },
-    requireAuth: true
+    requireAuth: true,
+     enabled: true
   });
   const { data: brandData } = useGeneralQuery<GetManyProps<ProductBrandProps>>({
     queryKey: ["productBrands", {}],
     url: "/product-brands",
     query: { deleted: false, columns: "name" },
-    requireAuth: true
+    requireAuth: true,
+     enabled: true
   });
   const { data: codeData } = useGeneralQuery<GetManyProps<ProductCodeProps>>({
     queryKey: ["productCodes", {}],
     url: "/product-codes",
     query: { deleted: false, columns: "code" },
-    requireAuth: true
+    requireAuth: true,
+     enabled: true
   });
   const { data: supplierData } = useGeneralQuery<GetManyProps<SupplierProps>>({
     queryKey: ["suppliers", {}],
     url: "/suppliers",
     query: { deleted: false, columns: "name" },
-    requireAuth: true
+    requireAuth: true,
+    enabled: true
   });
   const categoriesOptions =
     categoryData?.data.map((category) => {
