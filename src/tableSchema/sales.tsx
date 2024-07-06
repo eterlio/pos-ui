@@ -60,6 +60,15 @@ export const salesTableSchema = ({ isAdmin }: { isAdmin?: boolean }): ColumnDef<
         return value.includes(row.getValue(id));
       }
     },
+     {
+      accessorKey: "totalAmount",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Total Amount" />,
+      cell: ({ row }) => <div className="flex space-x-2">{formatCurrency(row.original?.invoiceData?.totalAmount || 0)}</div>,
+      filterFn: (row, id, value) => {
+        return value.includes(row.getValue(id));
+      },
+      size: 12
+    },
     {
       accessorKey: "amountPaid",
       header: ({ column }) => <DataTableColumnHeader column={column} title="Amount Paid" />,
