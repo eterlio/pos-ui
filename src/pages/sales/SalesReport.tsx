@@ -61,7 +61,7 @@ const SalesReport: FC<SalesReportProps> = ({ filters, isTodayReport, isAdmin }) 
         <div className="flex mb-5 justify-end">
           <h1>
             <span>Total Sales: </span>
-            <span className="font-bold">{formatCurrency((data as any)?.totalAmount)}</span>
+            <span className="font-bold">{formatCurrency({ value: (data as any)?.totalAmount })}</span>
           </h1>
         </div>
       )}

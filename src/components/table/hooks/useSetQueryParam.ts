@@ -5,7 +5,13 @@ export const useSetQueryParam = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
-  const [queryObject, setQueryObject] = useState<Record<string, string>>({});
+
+  const initialQueryObject: Record<string, string> = {};
+  queryParams.forEach((value, key) => {
+    initialQueryObject[key] = value;
+  });
+
+  const [queryObject, setQueryObject] = useState<Record<string, string>>(initialQueryObject);
 
   useEffect(() => {
     const newQueryObject: Record<string, string> = {};
@@ -14,9 +20,9 @@ export const useSetQueryParam = () => {
     });
     setQueryObject(newQueryObject);
   }, [location.search]);
-  
+
   const setQueryParam = (param: string, value: string) => {
-    queryParams.set(param, value);    
+    queryParams.set(param, value);
     updateUrl();
   };
 
@@ -31,9 +37,9 @@ export const useSetQueryParam = () => {
 
   const updateUrl = () => {
     navigate({
-      search: `?${queryParams.toString()}`,
+      search: `?${queryParams.toString()}`
     });
   };
 
-  return { setQueryParam, removeQueryParam, getQueryParam, queryObject };
+  return { setQueryParam, removeQueryParam, getQueryParam, queryObject, queryParams };
 };

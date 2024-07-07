@@ -3,7 +3,7 @@ import { useSetQueryParam } from "./useSetQueryParam";
 
 // Custom hook for debouncing a function
 export function useDebouncedSetQueryParam(delay: number = 150) {
-  const { setQueryParam } = useSetQueryParam();
+  const { setQueryParam, queryObject } = useSetQueryParam();
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const debouncedSetQueryParam = useCallback(
@@ -18,5 +18,5 @@ export function useDebouncedSetQueryParam(delay: number = 150) {
     [setQueryParam, delay]
   );
 
-  return debouncedSetQueryParam;
+  return { debouncedSetQueryParam, queryObject };
 }
