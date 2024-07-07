@@ -4,8 +4,17 @@ import { parseISO, format, formatDistanceToNow } from "date-fns";
 import { isEmpty, transform } from "lodash";
 import { capitalize, words } from "lodash";
 
-export const formatCurrency = (value: number, currency = "GHS") => {
-  return new Intl.NumberFormat("en-GH", { style: "currency", currency }).format(!value ? 0 : value);
+export const formatCurrency = (data: { value: number; currency?: string; minifyFormat?: boolean }) => {
+  const { value, currency = "GHS", minifyFormat = false } = data;
+  let currencyFormatOptions: Intl.NumberFormatOptions = {
+    style: "currency",
+    currency
+  };
+  if (minifyFormat) {
+    currencyFormatOptions = { ...currencyFormatOptions, notation: "compact", compactDisplay: "short" };
+  }
+
+  return new Intl.NumberFormat("en-GH", currencyFormatOptions).format(!value ? 0 : value);
 };
 
 export function formatQueryParams(params?: Record<string, any>): string {

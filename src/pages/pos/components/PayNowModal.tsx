@@ -173,18 +173,18 @@ const PayNowModal: FC<PayNowProps> = ({ customers }) => {
         <OrderSummary totalItemAmount={getItemTotalAmount()} totalItems={getTotalItems()} />
         <div className="flex items-center justify-between gap-x-3">
           <h1 className="font-bold text-sm flex-1">Amount paid:</h1>
-          <p className="text-right flex-1">{formatCurrency(state.amountPaid || 0)}</p>
+          <p className="text-right flex-1">{formatCurrency({ value: state.amountPaid || 0 })}</p>
         </div>
         {!hasArrears && (
           <div className="flex items-center justify-between gap-x-3">
             <h1 className="font-bold text-sm flex-1">Change to give:</h1>
-            <p className="text-right flex-1">{formatCurrency(changeAmount)}</p>
+            <p className="text-right flex-1">{formatCurrency({ value: changeAmount })}</p>
           </div>
         )}
         {hasArrears && (
           <div className="flex items-center justify-between gap-x-3">
             <h1 className="font-bold text-sm flex-1 text-red-500">Arrears</h1>
-            <p className="text-right flex-1">{formatCurrency(changeAmount)}</p>
+            <p className="text-right flex-1">{formatCurrency({ value: changeAmount })}</p>
           </div>
         )}
       </div>

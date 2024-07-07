@@ -211,6 +211,11 @@ export const menuSidebarRoutes = (userRole: string, userPermission: string): Men
               isVisible: true,
               subLinks: [
                 {
+                  title: "Sales Analysis",
+                  url: "/sales/analysis",
+                  isDisabled: false
+                },
+                {
                   title: "Profit/Loss",
                   url: "/users/create",
                   isDisabled: true

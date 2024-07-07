@@ -25,6 +25,7 @@ export type SortType = "asc" | "desc";
 export interface ActionButton {
   label: string;
   action: MouseEventHandler;
+  show?: boolean;
 }
 export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

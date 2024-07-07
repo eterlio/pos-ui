@@ -57,7 +57,7 @@ const ViewSaleScreen = () => {
                   <td className="text-left text-sm py-2">{item.name}</td>
                   <td className="text-right text-sm py-2">{item.price}</td>
                   <td className="text-right text-sm py-2">{item.quantity}</td>
-                  <td className="text-right text-sm py-2">{formatCurrency(item.price * item.quantity)}</td>
+                  <td className="text-right text-sm py-2">{formatCurrency({ value: item.price * item.quantity })}</td>
                 </tr>
               );
             })}
@@ -66,7 +66,7 @@ const ViewSaleScreen = () => {
         <div className="mb-6">
           <div className="flex justify-between text-sm">
             <p className="font-bold">Subtotal:</p>
-            <p>{formatCurrency(data?.invoiceData?.totalAmount || 0)}</p>
+            <p>{formatCurrency({ value: data?.invoiceData?.totalAmount || 0 })}</p>
           </div>
           <div className="flex justify-between text-sm">
             <p className="font-bold">Tax (0%):</p>
@@ -74,27 +74,27 @@ const ViewSaleScreen = () => {
           </div>
           <div className="flex justify-between text-sm">
             <p className="font-bold">Total:</p>
-            <p>{formatCurrency(data?.invoiceData?.totalAmount || 0)}</p>
+            <p>{formatCurrency({ value: data?.invoiceData?.totalAmount || 0 })}</p>
           </div>
         </div>
         <div className="border-t border-gray-300 mb-4"></div>
         <div className="mb-6">
           <div className="flex justify-between text-sm">
             <p className="font-bold">Cash Received:</p>
-            <p>{formatCurrency(data?.amountPaid || 0)}</p>
+            <p>{formatCurrency({ value: data?.amountPaid || 0 })}</p>
           </div>
 
           {discrepancy >= 0 && (
             <div className="flex justify-between text-sm">
               <p className="font-bold">Change Given:</p>
-              <p>{formatCurrency(discrepancy)}</p>
+              <p>{formatCurrency({ value: discrepancy })}</p>
             </div>
           )}
 
           {discrepancy < 0 && (
             <div className="flex justify-between text-sm">
               <p className="font-bold text-red-600">Arrears:</p>
-              <p>{formatCurrency(discrepancy)}</p>
+              <p>{formatCurrency({ value: discrepancy })}</p>
             </div>
           )}
         </div>

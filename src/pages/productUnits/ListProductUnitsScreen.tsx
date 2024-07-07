@@ -7,6 +7,7 @@ import { useGeneralQuery } from "@/hooks/request/useGeneralQuery";
 import { useOptimisticUpdates } from "@/hooks/request/useOptimisticUpdates";
 import { GetManyProps } from "@/hooks/types";
 import { useSetQueryParam } from "@/hooks/useSetQueryParam";
+import { usePermission } from "@/hooks/usePermission"; // Import usePermission
 import { ModalActionButtonProps } from "@/interfaces";
 import { ProductUnitProps } from "@/interfaces/productUnits";
 import { productUnitSchema } from "@/tableSchema/productUnits";
@@ -30,25 +31,31 @@ const ListProductUnitsScreen = () => {
     query: queryObject,
     enabled: !!Object.keys(queryObject).length
   });
+
+  const { canCreateProductUnit, canUpdateProductUnit, canDeleteProductUnit } = usePermission(); // Use usePermission hook
+
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
+
   const rowActions = [
     {
       label: "Edit",
-      action: handleEditRowActionClick
+      action: handleEditRowActionClick,
+      show: canUpdateProductUnit
     },
     {
       label: "Delete",
       action: (data: Record<string, any>) => {
         setOpenModal(true);
         setSelectedUnit(data);
-      }
+      },
+      show: canDeleteProductUnit
     }
   ];
 
   const modalData = {
     showModal: openModal,
-    modalTitle: (name: string) => `Are you sure you want to delete  ${name}`,
+    modalTitle: (name: string) => `Are you sure you want to delete ${name}`,
     modalDescription: `Deleting the product unit will permanently remove it from the system. Continue?`,
     actionButtons: [
       {
@@ -81,17 +88,18 @@ const ListProductUnitsScreen = () => {
     navigate(`/product-units/${data.id}`);
   }
 
-  return (
-    <DashboardLayout
-      pageTitle="Product Units"
-      actionButton={{
+  const actionButtonProps = canCreateProductUnit
+    ? {
         createButton: {
           name: "Create Product Unit",
           onClick: () => navigate("/product-units/create"),
           disabled: isFetching
         }
-      }}
-    >
+      }
+    : undefined;
+
+  return (
+    <DashboardLayout pageTitle="Product Units" actionButton={actionButtonProps}>
       <Modal
         showModal={modalData.showModal}
         modalTitle={modalData.modalTitle(selectedUnit.name)}

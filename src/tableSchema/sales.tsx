@@ -72,7 +72,7 @@ export const salesTableSchema = ({ isAdmin }: { isAdmin?: boolean }): ColumnDef<
     {
       accessorKey: "amountPaid",
       header: ({ column }) => <DataTableColumnHeader column={column} title="Amount Paid" />,
-      cell: ({ row }) => <div className="flex space-x-2">{formatCurrency(row.getValue("amountPaid"))}</div>,
+      cell: ({ row }) => <div className="flex space-x-2">{formatCurrency({ value: row.getValue("amountPaid") })}</div>,
       filterFn: (row, id, value) => {
         return value.includes(row.getValue(id));
       },
@@ -84,14 +84,13 @@ export const salesTableSchema = ({ isAdmin }: { isAdmin?: boolean }): ColumnDef<
       cell: ({ row }) => <div className="flex space-x-2">{startCase(row.getValue("modeOfPayment"))}</div>,
       filterFn: (row, id, value) => {
         return value.includes(row.getValue(id));
-      },
-      
+      }
     },
     {
       accessorKey: "changeGiven",
       header: ({ column }) => <DataTableColumnHeader column={column} title="Change Given" />,
       cell: ({ row }) => {
-        return <div className="flex space-x-2">{formatCurrency(row.getValue("changeGiven"))}</div>;
+        return <div className="flex space-x-2">{formatCurrency({ value: row.getValue("changeGiven") })}</div>;
       },
       filterFn: (row, id, value) => {
         return value.includes(row.getValue(id));
@@ -101,7 +100,7 @@ export const salesTableSchema = ({ isAdmin }: { isAdmin?: boolean }): ColumnDef<
       accessorKey: "arrears",
       header: ({ column }) => <DataTableColumnHeader column={column} title="Arrears" />,
       cell: ({ row }) => {
-        return <div className="flex space-x-2">{formatCurrency(row.getValue("arrears"))}</div>;
+        return <div className="flex space-x-2">{formatCurrency({ value: row.getValue("arrears") })}</div>;
       },
       filterFn: (row, id, value) => {
         return value.includes(row.getValue(id));

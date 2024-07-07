@@ -253,7 +253,7 @@ const OrderDetails = () => {
               onClick={handleModalChange("payment")}
             >
               <span>Pay</span>
-              <span>{formatCurrency(totalAmount)}</span>
+              <span>{formatCurrency({ value: totalAmount })}</span>
             </Button>
           </div>
         </div>
