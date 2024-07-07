@@ -298,6 +298,7 @@ const SalesAnalysis = () => {
                   </div>
                 </>
               )}
+              {!singleSalesAnalysis?.data || (!singleSalesAnalysis?.data.length && <div className="font-bold text-center my-10">No Data found</div>)}
             </div>
             {/* CONTENT END */}
             <AlertDialogFooter>
