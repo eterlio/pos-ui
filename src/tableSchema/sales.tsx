@@ -63,7 +63,7 @@ export const salesTableSchema = ({ isAdmin }: { isAdmin?: boolean }): ColumnDef<
      {
       accessorKey: "totalAmount",
       header: ({ column }) => <DataTableColumnHeader column={column} title="Total Amount" />,
-      cell: ({ row }) => <div className="flex space-x-2">{formatCurrency(row.original?.invoiceData?.totalAmount || 0)}</div>,
+      cell: ({ row }) => <div className="flex space-x-2">{formatCurrency({value: row.original?.invoiceData?.totalAmount || 0})}</div>,
       filterFn: (row, id, value) => {
         return value.includes(row.getValue(id));
       },
