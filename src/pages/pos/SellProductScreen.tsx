@@ -36,6 +36,22 @@ type ProductQueryProps = {
   categoryId?: string;
 };
 
+const ShimmerLoader = () => {
+  return (
+    <div className="min-h-[200px] h-[300px] p-2 flex flex-col shadow border rounded-md relative animate-pulse">
+      <div className="product-image flex-1 mb-4 h-1/2 bg-gray-200 rounded-md"></div>
+      <div className="product-content flex-1">
+        <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+        <div className="h-6 bg-gray-200 rounded w-1/2"></div>
+      </div>
+      <div className="flex flex-1 my-2 items-center justify-end">
+        <div className="h-8 w-8 bg-gray-200 rounded-full"></div>
+      </div>
+      <div className="absolute bottom-5 left-2 text-[11px] bg-gray-200 h-2 w-8"></div>
+    </div>
+  );
+};
+
 const SellProductScreen = () => {
   const { redirectHome } = useRoleRedirect();
   const { products, updateProducts, setProducts } = useProductStore();
@@ -72,7 +88,7 @@ const SellProductScreen = () => {
     enabled: !!Object.keys(queryObject).length
   });
 
-  const { data: productsData } = useGeneralQuery<GetManyProps<ProductProps>>({
+  const { data: productsData, isFetching } = useGeneralQuery<GetManyProps<ProductProps>>({
     queryKey: ["products", productQuery],
     url: "/products/general",
     query: productQuery,
@@ -230,15 +246,33 @@ const SellProductScreen = () => {
                   <div>
                     <Tabs getActiveTab={handleSetActiveTab} defaultTab={"all"}>
                       <Tab label={"All"} value={"all"} key="all">
-                        <div className="py-4">
-                          <ProductDetails products={products} />
-                        </div>
-                      </Tab>
-                      {categories.map((category, index) => (
-                        <Tab label={startCase(category?.name || "")} value={category?._id || ""} key={index}>
+                        {isFetching && (
+                          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+                            {new Array(8).fill(0).map((_, i) => {
+                              return <ShimmerLoader  key={i}/>;
+                            })}
+                          </div>
+                        )}
+                        {!isFetching && (
                           <div className="py-4">
                             <ProductDetails products={products} />
                           </div>
+                        )}
+                      </Tab>
+                      {categories.map((category, index) => (
+                        <Tab label={startCase(category?.name || "")} value={category?._id || ""} key={index}>
+                          {isFetching && (
+                            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+                              {new Array(8).fill(0).map((_, i) => {
+                                return <ShimmerLoader key={i}/>;
+                              })}
+                            </div>
+                          )}
+                          {!isFetching && (
+                            <div className="py-4">
+                              <ProductDetails products={products} />
+                            </div>
+                          )}
                         </Tab>
                       ))}
                     </Tabs>

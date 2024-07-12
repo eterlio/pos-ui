@@ -37,8 +37,8 @@ const UpdateProductCategoryScreen = () => {
   const validator = new Validator<Partial<ValidatorProps>>({
     formData: formValues as ValidatorProps,
     rules: {
-      description: "required|minLength:10",
-      name: "required:minLength:5"
+      description: "required|minLength:5",
+      name: "required:minLength:3"
     }
   });
 

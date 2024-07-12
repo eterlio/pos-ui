@@ -12,7 +12,7 @@ const Content: React.FC<ContentProps> = ({ children, fullWidth }) => {
           <p className="text-yellow-900">Your account is not verified yet. Check your email to verify account</p>
         </div>
       )}
-      <div className={`dashboard-content ${!fullWidth && "p-6"}`}>{children}</div>
+      <div className={`dashboard-content ${!fullWidth && "p-2 md:p-6"}`}>{children}</div>
     </>
   );
 };

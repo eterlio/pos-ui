@@ -92,7 +92,7 @@ export const productDefaults = (): ProductProps => {
     productCodeId: "",
     productSellingPrice: 0,
     productUnitPrice: 0,
-    status: "draft",
+    status: "active",
     supplierId: "",
     unitId: "",
     accountId: "",

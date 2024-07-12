@@ -24,8 +24,8 @@ const CreateProductCategoryScreen = () => {
   const validator = new Validator({
     formData: formValues,
     rules: {
-      description: "required|minLength:10",
-      name: "required:minLength:5"
+      description: "required|minLength:5",
+      name: "required:minLength:3"
     }
   });
 

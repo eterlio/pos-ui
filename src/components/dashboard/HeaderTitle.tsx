@@ -13,9 +13,9 @@ interface HeaderTitleProps {
 }
 const HeaderTitle: React.FC<HeaderTitleProps> = ({ pageTitle, pageDescription, showPageExporter, actionButton }) => {
   return (
-    <div className="mb-3 lg:flex items-center justify-between sm:block">
+    <div className="mb-3 md:flex items-center justify-between sm:block">
       <div className="title sm:mb-3">
-        <h6 className="font-semibold text-2xl">{pageTitle && pageTitle}</h6>
+        <h6 className="font-semibold md:text-2xl text-xl text-center md:text-start mb-1 md:mb-0">{pageTitle && pageTitle}</h6>
         <p className="text-[12px]">{pageDescription || ""}</p>
       </div>
       {showPageExporter && (
@@ -25,10 +25,10 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({ pageTitle, pageDescription, s
           </ButtonWithIcon>
         </div>
       )}
-      <div className="flex items-center justify-end">
+      <div className="flex items-center md:justify-end justify-center">
         {actionButton && (
           <Button
-            className="px-6 py-2 uppercase min-w-[170px] rounded-sm bg-primary flex items-center justify-center text-[12px]"
+            className="px-6 py-2 uppercase min-w-[170px] rounded-sm bg-primary flex items-center justify-center text-[12px] w-full"
             onClick={actionButton.createButton?.onClick}
             disabled={actionButton.createButton?.disabled}
           >

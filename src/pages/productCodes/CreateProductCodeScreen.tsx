@@ -24,8 +24,8 @@ const CreateProductCodeScreen = () => {
   const validator = new Validator({
     formData: formValues,
     rules: {
-      description: "required|minLength:10",
-      code: "required:minLength:5"
+      description: "required|minLength:3",
+      code: "required:minLength:3"
     }
   });
 
