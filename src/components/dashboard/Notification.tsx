@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { BellIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
-import { memo, useState } from "react";
+import { memo, useContext, useState } from "react";
 import { useGeneralQuery } from "@/hooks/request/useGeneralQuery";
 import { NotificationActionType, NotificationProps } from "@/interfaces/notification";
 import { GetManyProps } from "@/hooks/types";
@@ -13,6 +13,7 @@ import { startCase } from "lodash";
 import { timeAgoOrDate } from "@/utils/time";
 import { useGeneralMutation } from "@/hooks/request/useGeneralMutation";
 import Loader from "../Loader";
+import { StoreContext, StoreContextProps } from "@/utils/store";
 
 const Shimmer = () => {
   return (
@@ -27,6 +28,7 @@ const Shimmer = () => {
 };
 const Notification = ({ hasUnreadNotification }: { hasUnreadNotification: boolean }) => {
   const [openNotificationModal, setOpenNotificationModal] = useState(false);
+  const { authUser } = useContext(StoreContext) as StoreContextProps;
   const { data: notifications, isFetching } = useGeneralQuery<GetManyProps<NotificationProps>>({
     queryKey: ["notification", openNotificationModal],
     url: "/notifications",
@@ -42,13 +44,13 @@ const Notification = ({ hasUnreadNotification }: { hasUnreadNotification: boolea
     mutationKey: ["notification"]
   });
   const handleReadNotification = (ids?: string[]) => {
-    mutate({ payload: { read: true, ...(ids?.length && { ids }) } });
+    mutate({ payload: { ...(ids?.length && { ids }) } });
   };
 
   const hasNotifications = !!(notifications && notifications?.data?.length > 0);
   const hasAtLeastOneUnread = () => {
     if (!notifications?.data?.length) return false;
-    return notifications.data.some((notification) => !notification.read);
+    return notifications.data.some((notification) => !notification.readUsers?.includes(authUser?._id || ""));
   };
   return (
     <div className="notification-icon w-8 h-8 bg-gray-50 rounded-full flex items-center justify-center relative">
@@ -113,7 +115,10 @@ const Notification = ({ hasUnreadNotification }: { hasUnreadNotification: boolea
                               <Link to="">
                                 <Avatar className="h-8 w-8 outline-none">
                                   <AvatarImage src="https://github.com/shadcn.pg" alt="Avatar" />
-                                  <AvatarFallback>BA</AvatarFallback>
+                                  <AvatarFallback>
+                                    {`${notification?.createdByData?.firstName?.[0]}${notification?.createdByData?.lastName?.[0]}` ||
+                                      "N/A"}
+                                  </AvatarFallback>
                                 </Avatar>
                               </Link>
                               <div>
@@ -137,7 +142,7 @@ const Notification = ({ hasUnreadNotification }: { hasUnreadNotification: boolea
                                 })}
                               </div>
                             </div>
-                            {!notification?.read && (
+                            {!notification?.readUsers?.includes(authUser?._id || "") && (
                               <div className="h-2.5 w-2.5 bg-primaryButton rounded-full mt-1.5"></div>
                             )}
                           </div>

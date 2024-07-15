@@ -5,11 +5,11 @@ export interface NotificationProps extends DefaultPluginProps {
   id?: string;
   type: NotificationTypeProps;
   message: string;
-  timestamp: Date;
+  timestamp?: Date;
   status?: NotificationStatusProps;
   priority: NotificationPriorityProps;
   actions?: NotificationActionProps[];
-  read?: boolean;
+  readUsers?: string[];
   recipients: string[];
   recipientsByRole?: UserRole;
   context?: NotificationContextProps;
