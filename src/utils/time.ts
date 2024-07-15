@@ -1,14 +1,10 @@
-// Import necessary Lodash functions
+import { differenceInMilliseconds, isValid } from "date-fns";
 
-import { differenceInMilliseconds } from "date-fns";
-
-// Helper function to get ordinal suffix using Intl
+// Helper function to get ordinal suffix
 export const getOrdinalSuffix = (n: number): string => {
-  const ordinalFormatter = new Intl.NumberFormat("en-US", {
-    style: "unit",
-    unit: "ordinal"
-  });
-  return ordinalFormatter.format(n);
+  const s = ["th", "st", "nd", "rd"],
+    v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
 };
 
 // Format date function
@@ -57,5 +53,7 @@ export const timeAgoOrDate = (timestamp: Date): string => {
     return timeago(timestamp);
   }
 
-  return formatDate(timestamp);
+  let date = new Date(timestamp);
+  if (!isValid(date)) return date.toString();
+  return formatDate(date);
 };

@@ -1,5 +1,5 @@
 import { DefaultPluginProps } from ".";
-import { UserRole } from "./user";
+import { UserProps, UserRole } from "./user";
 
 export interface NotificationProps extends DefaultPluginProps {
   id?: string;
@@ -17,6 +17,9 @@ export interface NotificationProps extends DefaultPluginProps {
   warehouseId?: string;
   accountId?: string;
   service?: "stock";
+
+  // virtuals
+  createdByData?: UserProps;
 }
 
 export enum NotificationTypeProps {

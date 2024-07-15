@@ -33,7 +33,8 @@ const Notification = ({ hasUnreadNotification }: { hasUnreadNotification: boolea
     requireAuth: true,
     query: {
       limit: 3
-    }
+    },
+    enabled: openNotificationModal
   });
   const { mutate, isPending } = useGeneralMutation({
     httpMethod: "patch",
@@ -116,9 +117,11 @@ const Notification = ({ hasUnreadNotification }: { hasUnreadNotification: boolea
                                 </Avatar>
                               </Link>
                               <div>
-                                <div className="text-sm font-medium">Elisa edited the status of New Project</div>
+                                <div className="text-sm font-medium">
+                                  {notification?.createdByData?.fullName || "N/A"} {notification.message}
+                                </div>
                                 <div className="text-xs text-gray-400">
-                                  {notification.timestamp && timeAgoOrDate(notification.timestamp)} |{" "}
+                                  {notification.timestamp && timeAgoOrDate(notification.timestamp)} |
                                   {startCase(notification?.service)}
                                 </div>
                                 {notification.actions?.map((action, i) => {
