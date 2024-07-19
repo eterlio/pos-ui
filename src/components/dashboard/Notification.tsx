@@ -13,7 +13,7 @@ import { startCase } from "lodash";
 import { timeAgoOrDate } from "@/utils/time";
 import { useGeneralMutation } from "@/hooks/request/useGeneralMutation";
 import Loader from "../Loader";
-import { StoreContext, StoreContextProps } from "@/utils/store";
+import useAuthStore from "@/store/auth";
 
 const Shimmer = () => {
   return (
@@ -28,7 +28,7 @@ const Shimmer = () => {
 };
 const Notification = ({ hasUnreadNotification }: { hasUnreadNotification: boolean }) => {
   const [openNotificationModal, setOpenNotificationModal] = useState(false);
-  const { authUser } = useContext(StoreContext) as StoreContextProps;
+  const { authUser } = useAuthStore();
   const { data: notifications, isFetching } = useGeneralQuery<GetManyProps<NotificationProps>>({
     queryKey: ["notification", openNotificationModal],
     url: "/notifications",
