@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { BellIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
-import { memo, useContext, useState } from "react";
+import { memo, useState } from "react";
 import { useGeneralQuery } from "@/hooks/request/useGeneralQuery";
 import { NotificationActionType, NotificationProps } from "@/interfaces/notification";
 import { GetManyProps } from "@/hooks/types";
