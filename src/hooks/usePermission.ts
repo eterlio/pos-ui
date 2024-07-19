@@ -5,15 +5,15 @@ import {
   hasPermission,
   permissionOperations
 } from "@/helpers/permission";
-import { StoreContext, StoreContextProps } from "@/utils/store";
-import { useContext, useMemo } from "react";
+import useAuthStore from "@/store/auth";
+import { useMemo } from "react";
 // Define the permission keys dynamically
 type PermissionKeys = `${"can"}${Capitalize<PermissionOperation>}${Capitalize<PermissionString>}`;
 
 // Define a record type for permissions
 type Permissions = Record<PermissionKeys, boolean>;
 export const usePermission = (): Permissions => {
-  const { authUser } = useContext(StoreContext) as StoreContextProps;
+  const { authUser } = useAuthStore();
 
   const permissions = useMemo(() => {
     const perms = {} as Permissions;

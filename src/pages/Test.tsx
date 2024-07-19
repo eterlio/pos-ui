@@ -4,9 +4,7 @@ const Test = () => {
   return (
     <div>
       <FileDropzone
-        onChange={(data: any) => {
-          console.log(data);
-        }}
+        onChange={() => {}}
         showPreview
         maxFileUploads={3}
         maxFileSize={5}

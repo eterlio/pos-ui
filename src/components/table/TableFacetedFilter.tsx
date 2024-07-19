@@ -30,7 +30,7 @@ interface DataTableFacetedFilterProps {
 }
 
 export function DataTableFacetedFilter({ title, options, extra, column }: DataTableFacetedFilterProps) {
-  const { getQueryParam, removeQueryParam, setQueryParam, queryObject } = useSetQueryParam();
+  const { getQueryParam, removeQueryParam, setQueryParam } = useSetQueryParam();
   const selected =
     !!getQueryParam(`${column}_in`) && getQueryParam(`${column}_in`)?.length
       ? getQueryParam(`${column}_in`)!.split(",")
@@ -57,7 +57,6 @@ export function DataTableFacetedFilter({ title, options, extra, column }: DataTa
   const resetItems = useCallback(() => {
     removeQueryParam(`${column}_in`);
     setSelectedValues([]);
-    console.log(queryObject, column);
   }, []);
   return (
     <Popover>

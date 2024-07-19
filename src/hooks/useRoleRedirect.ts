@@ -1,9 +1,8 @@
-import { StoreContext, StoreContextProps } from "@/utils/store";
-import { useContext } from "react";
+import useAuthStore from "@/store/auth";
 import { useNavigate } from "react-router-dom";
 
 export const useRoleRedirect = () => {
-  const { authUser } = useContext(StoreContext) as StoreContextProps;
+  const { authUser } = useAuthStore();
   const navigate = useNavigate();
 
   const redirectHome = () => {

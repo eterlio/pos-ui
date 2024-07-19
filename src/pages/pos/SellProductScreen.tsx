@@ -17,7 +17,7 @@ import { useGeneralQuery } from "@/hooks/request/useGeneralQuery";
 import { GetManyProps } from "@/hooks/types";
 import { ProductCategoryProps } from "@/interfaces/productCategories";
 import { ProductProps } from "@/interfaces/products";
-import useProductStore from "@/store/useProductStore";
+import useProductStore from "@/store/products";
 import {
   AlertDialog,
   AlertDialogCancel,
