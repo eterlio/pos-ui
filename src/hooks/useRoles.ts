@@ -1,8 +1,7 @@
-import { StoreContext, StoreContextProps } from "@/utils/store";
-import { useContext } from "react";
+import useAuthStore from "@/store/auth";
 
 export const useRoles = () => {
-  const { authUser } = useContext(StoreContext) as StoreContextProps;
+  const { authUser } = useAuthStore()
   const isAdmin = authUser?.role === "admin";
   const isManager = authUser?.role === "manager";
   const isSuperAdmin = authUser?.role === "super-admin";

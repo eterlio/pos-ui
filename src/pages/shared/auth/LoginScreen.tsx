@@ -6,16 +6,16 @@ import { HandlerProps } from "@/components/customFields/type";
 import { useAuthLogin, useGetAuthUser } from "@/hooks/request/useAuthRequest";
 import { useError } from "@/hooks/useError";
 import { useFormFieldUpdate } from "@/hooks/useFormFieldUpdate";
-import { StoreContext, StoreContextProps } from "@/utils/store";
+import useAuthStore from "@/store/auth";
 import { Validator } from "@/validator";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 const LoginScreen = () => {
   const authDefault = {
     password: "",
     email: ""
   };
-  const { authUser } = useContext(StoreContext) as StoreContextProps;
+  const { authUser } = useAuthStore();
   const { formValues, updateFormFieldValue } = useFormFieldUpdate(authDefault);
   const { isFetching } = useGetAuthUser();
   const { mutateAsync, isPending } = useAuthLogin();

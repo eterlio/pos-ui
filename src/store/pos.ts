@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import useProductStore from "./useProductStore";
+import useProductStore from "./products";
 import { toast } from "sonner";
 import { set as setValue } from "lodash";
 import { BankPaymentProps, ChequePaymentProps, MOP, MobileMoneyPaymentProps } from "@/interfaces/sales";

@@ -47,8 +47,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
   const handleScrollToTop = () => {
     if (mainRef.current) {
-      console.log(mainRef);
-
       mainRef.current.scrollTo({ top: 0, behavior: "smooth" });
     } else {
       window.scrollTo({ top: 0, behavior: "smooth" });

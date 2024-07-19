@@ -8,6 +8,7 @@ import { STOCK_ROUTES } from "./stock";
 import { POS_ROUTES } from "./pos";
 import Test from "@/pages/Test";
 import { SALES_ROUTES } from "./sales";
+import SettingsScreen from "@/pages/settings/SettingsScreen";
 
 export const ROUTES: RoutesProps[] = [
   ...AUTH_ROUTES,
@@ -18,6 +19,13 @@ export const ROUTES: RoutesProps[] = [
   ...STOCK_ROUTES,
   ...POS_ROUTES,
   ...SALES_ROUTES,
+  {
+    component: SettingsScreen,
+    url: "/settings",
+    allowedRoles: ["admin"],
+    requireAuth: true,
+    routeName: "settings"
+  },
   {
     component: Test,
     url: "/test"

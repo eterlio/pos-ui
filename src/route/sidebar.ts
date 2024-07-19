@@ -311,7 +311,7 @@ export const generalSidebarRoutes = (userRole?: UserRole) => {
       title: "General",
       routeLinks: [
         {
-          isDisabled: true,
+          isDisabled: false,
           title: "Settings",
           url: "/settings",
           icon: SettingsIcon

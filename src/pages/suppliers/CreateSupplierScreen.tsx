@@ -64,16 +64,16 @@ const CreateSupplierScreen = () => {
     );
   };
   return (
-      <SupplierEditFields
-        buttonTitle="Create Supplier"
-        formFields={formValues}
-        handleFormFieldChange={handleChange}
-        onsubmitHandler={onsubmitHandler}
-        disabledButton={isPending}
-        isLoading={isPending}
-        errors={errors as any}
-        pageTitle="Create Supplier"
-      />
+    <SupplierEditFields
+      buttonTitle="Create Supplier"
+      formFields={formValues}
+      handleFormFieldChange={handleChange}
+      onsubmitHandler={onsubmitHandler}
+      disabledButton={isPending}
+      isLoading={isPending}
+      errors={errors as any}
+      pageTitle="Create Supplier"
+    />
   );
 };
 

@@ -15,10 +15,12 @@ class ValidatorCheck {
   }
 
   minLength(fieldValue: string, minLength: number): boolean {
+    if (!fieldValue) return false;
     return fieldValue.length >= minLength;
   }
 
   maxLength(fieldValue: string, maxLength: number): boolean {
+    if (!fieldValue) return false;
     return fieldValue.length <= maxLength;
   }
 
@@ -60,7 +62,6 @@ class ValidatorCheck {
 type FieldKeys<T> = T extends object
   ? { [K in keyof T]: T[K] extends Function ? never : `${K & string}` | `${K & string}.${FieldKeys<T[K]>}` }[keyof T]
   : never;
-
 
 type RuleSet<T> = {
   [Property in FieldKeys<T>]?: string;

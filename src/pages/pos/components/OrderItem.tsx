@@ -3,8 +3,8 @@ import { Trash2 } from "lucide-react";
 import Tile from "@/assets/tile.jpg";
 import { FC } from "react";
 import { Button } from "@/components/ui/button";
-import usePosStore from "@/store/usePosStore";
-import useProductStore from "@/store/useProductStore";
+import usePosStore from "@/store/pos";
+import useProductStore from "@/store/products";
 
 interface Item {
   id: string;
