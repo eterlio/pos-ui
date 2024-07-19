@@ -37,7 +37,7 @@ const CheckBoxField: FC<CheckBoxFieldProps> = ({
         defaultValue={value}
         defaultChecked={!!value}
       />
-      {label && <InputLabel id={id} required={isRequired || false} label={label} />}
+      {label && <InputLabel id={id || fieldKey} required={isRequired || false} label={label} />}
     </div>
   );
 };

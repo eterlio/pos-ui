@@ -1,12 +1,13 @@
 import { Input } from "@/components/ui/input";
 import { MessageSquare, Menu } from "lucide-react";
-import { MouseEventHandler, useContext, useEffect } from "react";
+import { MouseEventHandler, useEffect } from "react";
 import UserNav from "./UserNav";
 import { Link } from "react-router-dom";
-import { StoreContext, StoreContextProps } from "@/utils/store";
 import { eventSourceHandler } from "@/lib/eventManager";
 import { EventSourceMessage } from "@microsoft/fetch-event-source";
 import Notification from "./Notification";
+import useAuthStore from "@/store/auth";
+import useNotificationStore from "@/store/notification";
 
 const Header = ({
   handleDisplaySidebar,
@@ -19,9 +20,8 @@ const Header = ({
   showNotification?: boolean;
   displaySidebar?: boolean;
 }) => {
-  const { authUser, setNotificationData, setHasUnreadNotificationData, hasUnreadNotification } = useContext(
-    StoreContext
-  ) as StoreContextProps;
+  const { authUser } = useAuthStore();
+  const { setNotificationData, setHasUnreadNotificationData, hasUnreadNotification } = useNotificationStore();
 
   useEffect(() => {
     eventSourceHandler.setHeaders({

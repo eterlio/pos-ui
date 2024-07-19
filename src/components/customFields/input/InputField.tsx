@@ -36,7 +36,7 @@ const InputField: FC<InputFieldProps> = ({
     <div className="w-full">
       {label && (
         <div className="my-2">
-          <InputLabel id={id} required={isRequired || false} label={label} />
+          <InputLabel id={id || fieldKey} required={isRequired || false} label={label} />
         </div>
       )}
       <Input
@@ -45,7 +45,7 @@ const InputField: FC<InputFieldProps> = ({
         onChange={handleInputFieldChange}
         disabled={disabled}
         {...props}
-        id={id}
+        id={id || fieldKey}
       />
       {errorMessage && <InputError message={errorMessage} />}
     </div>

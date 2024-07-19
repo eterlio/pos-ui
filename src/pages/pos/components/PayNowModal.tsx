@@ -4,7 +4,7 @@ import InputField from "@/components/customFields/input/InputField";
 import NumberField from "@/components/customFields/input/NumberField";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import OrderSummary from "./OrderSummary";
-import usePosStore from "@/store/usePosStore";
+import usePosStore from "@/store/pos";
 import { HandlerProps } from "@/components/customFields/type";
 import { BANK_NAME_OPTIONS, TELECOM_NAME_OPTIONS, formatCurrency } from "@/helpers";
 import { FC } from "react";
@@ -18,8 +18,6 @@ const PayNowModal: FC<PayNowProps> = ({ customers }) => {
   const { getItemTotalAmount, getTotalItems, setState, getState } = usePosStore();
   const state = getState();
   const handleFieldChange = (data: HandlerProps) => {
-    console.log(data);
-
     setState({ [data.key]: data.value });
   };
 

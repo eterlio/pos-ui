@@ -1,14 +1,14 @@
 import Preloader from "@/components/Preloader";
 import { useBaseRequestService } from "@/hooks/request/useAxiosPrivate";
-import { StoreContext, StoreContextProps } from "@/utils/store";
+import useAuthStore from "@/store/auth";
 import { AxiosError } from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 export const PersistLogin = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-  const { authUser: auth } = useContext(StoreContext) as StoreContextProps;
+  const { authUser: auth } = useAuthStore();
   const { getAuth } = useBaseRequestService({
     useToken: true,
     tokenType: "accessToken"
@@ -25,10 +25,14 @@ export const PersistLogin = () => {
       setIsLoading(false);
     }
   };
-
+  const { getInitData } = useBaseRequestService({
+    useToken: true,
+    tokenType: "accessToken"
+  });
   useEffect(() => {
     if (!auth || !Object.keys(auth).length) {
       verifyUserIsAuthenticated();
+      getInitData();
     } else {
       setIsLoading(false);
     }

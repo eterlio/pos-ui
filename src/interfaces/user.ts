@@ -43,6 +43,6 @@ export interface AuthUserResponse extends UserProps {
 }
 
 export interface InitData {
-  settings: SettingsProps | null;
+  settings: SettingsProps;
   hasUnreadNotification: boolean;
 }

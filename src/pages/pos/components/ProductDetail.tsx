@@ -2,7 +2,7 @@ import { Plus } from "lucide-react";
 import Tile from "@/assets/tile.jpg";
 import { Button } from "@/components/ui/button";
 import { FC } from "react";
-import usePosStore from "@/store/usePosStore";
+import usePosStore from "@/store/pos";
 import { ProductProps } from "@/interfaces/products";
 
 const ProductDetail: FC<{ product: ProductProps }> = ({ product }) => {
