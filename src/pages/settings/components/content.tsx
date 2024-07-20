@@ -1,3 +1,4 @@
+import React, { memo } from "react";
 import { SettingsProps } from "@/interfaces/settings";
 import InvoicingScreen from "../general/InvoicingScreen";
 import StoreInformationScreen from "../general/StoreInformation";
@@ -32,4 +33,4 @@ const Content: React.FC<ContentProps> = ({ currentNav, currentSubLink, settings,
   return null;
 };
 
-export default Content;
+export default memo(Content);

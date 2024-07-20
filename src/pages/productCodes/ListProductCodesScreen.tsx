@@ -113,9 +113,9 @@ const ListProductCodeScreen = () => {
           isLoading={isFetching || isPending}
           loadingText="Fetching product code data"
           showExportButton
-          paginator={data?.paginator}
+          paginator={data?.paginator || null}
           filters={[]}
-          actionButtons={rowActions} // Pass the row actions without filtering
+          actionButtons={rowActions}
           allowRowSelect
           handleRowClick={handleEditRowActionClick}
           showSelectColumns

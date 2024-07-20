@@ -113,7 +113,7 @@ const ListProductCategoriesScreen = () => {
           isLoading={isFetching || isPending}
           loadingText="Fetching product category data"
           showExportButton
-          paginator={data?.paginator}
+          paginator={data?.paginator || null}
           filters={[]}
           actionButtons={rowActions} // Pass the row actions without filtering
           allowRowSelect

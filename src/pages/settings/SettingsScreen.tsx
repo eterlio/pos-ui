@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useCallback, memo } from "react";
 import DashboardLayout from "@/components/dashboard/Layout";
 import { useSetQueryParam } from "@/hooks/useSetQueryParam";
 import Navigation from "./components/navigation";
@@ -13,7 +13,7 @@ type Nav = "general" | "notification" | "integrations" | "advanced";
 
 const SettingsScreen: React.FC = () => {
   const { getQueryParam, setQueryParam } = useSetQueryParam();
-  const { settings, setSettingsData } = useSettingsStore();
+  const { settings, setSettings } = useSettingsStore();
   const { isPending, mutate } = useGeneralMutation({
     httpMethod: "put",
     url: "/settings",
@@ -25,42 +25,48 @@ const SettingsScreen: React.FC = () => {
     url: "/settings",
     enabled: true
   });
-  const navOptions: { [key in Nav]: { subLinks: string[] } } = {
-    general: { subLinks: ["Store Information", "Invoicing", "Taxation", "Payment"] },
-    notification: { subLinks: ["Channels", "Preferences"] },
-    integrations: { subLinks: [] },
-    advanced: { subLinks: [] }
-  };
+
+  const navOptions: { [key in Nav]: { subLinks: string[] } } = useMemo(
+    () => ({
+      general: { subLinks: ["Store Information", "Invoicing", "Taxation", "Payment"] },
+      notification: { subLinks: ["Channels", "Preferences"] },
+      integrations: { subLinks: [] },
+      advanced: { subLinks: [] }
+    }),
+    []
+  );
 
   const initialNav = (getQueryParam("sideNav") as Nav) || "general";
   const [currentNav, setCurrentNav] = useState<Nav>(initialNav);
   const initialSubLink = getQueryParam("subLink") || navOptions[currentNav].subLinks[0];
   const [currentSubLink, setCurrentSubLink] = useState(initialSubLink);
 
-  const handleNavChange = (nav: Nav) => {
+  const handleNavChange = useCallback((nav: Nav) => {
     setCurrentNav(nav);
     setQueryParam("sideNav", nav);
     if (!navOptions[nav].subLinks.includes(currentSubLink)) {
-      setCurrentSubLink(navOptions[nav].subLinks[0] || "");
-      setQueryParam("subLink", nav);
+      const newSubLink = navOptions[nav].subLinks[0] || "";
+      setCurrentSubLink(newSubLink);
+      setQueryParam("subLink", newSubLink);
     }
-  };
+  }, []);
 
-  const handleSubNavChange = (link: string) => {
+  const handleSubNavChange = useCallback((link: string) => {
     setCurrentSubLink(link);
     setQueryParam("subLink", link);
-  };
+  }, []);
 
   useEffect(() => {
-    if (data) setSettingsData(data);
-  }, []);
+    if (data) {
+      setSettings(data);
+    }
+  }, [data]);
+
   return (
     <DashboardLayout pageTitle="Settings" isLoading={isFetching}>
       <div className="flex w-full flex-col">
         <main className="flex flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10 pt0">
-          <div className="mx-auto grid w-full max-w-6xl gap-2">
-            {/* <h1 className="text-3xl font-semibold">Settings</h1> */}
-          </div>
+          <div className="mx-auto grid w-full max-w-6xl gap-2"></div>
           <div className="mx-auto grid w-full max-w-6xl items-start lg:grid-cols-[220px_1fr]">
             <Navigation currentNav={currentNav} navOptions={navOptions} handleNavChange={handleNavChange} />
             <div className="grid gap-6">
@@ -88,4 +94,4 @@ const SettingsScreen: React.FC = () => {
   );
 };
 
-export default SettingsScreen;
+export default memo(SettingsScreen);

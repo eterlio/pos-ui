@@ -114,7 +114,7 @@ const ListProductBrandScreen = () => {
           isLoading={isFetching || isPending}
           loadingText="Fetching product brand data"
           showExportButton
-          paginator={data?.paginator}
+          paginator={data?.paginator || null}
           filters={[]}
           actionButtons={rowActions}
           allowRowSelect

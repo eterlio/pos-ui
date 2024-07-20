@@ -27,6 +27,13 @@ export interface ActionButton {
   action: MouseEventHandler;
   show?: boolean;
 }
+
+export interface TableActionProps {
+  label: string;
+  action: () => void;
+  show?: boolean;
+}
+
 export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   showExportButton?: boolean;
@@ -36,7 +43,7 @@ export interface DataTableProps<TData, TValue> {
   selectedDocuments?: TData[];
   allowRowSelect?: boolean;
   data: TData[];
-  paginator?: Paginator;
+  paginator: Paginator | null;
   showSearchSelection?: boolean;
   searchSelectionOptions?: OptionsProps[];
   showSelectColumns?: boolean;
@@ -46,6 +53,7 @@ export interface DataTableProps<TData, TValue> {
   isLoading?: boolean;
   loadingText?: string;
   showSearch?: boolean;
+  tableActions?: TableActionProps[];
 }
 
 export interface Paginator {

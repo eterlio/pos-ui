@@ -22,7 +22,8 @@ const Table = ({
   description,
   isLoading,
   loadingText,
-  showSearch
+  showSearch,
+  tableActions
 }: TableProps) => {
   return (
     <div className="w-full">
@@ -49,6 +50,7 @@ const Table = ({
         isLoading={isLoading}
         loadingText={loadingText}
         showSearch={showSearch}
+        tableActions={tableActions}
       />
     </div>
   );

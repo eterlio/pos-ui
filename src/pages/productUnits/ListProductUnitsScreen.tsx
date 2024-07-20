@@ -113,7 +113,7 @@ const ListProductUnitsScreen = () => {
           isLoading={isFetching}
           loadingText="Fetching product unit data"
           showExportButton
-          paginator={data?.paginator}
+          paginator={data?.paginator || null}
           filters={[]}
           actionButtons={rowActions}
           allowRowSelect

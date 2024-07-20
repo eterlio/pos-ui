@@ -112,7 +112,7 @@ const ListSuppliersScreen = () => {
           isLoading={isFetching}
           loadingText="Fetching supplier data"
           showExportButton
-          paginator={data?.paginator}
+          paginator={data?.paginator || null}
           filters={[]}
           actionButtons={rowActions}
           allowRowSelect

@@ -95,13 +95,14 @@ const ListUsersScreen = () => {
           loadingText="Fetching user data"
           showExportButton
           filters={userTableFilters}
-          paginator={data?.paginator}
+          paginator={data?.paginator || null}
           actionButtons={rowActions}
           allowRowSelect
           handleRowClick={handleRowClick}
           searchSelectionOptions={searchSelectionOptions}
           showSelectColumns
           showSearchSelection
+          tableActions={[{ action: () => {}, label: "Export Users", show: true }]}
         />
       </Container>
     </DashboardLayout>

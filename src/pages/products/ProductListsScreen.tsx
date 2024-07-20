@@ -108,7 +108,7 @@ const ProductListsScreen = () => {
         <Table
           columns={productTableSchema}
           data={data?.data || []}
-          paginator={data?.paginator}
+          paginator={data?.paginator || null}
           allowRowSelect
           showSelectColumns
           showExportButton

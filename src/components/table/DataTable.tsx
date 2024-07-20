@@ -36,7 +36,8 @@ export function DataTable<TData, TValue>({
   handleRowClick,
   isLoading,
   loadingText,
-  showSearch
+  showSearch,
+  tableActions
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -150,6 +151,7 @@ export function DataTable<TData, TValue>({
         showSearchSelection={showSearchSelection}
         showSelectColumns={showSelectColumns}
         showSearch={showSearch}
+        tableActions={tableActions}
       />
       <div className="rounded border border-[#f6f6f6] border-md mt-5">
         <Table className="-striped -highlight">

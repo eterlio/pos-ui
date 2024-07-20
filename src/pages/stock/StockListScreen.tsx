@@ -81,7 +81,7 @@ const StockListScreen = () => {
           isLoading={isFetching}
           loadingText="Fetching stock data"
           showExportButton
-          paginator={data?.paginator}
+          paginator={data?.paginator || null}
           allowRowSelect
           handleRowClick={handleEditRowActionClick}
           showSelectColumns
