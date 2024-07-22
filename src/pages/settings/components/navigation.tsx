@@ -1,6 +1,5 @@
 import { startCase } from "lodash";
-import { FC } from "react";
-import { Link } from "react-router-dom";
+import { FC, memo } from "react";
 
 interface NavigationProps {
   currentNav: string;
@@ -12,17 +11,16 @@ const Navigation: FC<NavigationProps> = ({ currentNav, navOptions, handleNavChan
   return (
     <nav className="grid gap-4 text-sm text-muted-foreground">
       {(Object.keys(navOptions) as string[]).map((nav, index) => (
-        <Link
-          to="#"
+        <span
           key={index}
-          className={`font-semibold ${currentNav === nav ? "text-primary" : ""}`}
+          className={`font-semibold ${currentNav === nav ? "text-primary" : ""} cursor-pointer`}
           onClick={() => handleNavChange(nav)}
         >
           {startCase(nav)}
-        </Link>
+        </span>
       ))}
     </nav>
   );
 };
 
-export default Navigation;
+export default memo(Navigation);

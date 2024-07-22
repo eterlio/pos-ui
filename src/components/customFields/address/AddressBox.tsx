@@ -39,7 +39,7 @@ const AddressBox: FC<AddressBoxProps> = ({ values, fieldKey, onChange, errors, d
   };
   return (
     <div className="mt-10">
-      <h1 className="text-xl">Address Details</h1>
+      <h1 className="text-lg">Address Details</h1>
       <div className="mt-5">
         <CheckBoxField
           fieldKey="isGpsAddress"

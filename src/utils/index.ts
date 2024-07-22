@@ -1,5 +1,6 @@
 import { PERMISSIONS_LIST, PermissionString } from "@/helpers/permission";
 import { PhoneProps } from "@/interfaces";
+
 import { format, isValid, parseISO } from "date-fns";
 import { toLower, trim } from "lodash";
 
@@ -41,7 +42,11 @@ export const ROLE_OPTIONS = [
   },
   {
     label: "Sales Personnel",
-    value: "salesPersonnel"
+    value: "sales-personnel"
+  },
+  {
+    label: "Warehouse Manager",
+    value: "warehouse-manager"
   }
 ];
 

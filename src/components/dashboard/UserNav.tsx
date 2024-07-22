@@ -24,7 +24,7 @@ const UserNav = memo(() => {
   const navLinks = [
     {
       name: "Profile",
-      route: "/profile",
+      route: "/me",
       allowedRoles: [],
       shortcut: "⇧⌘P"
     }

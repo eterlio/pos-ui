@@ -4,6 +4,7 @@ import OtherRoleDashboard from "@/pages/dashboard/OtherRoleDashboard";
 import Home from "@/pages/shared/Home";
 import ForgotPasswordScreen from "@/pages/shared/auth/ForgotPasswordScreen";
 import LoginScreen from "@/pages/shared/auth/LoginScreen";
+import ProfileScreen from "@/pages/shared/auth/ProfileScreen";
 import ResetPasswordScreen from "@/pages/shared/auth/ResetPassword";
 import VerifyAccountScreen from "@/pages/shared/auth/VerifyAccountScreen";
 
@@ -41,5 +42,10 @@ export const AUTH_ROUTES: RoutesProps[] = [
     component: Home,
     url: "/",
     requireAuth: false
+  },
+  {
+    component: ProfileScreen,
+    url: "/me",
+    requireAuth: true
   }
 ];
