@@ -39,11 +39,13 @@ const DashboardSidebar = ({
                 />
               </div>
             </div>
-            <div className="ml-[-30px] flex items-center justify-center w-full text-white">
-              <Button variant={"outline"} size={"icon"} className="bg-[#38585e24 hover:bg-transparent">
-                <ArrowRightLeft />
-              </Button>
-            </div>
+            {false && (
+              <div className="ml-[-30px] flex items-center justify-center w-full text-white">
+                <Button variant={"outline"} size={"icon"} className="bg-[#38585e24 hover:bg-transparent">
+                  <ArrowRightLeft />
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>

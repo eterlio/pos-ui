@@ -15,7 +15,11 @@ const OtherRoleDashboard = () => {
       navigate("/unauthorized");
     }
   }, []);
-  return <DashboardLayout>Welcome, {authUser?.fullName}</DashboardLayout>;
+  return (
+    <DashboardLayout>
+      <h1 className="text-medium">Welcome, {authUser?.fullName}</h1>
+    </DashboardLayout>
+  );
 };
 
 export default OtherRoleDashboard;
