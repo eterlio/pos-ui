@@ -9,6 +9,7 @@ import { POS_ROUTES } from "./pos";
 import Test from "@/pages/Test";
 import { SALES_ROUTES } from "./sales";
 import SettingsScreen from "@/pages/settings/SettingsScreen";
+import { INVOICES_ROUTES } from "./invoices";
 
 export const ROUTES: RoutesProps[] = [
   ...AUTH_ROUTES,
@@ -19,6 +20,7 @@ export const ROUTES: RoutesProps[] = [
   ...STOCK_ROUTES,
   ...POS_ROUTES,
   ...SALES_ROUTES,
+  ...INVOICES_ROUTES,
   {
     component: SettingsScreen,
     url: "/settings",

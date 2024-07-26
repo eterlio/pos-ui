@@ -15,7 +15,8 @@ import {
   MinusCircle,
   Puzzle,
   LucideIcon,
-  Coins
+  Coins,
+  FileSpreadsheet
 } from "lucide-react";
 
 interface RouteLink {
@@ -181,11 +182,30 @@ export const menuSidebarRoutes = (userRole: string, userPermission: string): Men
           }
         ]
       },
+    
       {
         title: "Sales",
         url: "/sales",
         icon: Coins,
         isVisible: hasPermission(userPermission, ["sales", "read"])
+      },
+      {
+        title: "Invoicing",
+        url: "/invoices",
+        icon: FileSpreadsheet,
+        isVisible: hasPermission(userPermission, ["invoice", "read"]),
+        subLinks: [
+          {
+            title: "List invoices",
+            url: "/invoices",
+            isVisible: hasPermission(userPermission, ["invoice", "read"])
+          },
+          {
+            title: "Add new invoice",
+            url: "/invoices/create",
+            isVisible: hasPermission(userPermission, ["invoice", "create"])
+          }
+        ]
       },
       {
         title: "Customer",
