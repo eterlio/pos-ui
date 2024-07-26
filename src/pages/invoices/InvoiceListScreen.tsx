@@ -94,7 +94,7 @@ const InvoiceListScreen = () => {
         createButton: {
           name: "Create Invoice",
           onClick: () => navigate("/invoices/create"),
-          disabled: isFetching
+          disabled: true || isFetching
         }
       }
     : undefined;
@@ -118,7 +118,7 @@ const InvoiceListScreen = () => {
           filters={[]}
           actionButtons={rowActions}
           allowRowSelect
-        //   handleRowClick={handleEditRowActionClick}
+          //   handleRowClick={handleEditRowActionClick}
           // showSelectColumns
         />
       </Container>
