@@ -23,6 +23,7 @@ export interface SalesProps {
   mobileMoneyPayment?: MobileMoneyPaymentProps;
   bankPayment?: BankPaymentProps;
   chequePayment?: ChequePaymentProps;
+  description?: string;
 }
 
 // Define the state type

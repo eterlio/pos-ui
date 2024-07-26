@@ -4,11 +4,12 @@ import { FC } from "react";
 interface OrderSummaryProps {
   totalItems: number;
   totalItemAmount: number;
+  title: string
 }
-const OrderSummary: FC<OrderSummaryProps> = ({ totalItemAmount, totalItems }) => {
+const OrderSummary: FC<OrderSummaryProps> = ({ totalItemAmount, totalItems, title }) => {
   return (
     <div className="receipt mb-10 min-h-[80px]">
-      <h1>Order Summary</h1>
+      <h1>{title}</h1>
       <div className="bg-gray-100 rounded p-2 h-full">
         <div className="upper space-y-2 text-[13px]">
           <div className="flex justify-between items-center">
