@@ -1,4 +1,4 @@
-import { differenceInMilliseconds, isValid } from "date-fns";
+import { differenceInMilliseconds, format, isValid } from "date-fns";
 
 // Helper function to get ordinal suffix
 export const getOrdinalSuffix = (n: number): string => {
@@ -57,3 +57,8 @@ export const timeAgoOrDate = (timestamp: Date): string => {
   if (!isValid(date)) return date.toString();
   return formatDate(date);
 };
+
+
+export const formateSimpleDate = (date: any)=> {
+  return format(date, "dd-MM-y")
+}

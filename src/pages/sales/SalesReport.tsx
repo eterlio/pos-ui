@@ -17,7 +17,7 @@ interface SalesReportProps {
   isTodayReport?: boolean;
   isAdmin?: boolean;
 }
-const SalesReport: FC<SalesReportProps> = ({ filters, isTodayReport, isAdmin }) => {
+const SalesReport: FC<SalesReportProps> = ({ filters, isAdmin }) => {
   const [printLoading, setPrintLoading] = useState(false);
   const { queryObject } = useSetQueryParam();
   const navigate = useNavigate();
@@ -64,14 +64,14 @@ const SalesReport: FC<SalesReportProps> = ({ filters, isTodayReport, isAdmin }) 
   }, [data]);
   return (
     <>
-      {isTodayReport && (
+      {/* {isTodayReport && ( */}
         <div className="flex mb-5 justify-end">
           <h1>
             <span>Total Sales: </span>
             <span className="font-bold">{formatCurrency({ value: (data as any)?.totalAmount })}</span>
           </h1>
         </div>
-      )}
+      {/* )} */}
       <Table
         columns={salesTableSchema({ isAdmin })}
         data={sales || []}

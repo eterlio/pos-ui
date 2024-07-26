@@ -67,3 +67,17 @@ export interface OptionsProps {
   value: any;
   label: string;
 }
+
+
+export type SimpleTableColumn = {
+  key: string;
+  label: string;
+  className?: string;
+};
+
+export type SimpleTableProps = {
+  data: Record<string, any>[];
+  columns: SimpleTableColumn[];
+  caption?: string;
+  footerData?: Record<string, any>[]; // Add this line
+};

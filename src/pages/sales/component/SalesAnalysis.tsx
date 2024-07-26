@@ -30,6 +30,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from "@/components/ui/alert-dialog";
+import SalesAnalysisListView from "./SalesAnalysisListView";
 
 const SalesAnalysis = () => {
   const [currentDate, setCurrentDate] = useState<Date | null>(null);
@@ -48,7 +49,7 @@ const SalesAnalysis = () => {
     query: queryObject
   });
   const { data: singleSalesAnalysis, isFetching: isFetchingSingleAnalysis } = useGeneralQuery<
-    GetManyProps<{ name: string; totalQuantity: number; totalPrice: number }[]>
+    GetManyProps<{ productName: string; totalQuantity: number; totalPrice: number }[]>
   >({
     queryKey: ["singleSalesAnalysis", selectedDate],
     url: "/sales/single/analysis",
@@ -285,25 +286,10 @@ const SalesAnalysis = () => {
                       {formatCurrency({ value: calculateSingleSalesTotal(singleSalesAnalysis.data) })}
                     </span>
                   </div>
-                  <div className="md:grid  md:grid-cols-4 my-10 gap-2">
-                    {singleSalesAnalysis?.data &&
-                      singleSalesAnalysis.data.length > 0 &&
-                      singleSalesAnalysis.data.map((data) => {
-                        return (
-                          <div className="p-1 space-y-2 my-5 md:my-0">
-                            <p className="title">
-                              <span className="font-medium">Product</span>: {data.name}
-                            </p>
-                            <p className="title">
-                              <span className="font-medium">Total Quantity</span>: {data.totalQuantity}
-                            </p>
-                            <p className="title">
-                              <span className="font-medium">Amount Sold</span>:
-                              {formatCurrency({ value: data.totalPrice })}
-                            </p>
-                          </div>
-                        );
-                      })}
+                  <div className="my-10">
+                    {singleSalesAnalysis?.data && singleSalesAnalysis.data.length > 0 && (
+                      <SalesAnalysisListView data={singleSalesAnalysis.data} />
+                    )}
                   </div>
                 </>
               )}
