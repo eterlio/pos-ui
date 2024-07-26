@@ -80,7 +80,7 @@ const SellProductScreen = () => {
   };
   const queryObject = { deleted: false };
   const { data: productCategories, isFetching: categoriesFetching } = useGeneralQuery<
-    GetManyProps<ProductCategoryProps>
+    GetManyProps<ProductCategoryProps[]>
   >({
     queryKey: ["productCategories", queryObject],
     url: "/product-categories",
@@ -88,7 +88,7 @@ const SellProductScreen = () => {
     enabled: !!Object.keys(queryObject).length
   });
 
-  const { data: productsData, isFetching } = useGeneralQuery<GetManyProps<ProductProps>>({
+  const { data: productsData, isFetching } = useGeneralQuery<GetManyProps<ProductProps[]>>({
     queryKey: ["products", productQuery],
     url: "/products/general",
     query: productQuery,

@@ -110,7 +110,7 @@ const OrderDetails = () => {
     }
   };
 
-  const { refetch, data: customers } = useGeneralQuery<GetManyProps<CustomerProps>>({
+  const { refetch, data: customers } = useGeneralQuery<GetManyProps<CustomerProps[]>>({
     queryKey: ["createCustomers"],
     url: "/customers",
     enabled: true,

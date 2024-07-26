@@ -25,7 +25,7 @@ const ListSuppliersScreen = () => {
     url: `/suppliers/${selectedSupplier.id}`
   });
 
-  const { data, isFetching } = useGeneralQuery<GetManyProps<SupplierProps>>({
+  const { data, isFetching } = useGeneralQuery<GetManyProps<SupplierProps[]>>({
     queryKey: ["suppliers", queryObject],
     url: "/suppliers",
     query: queryObject,

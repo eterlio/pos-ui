@@ -28,13 +28,23 @@ const SettingsScreen: React.FC = () => {
 
   const navOptions: { [key in Nav]: { subLinks: string[] } } = useMemo(
     () => ({
-      general: { subLinks: ["Store Information", "Invoicing", "Taxation", "Payment"] },
-      notification: { subLinks: ["Channels", "Preferences"] },
+      general: { subLinks: ["Store Information"] },
+      notification: { subLinks: [] },
       integrations: { subLinks: [] },
       advanced: { subLinks: [] }
     }),
     []
   );
+
+  // const navOptions: { [key in Nav]: { subLinks: string[] } } = useMemo(
+  //   () => ({
+  //     general: { subLinks: ["Store Information", "Invoicing", "Taxation", "Payment"] },
+  //     notification: { subLinks: ["Channels", "Preferences"] },
+  //     integrations: { subLinks: [] },
+  //     advanced: { subLinks: [] }
+  //   }),
+  //   []
+  // );
 
   const initialNav = (getQueryParam("sideNav") as Nav) || "general";
   const [currentNav, setCurrentNav] = useState<Nav>(initialNav);

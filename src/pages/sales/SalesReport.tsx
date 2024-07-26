@@ -23,7 +23,7 @@ const SalesReport: FC<SalesReportProps> = ({ filters, isTodayReport, isAdmin }) 
   const navigate = useNavigate();
   const { sales, setSales, setPaginator, paginator } = useSalesStore();
   const { axiosInstance } = useBaseRequestService({ useToken: true, tokenType: "accessToken" });
-  const { data, isFetching } = useGeneralQuery<GetManyProps<SalesProps>>({
+  const { data, isFetching } = useGeneralQuery<GetManyProps<SalesProps[]>>({
     queryKey: ["sales", queryObject],
     url: "/sales",
     query: queryObject

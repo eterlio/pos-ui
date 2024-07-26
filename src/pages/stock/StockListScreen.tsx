@@ -19,7 +19,7 @@ const StockListScreen = () => {
   const [selectedStock, setSelectedStock] = useState<Partial<StockProps>>({});
   const [openDrawer, setOpenDrawer] = useState(false);
   const { queryObject } = useSetQueryParam();
-  const { data, isFetching } = useGeneralQuery<GetManyProps<StockProps>>({
+  const { data, isFetching } = useGeneralQuery<GetManyProps<StockProps[]>>({
     queryKey: ["stocks", queryObject],
     url: "/stocks",
     query: queryObject,

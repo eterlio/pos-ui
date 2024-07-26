@@ -25,7 +25,7 @@ const ProductListsScreen = () => {
     url: `/products/${selectedProduct.id}`
   });
 
-  const { data, isFetching } = useGeneralQuery<GetManyProps<ProductProps>>({
+  const { data, isFetching } = useGeneralQuery<GetManyProps<ProductProps[]>>({
     queryKey: ["products", queryObject],
     url: "/products",
     query: queryObject,

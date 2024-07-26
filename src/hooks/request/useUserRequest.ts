@@ -84,7 +84,7 @@ export const useDeleteUserMutation = (query: any) => {
       const previousResponse = queryClient.getQueryData<GetManyProps<UserProps[]>>(["users", query]);
 
       if (previousResponse && Object.keys(previousResponse).length) {
-        queryClient.setQueryData(["users", query], (old: GetManyProps<UserProps>) => {
+        queryClient.setQueryData(["users", query], (old: GetManyProps<UserProps[]>) => {
           const result = old.data.filter((user) => {
             return user.id !== id;
           });

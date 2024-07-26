@@ -32,7 +32,7 @@ export const useSetQueryParam = () => {
   };
 
   const getQueryParam = (param: string) => {
-    return queryParams.get(param);
+    return queryParams.get(param) || "";
   };
 
   const updateUrl = () => {

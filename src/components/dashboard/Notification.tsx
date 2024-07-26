@@ -29,7 +29,7 @@ const Shimmer = () => {
 const Notification = ({ hasUnreadNotification }: { hasUnreadNotification: boolean }) => {
   const [openNotificationModal, setOpenNotificationModal] = useState(false);
   const { authUser } = useAuthStore();
-  const { data: notifications, isFetching } = useGeneralQuery<GetManyProps<NotificationProps>>({
+  const { data: notifications, isFetching } = useGeneralQuery<GetManyProps<NotificationProps[]>>({
     queryKey: ["notification", openNotificationModal],
     url: "/notifications",
     requireAuth: true,

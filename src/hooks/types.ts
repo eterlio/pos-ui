@@ -1,6 +1,6 @@
 import { Paginator } from "@/components/table/type";
 
 export interface GetManyProps<T>{
-    data: T[],
+    data: T,
       paginator: Paginator,
 }

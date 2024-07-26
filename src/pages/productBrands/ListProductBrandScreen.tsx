@@ -26,7 +26,7 @@ const ListProductBrandScreen = () => {
     url: `/product-brands/${brandId}`
   });
 
-  const { data, isFetching } = useGeneralQuery<GetManyProps<ProductBrandProps>>({
+  const { data, isFetching } = useGeneralQuery<GetManyProps<ProductBrandProps[]>>({
     queryKey: ["productBrands", queryObject],
     url: "/product-brands",
     query: queryObject,

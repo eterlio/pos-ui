@@ -40,7 +40,7 @@ const SalesAnalysis = () => {
   });
   const { debouncedSetQueryParam, queryObject } = useDebouncedSetQueryParam();
   const [openModal, setOpenModal] = useState(false);
-  const { data, isFetching } = useGeneralQuery<GetManyProps<{ date: string; totalItemsSold: number }>>({
+  const { data, isFetching } = useGeneralQuery<GetManyProps<{ date: string; totalItemsSold: number }[]>>({
     queryKey: ["salesAnalysis", queryObject],
     url: "/sales/analysis",
     requireAuth: true,
@@ -48,7 +48,7 @@ const SalesAnalysis = () => {
     query: queryObject
   });
   const { data: singleSalesAnalysis, isFetching: isFetchingSingleAnalysis } = useGeneralQuery<
-    GetManyProps<{ name: string; totalQuantity: number; totalPrice: number }>
+    GetManyProps<{ name: string; totalQuantity: number; totalPrice: number }[]>
   >({
     queryKey: ["singleSalesAnalysis", selectedDate],
     url: "/sales/single/analysis",
@@ -56,6 +56,15 @@ const SalesAnalysis = () => {
     enabled: Boolean(selectedDate),
     query: { date: selectedDate || "" }
   });
+  const { data: som } = useGeneralQuery<GetManyProps<{ name: string; totalQuantity: number; totalPrice: number }>>({
+    queryKey: ["gfdghfgfhgf", selectedDate],
+    url: "/sales/by/cashier",
+    requireAuth: true,
+    enabled: Boolean(selectedDate),
+    query: { date: selectedDate || "" }
+  });
+
+  console.log({ som });
 
   useEffect(() => {
     if (queryObject && queryObject.year && queryObject.month) {
@@ -298,7 +307,8 @@ const SalesAnalysis = () => {
                   </div>
                 </>
               )}
-              {!singleSalesAnalysis?.data || (!singleSalesAnalysis?.data.length && <div className="font-bold text-center my-10">No Data found</div>)}
+              {!singleSalesAnalysis?.data ||
+                (!singleSalesAnalysis?.data.length && <div className="font-bold text-center my-10">No Data found</div>)}
             </div>
             {/* CONTENT END */}
             <AlertDialogFooter>

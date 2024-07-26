@@ -39,7 +39,7 @@ export const PromiseSelect: FC<PromiseSelectDataProps> = ({
   const fetchData = async (params: Record<string, any>) => {
     try {
       setLoading(true);
-      const { data } = await axiosInstance.get<BaseResponse<GetManyProps<any>>>(url, { params });
+      const { data } = await axiosInstance.get<BaseResponse<GetManyProps<any[]>>>(url, { params });
       if (data) {
         const options = data.response.data.map((field) => ({
           label: field[labelKey] || "",

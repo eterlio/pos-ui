@@ -13,7 +13,7 @@ import { UserProps } from "@/interfaces/user";
 const SalesListScreen = () => {
   const { isAdmin, isSuperAdmin } = useRoles();
 
-  const { data: users } = useGeneralQuery<GetManyProps<UserProps>>({
+  const { data: users } = useGeneralQuery<GetManyProps<UserProps[]>>({
     queryKey: ["users"],
     url: "/users",
     enabled: isAdmin,
