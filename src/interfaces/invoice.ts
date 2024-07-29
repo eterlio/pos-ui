@@ -1,11 +1,13 @@
 import { DefaultPluginProps } from ".";
+import { CustomerProps } from "./customer";
+import { UserProps } from "./user";
 
 export interface Discount {
   type: "fixed" | "percentage";
   amount: number;
 }
 export type InvoiceStatus = "paid" | "not paid" | "expired" | "partly paid";
-
+export const INVOICE_STATUSES: InvoiceStatus[] = ["expired", "not paid", "paid", "partly paid"];
 export type Interval = "daily" | "weekly" | "monthly" | "yearly";
 export interface RecurrenceProps {
   interval: Interval;
@@ -26,6 +28,10 @@ export interface InvoiceProps extends DefaultPluginProps {
   description?: string;
   customerId: string;
   remarks?: string;
+
+  // virtuals
+  customerData?: CustomerProps;
+  createdByData?: UserProps;
 }
 
 export interface InvoiceItem {

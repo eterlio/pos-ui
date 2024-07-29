@@ -13,7 +13,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { InvoiceProps } from "@/interfaces/invoice";
-import { invoiceSchema } from "@/tableSchema/invoice";
+import { invoiceSchema, invoiceTableFilters } from "@/tableSchema/invoice";
 
 const InvoiceListScreen = () => {
   const { removeItemFromList } = useOptimisticUpdates();
@@ -94,7 +94,7 @@ const InvoiceListScreen = () => {
         createButton: {
           name: "Create Invoice",
           onClick: () => navigate("/invoices/create"),
-          disabled: true || isFetching
+          disabled: isFetching
         }
       }
     : undefined;
@@ -115,11 +115,13 @@ const InvoiceListScreen = () => {
           loadingText="Fetching invoice data"
           showExportButton
           paginator={data?.paginator || null}
-          filters={[]}
+          filters={invoiceTableFilters}
           actionButtons={rowActions}
-          allowRowSelect
+          showSearchSelection
+          searchSelectionOptions={[{ label: "Customer", value: "customerName" }]}
+          // allowRowSelect
           //   handleRowClick={handleEditRowActionClick}
-          // showSelectColumns
+          showSelectColumns
         />
       </Container>
     </DashboardLayout>

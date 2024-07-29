@@ -9,9 +9,9 @@ interface TableStatusProps {
 const TableStatus: FC<TableStatusProps> = ({ bg, text, textColor, circleBg }) => {
   return (
     <p
-      className={`${bg} ${textColor} px-3 w-[100px] text-center flex items-center justify-center rounded gap-1 text-[12px] min-h-[30px]`}
+      className={`${bg} ${textColor} px-2 w-[100px] text-center flex items-center justify-center rounded gap-1 text-[12px] min-h-[25px]`}
     >
-      {circleBg && <span className={`block h-[6px] w-[6px] rounded-full ${circleBg}`}></span>}
+      {circleBg && <span className={`block h-[5px] w-[5px] rounded-full ${circleBg}`}></span>}
       <span>{text}</span>
     </p>
   );

@@ -182,7 +182,7 @@ export const menuSidebarRoutes = (userRole: string, userPermission: string): Men
           }
         ]
       },
-    
+
       {
         title: "Sales",
         url: "/sales",
@@ -204,7 +204,7 @@ export const menuSidebarRoutes = (userRole: string, userPermission: string): Men
             title: "Add new invoice",
             url: "/invoices/create",
             isVisible: hasPermission(userPermission, ["invoice", "create"]),
-            isDisabled: true
+            isDisabled: false
           }
         ]
       },
