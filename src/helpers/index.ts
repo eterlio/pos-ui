@@ -1,17 +1,38 @@
 import { AddressProps, PhoneProps, UploadedFileProps } from "@/interfaces";
-import { UserRole, specialRoles } from "@/interfaces/users";
+import { UserRole, specialRoles } from "@/interfaces/user";
 import { parseISO, format, formatDistanceToNow } from "date-fns";
 import { isEmpty, transform } from "lodash";
 import { capitalize, words } from "lodash";
 
-export const formatCurrency = (amount: number, currency = "GHS") => {
-  if (!amount) return 0;
-  return amount.toLocaleString("en-US", {
+export const formatCurrency = (data: {
+  value: number;
+  currency?: string;
+  minifyFormat?: boolean;
+  showCurrencySign?: boolean;
+  currencyDisplay?: "symbol" | "narrowSymbol" | "code" | "name";
+}) => {
+  const { value, currency = "GHS", minifyFormat = false, showCurrencySign = true, currencyDisplay = "symbol" } = data;
+
+  let currencyFormatOptions: Intl.NumberFormatOptions = {
     style: "currency",
     currency,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
+    currencyDisplay
+  };
+
+  if (minifyFormat) {
+    currencyFormatOptions = { ...currencyFormatOptions, notation: "compact", compactDisplay: "short" };
+  }
+
+  if (!showCurrencySign) {
+    // Change style to "decimal" if showCurrencySign is false
+    currencyFormatOptions = {
+      style: "decimal", // Remove currency symbol and display just the number
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    };
+  }
+
+  return new Intl.NumberFormat("en-GH", currencyFormatOptions).format(!value ? 0 : value);
 };
 
 export function formatQueryParams(params?: Record<string, any>): string {
@@ -30,17 +51,10 @@ export function objectToQueryString(obj: Record<string, any>) {
     if (value !== undefined && value !== null) {
       if (Array.isArray(value) && value.length > 0) {
         // If the value is an array with elements, join them with ","
-        return (
-          encodeURIComponent(key) + "=" + encodeURIComponent(value.join(","))
-        );
-      } else if (
-        (typeof value === "string" && value !== "") ||
-        typeof value === "number"
-      ) {
+        return encodeURIComponent(key) + "=" + encodeURIComponent(value.join(","));
+      } else if ((typeof value === "string" && value !== "") || typeof value === "number") {
         // If the value is a non-empty string or a number, include it in the query string
-        return (
-          encodeURIComponent(key) + "=" + encodeURIComponent(value.toString())
-        );
+        return encodeURIComponent(key) + "=" + encodeURIComponent(value.toString());
       }
     }
 
@@ -78,35 +92,54 @@ export function objectDifference(
   const diff: Record<string, any> = {};
 
   if (!objectToCompare || !baseObject) return diff;
+
   const baseKeys = Object.keys(baseObject);
   const compareKeys = Object.keys(objectToCompare);
 
+  // Helper function to find array differences
+  const arrayDifference = (baseArray: any[], compareArray: any[]) => {
+    return compareArray.filter((item) => !baseArray.includes(item));
+  };
+
   // Iterate over the keys of baseObject
   for (const key of baseKeys) {
-    if (compareKeys.includes(key)) {
-      const baseValue = baseObject[key];
-      const compareValue = objectToCompare[key];
+    const baseValue = baseObject[key];
+    const compareValue = objectToCompare[key];
 
+    if (compareKeys.includes(key)) {
       if (Array.isArray(baseValue) && Array.isArray(compareValue)) {
-        // Handle arrays
-        if (JSON.stringify(baseValue) !== JSON.stringify(compareValue)) {
+        // Handle arrays with more granular comparison
+        const diffArray = arrayDifference(baseValue, compareValue);
+        if (diffArray.length > 0) {
           diff[key] = compareValue;
         }
       } else if (
         typeof baseValue === "object" &&
-        typeof compareValue === "object"
+        baseValue !== null &&
+        typeof compareValue === "object" &&
+        compareValue !== null
       ) {
         // Recursively compare nested objects
         const nestedDiff = objectDifference(baseValue, compareValue);
         if (!isEmpty(nestedDiff)) {
-          // Create a new object to avoid the "Cannot add property" error
-          diff[key] = { ...nestedDiff };
+          diff[key] = nestedDiff;
         }
       } else if (baseValue !== compareValue) {
-        diff[key] = compareValue;
+        if (
+          !(baseValue === "" && compareValue === "") &&
+          !(baseValue == null && compareValue == null) &&
+          !(
+            typeof baseValue === "number" &&
+            typeof compareValue === "number" &&
+            isNaN(baseValue) &&
+            isNaN(compareValue)
+          )
+        ) {
+          diff[key] = compareValue;
+        }
       }
     } else {
-      diff[key] = baseObject[key];
+      diff[key] = baseValue;
     }
   }
 
@@ -127,7 +160,7 @@ const sizeMap: Record<SizeUnit, number> = {
   KB: 1024,
   MB: 1024 * 1024,
   GB: 1024 * 1024 * 1024,
-  TB: 1024 * 1024 * 1024 * 1024,
+  TB: 1024 * 1024 * 1024 * 1024
 };
 
 export function formatFileSize(sizeInBytes: number): string {
@@ -178,14 +211,63 @@ export function formatAddressToString(address: AddressProps) {
 
   return formattedAddress.trim();
 }
-export const formatPhoneToString = (phone: PhoneProps) => {
+export const formatPhoneToString = (phone?: PhoneProps) => {
   if (!phone) return "N/A";
   const { number = "", prefix = "" } = phone;
-  return `+${prefix} ${number}`;
+  return `(+${prefix}) ${number}`;
 };
-
-
 
 export const isSpecialRole = (role: UserRole): boolean => {
   return specialRoles.includes(role);
 };
+
+export const addressValidationProps = {
+  validation: {
+    "address.city": "required",
+    "address.country": "required",
+    "address.poBox": "required",
+    "address.state": "required"
+  },
+  customFields: {
+    "address.city": "City",
+    "address.country": "Country",
+    "address.poBox": "po Box",
+    "address.state": "State"
+  }
+};
+export const BANK_NAME_OPTIONS = [
+  { label: "Absa Bank Ghana Ltd", value: "Absa Bank Ghana Ltd" },
+  { label: "Access Bank", value: "Access Bank" },
+  { label: "ADB Bank Limited", value: "ADB Bank Limited" },
+  { label: "ARB Apex Bank", value: "ARB Apex Bank" },
+  { label: "Bank of Africa Ghana", value: "Bank of Africa Ghana" },
+  { label: "Bank of Ghana", value: "Bank of Ghana" },
+  { label: "Best Point Savings & Loans", value: "Best Point Savings & Loans" },
+  { label: "BSIC Ghana Limited", value: "BSIC Ghana Limited" },
+  { label: "CAL Bank Limited", value: "CAL Bank Limited" },
+  { label: "Consolidated Bank Ghana Limited", value: "Consolidated Bank Ghana Limited" },
+  { label: "Ecobank Ghana Limited", value: "Ecobank Ghana Limited" },
+  { label: "FBNBank Ghana Limited", value: "FBNBank Ghana Limited" },
+  { label: "Fidelity Bank Ghana Limited", value: "Fidelity Bank Ghana Limited" },
+  { label: "First Atlantic Bank Limited", value: "First Atlantic Bank Limited" },
+  { label: "First National Bank Ghana Limited", value: "First National Bank Ghana Limited" },
+  { label: "GCB Bank Limited", value: "GCB Bank Limited" },
+  { label: "Guaranty Trust Bank (Ghana) Limited", value: "Guaranty Trust Bank (Ghana) Limited" },
+  { label: "National Investment Bank Limited", value: "National Investment Bank Limited" },
+  { label: "OmniBank Ghana Limited", value: "OmniBank Ghana Limited" },
+  { label: "Prudential Bank Limited", value: "Prudential Bank Limited" },
+  { label: "Republic Bank (GH) Limited", value: "Republic Bank (GH) Limited" },
+  { label: "Services Integrity Savings and Loans", value: "Services Integrity Savings and Loans" },
+  { label: "Société Générale Ghana Limited", value: "Société Générale Ghana Limited" },
+  { label: "Stanbic Bank Ghana Limited", value: "Stanbic Bank Ghana Limited" },
+  { label: "Standard Chartered Bank Ghana Limited", value: "Standard Chartered Bank Ghana Limited" },
+  { label: "United Bank for Africa Ghana Limited", value: "United Bank for Africa Ghana Limited" },
+  { label: "Universal Merchant Bank Ghana Limited", value: "Universal Merchant Bank Ghana Limited" },
+  { label: "Zenith Bank Ghana", value: "Zenith Bank Ghana" }
+];
+
+export const TELECOM_NAME_OPTIONS = [
+  { label: "MTN", value: "MTN" },
+  { label: "VODAFONE", value: "VODAFONE" },
+  { label: "AIRTEL TIGO", value: "AIRTEL TIGO" }
+];

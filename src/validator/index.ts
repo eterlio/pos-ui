@@ -1,242 +1,284 @@
-
+import { get, has, isArray } from "lodash";
 
 class ValidatorCheck {
-    required(fieldValue: string | number | any[]): boolean {
-        if (Array.isArray(fieldValue)) return fieldValue.length > 0;
-        return Boolean(fieldValue);
-    }
+  required(fieldValue: string | number | any[]): boolean {
+    if (Array.isArray(fieldValue)) return fieldValue.length > 0;
+    return Boolean(fieldValue);
+  }
 
-    minValue(fieldValue: number, minValue: number): boolean {
-        return fieldValue >= minValue;
-    }
+  minValue(fieldValue: number, minValue: number): boolean {
+    return fieldValue >= minValue;
+  }
 
-    maxValue(fieldValue: number, maxValue: number): boolean {
-        return fieldValue <= maxValue;
-    }
+  maxValue(fieldValue: number, maxValue: number): boolean {
+    return fieldValue <= maxValue;
+  }
 
-    minLength(fieldValue: string, minLength: number): boolean {
-        return fieldValue.length >= minLength;
-    }
+  minLength(fieldValue: string, minLength: number): boolean {
+    if (!fieldValue) return false;
+    return fieldValue.length >= minLength;
+  }
 
-    maxLength(fieldValue: string, maxLength: number): boolean {
-        return fieldValue.length <= maxLength;
-    }
+  maxLength(fieldValue: string, maxLength: number): boolean {
+    if (!fieldValue) return false;
+    return fieldValue.length <= maxLength;
+  }
 
-    isEmail(fieldValue: string): boolean {
-        return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(fieldValue);
-    }
+  isEmail(fieldValue: string): boolean {
+    return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(fieldValue);
+  }
 
-    isUrl(fieldValue: string): boolean {
-        return /^((https):\/\/)?(?:www\.)?([a-zA-Z0-9-]+)\.[a-zA-Z]{2,}$/.test(fieldValue);
-    }
+  isUrl(fieldValue: string): boolean {
+    return /^((https):\/\/)?(?:www\.)?([a-zA-Z0-9-]+)\.[a-zA-Z]{2,}$/.test(fieldValue);
+  }
 
-    isNumber(fieldValue: string): boolean {
-        return /^\d+$/.test(fieldValue);
-    }
+  isPassword(fieldValue: string): boolean {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+    return passwordRegex.test(fieldValue);
+  }
 
-    isString(fieldValue: string): boolean {
-        return /^[a-zA-Z]+$/.test(fieldValue);
-    }
+  isNumber(fieldValue: string): boolean {
+    return /^\d+$/.test(fieldValue);
+  }
 
-    isAlphaNumeric(fieldValue: string): boolean {
-        return /^[a-zA-Z0-9]+$/.test(fieldValue);
-    }
+  isString(fieldValue: string): boolean {
+    return /^[a-zA-Z]+$/.test(fieldValue);
+  }
 
-    in(fieldValue: string | number, ruleSet: string[]): boolean {
-        return ruleSet.includes(String(fieldValue));
-    }
+  isAlphaNumeric(fieldValue: string): boolean {
+    return /^[a-zA-Z0-9]+$/.test(fieldValue);
+  }
 
-    isBetween(fieldValue: number, ruleSet: string): boolean {
-        const [minValue, maxValue] = ruleSet.split(",").map(Number);
-        return fieldValue >= minValue && fieldValue <= maxValue;
-    }
+  in(fieldValue: string | number, ruleSet: string[]): boolean {
+    return ruleSet.includes(String(fieldValue));
+  }
 
-    // private isAlphaNumericSpace(fieldValue: string): boolean {
-    //     return /^[a-zA-Z0-9\s]+$/.test(fieldValue);
-    // }
-
-    // private isAlphaNumericSpaceHyphen(fieldValue: string): boolean {
-    //     return /^[a-zA-Z0-9\s-]+$/.test(fieldValue);
-    // }
-
-    // private isAlphaNumericSpaceHyphenUnderscore(fieldValue: string): boolean {
-    //     return /^[a-zA-Z0-9\s-_]+$/.test(fieldValue);
-    // }
-
-    // private isAlphaNumericSpaceHyphenUnderscorePeriod(fieldValue: string): boolean {
-    //     return /^[a-zA-Z0-9\s-_\.]+$/.test(fieldValue);
-    // }
-
-    // private isAlphaNumericSpaceHyphenUnderscorePeriodExclamation(fieldValue: string): boolean {
-    //     return /^[a-zA-Z0-9\s-_\.!]+$/.test(fieldValue);
-    // }
+  isBetween(fieldValue: number, ruleSet: string): boolean {
+    const [minValue, maxValue] = ruleSet.split(",").map(Number);
+    return fieldValue >= minValue && fieldValue <= maxValue;
+  }
 }
 
+type FieldKeys<T> = T extends object
+  ? { [K in keyof T]: T[K] extends Function ? never : `${K & string}` | `${K & string}.${FieldKeys<T[K]>}` }[keyof T]
+  : never;
+
 type RuleSet<T> = {
-    [Property in keyof T]?: string
+  [Property in FieldKeys<T>]?: string;
 };
 
-
+type CustomFieldKeys<T> = {
+  [Property in FieldKeys<T>]?: string;
+};
 export class Validator<TFormData> {
-    private formData: {[P in keyof TFormData]: any};
-    private rules: RuleSet<TFormData>;
-    private validationErrors: { field: keyof TFormData; messages: string[] }[];
-    private validatorCheck: ValidatorCheck;
+  private formData: { [P in keyof TFormData]: any };
+  private rules: RuleSet<TFormData>;
+  private validationErrors: { field: keyof TFormData; messages: string[] }[];
+  private validatorCheck: ValidatorCheck;
+  private customFieldKeys: CustomFieldKeys<TFormData>;
 
-    constructor(data: { formData: {[P in keyof TFormData]: string}; rules: RuleSet<TFormData> }) {
-        this.formData = data.formData;
-        this.rules = data.rules;
-        this.validationErrors = [];
-        this.validatorCheck = new ValidatorCheck();
+  constructor(data: {
+    formData: { [P in keyof TFormData]: any };
+    rules: RuleSet<TFormData>;
+    customFieldKeys?: CustomFieldKeys<TFormData>;
+  }) {
+    this.formData = data.formData;
+    this.rules = data.rules;
+    this.validationErrors = [];
+    this.validatorCheck = new ValidatorCheck();
+    this.customFieldKeys = data.customFieldKeys || {};
+  }
+
+  private addValidationError(fieldKey: keyof TFormData, message: string): void {
+    const errorIndex = this.validationErrors.findIndex((error) => error.field === fieldKey);
+    if (errorIndex !== -1) {
+      this.validationErrors[errorIndex].messages.push(message);
+    } else {
+      this.validationErrors.push({
+        field: fieldKey,
+        messages: [message]
+      });
     }
-    private addValidationError(fieldKey: keyof TFormData, message: string): void {
-        const errorIndex = this.validationErrors.findIndex(error => error.field === fieldKey);
-        if (errorIndex !== -1) {
-            this.validationErrors[errorIndex].messages.push(message);
-        } else {
-            this.validationErrors.push({
-                field: fieldKey,
-                messages: [message]
-            });
-        }
-    }
+  }
 
-    validate(): void {
-        for (const fieldKey in this.rules) {
-            const fieldValue = this.formData[fieldKey];
+  private getFieldLabel(fieldKey: keyof TFormData): string {
+    return this.customFieldKeys[fieldKey] || String(fieldKey);
+  }
 
-            const rules = this.rules && this.rules[fieldKey] && Object.keys(this.rules).includes(fieldKey) ? this.rules[fieldKey]!.split("|") : [];
-            const ruleMapper = rules.map((rule) => {
-                const [ruleName, ruleValue] = rule.split(":");
-                return {
-                    ruleValue: ruleValue || undefined,
-                    ruleName
-                };
-            });
+  private validateField(fieldKey: keyof TFormData, fieldValue: any, fieldLabel: string, rules: string[]) {
+    const ruleMapper = rules.map((rule) => {
+      const [ruleName, ruleValue] = rule.split(":");
+      return { ruleName, ruleValue };
+    });
 
-            ruleMapper.forEach((ruleMap) => {
-                switch (ruleMap.ruleName) {
-                    case "required":
-                        const requiredPassed = this.validatorCheck.required(fieldValue);
-                        if (!requiredPassed) {
-                            this.addValidationError(fieldKey, `${fieldKey} is required`);
-                        }
-                        break;
-                    case "minValue":
-                        const minValuePassed = this.validatorCheck.minValue(fieldValue, parseFloat(ruleMap.ruleValue!));
-                        if (!minValuePassed) {
-                            this.addValidationError(fieldKey, `${fieldKey} must be greater than or equal to ${ruleMap.ruleValue}`);
-                        }
-                        break;
-                    case "maxValue":
-                        const maxValuePassed = this.validatorCheck.maxValue(fieldValue, parseFloat(ruleMap.ruleValue!));
-                        if (!maxValuePassed) {
-                            this.addValidationError(fieldKey, `${fieldKey} must be less than or equal to ${ruleMap.ruleValue}`);
-                        }
-                        break;
-                    case "minLength":
-                        const minLengthPassed = this.validatorCheck.minLength(fieldValue, parseInt(ruleMap.ruleValue!));
-                        if (!minLengthPassed) {
-                            this.addValidationError(fieldKey, `${fieldKey} must have a minimum length of ${ruleMap.ruleValue}`);
-                        }
-                        break;
-                    case "maxLength":
-                        const maxLengthPassed = this.validatorCheck.maxLength(fieldValue, parseInt(ruleMap.ruleValue!));
-                        if (!maxLengthPassed) {
-                            this.addValidationError(fieldKey, `${fieldKey} must have a maximum length of ${ruleMap.ruleValue}`);
-                        }
-                        break;
-                    case "isEmail":
-                        const isEmailPassed = this.validatorCheck.isEmail(fieldValue);
-                        if (!isEmailPassed) {
-                            this.addValidationError(fieldKey, `The ${fieldKey} field must be a valid email address`);
-                        }
-                        break;
-                    case "isUrl":
-                        const isUrlPassed = this.validatorCheck.isUrl(fieldValue);
-                        if (!isUrlPassed) {
-                            this.addValidationError(fieldKey, `${fieldKey} must be a valid URL`);
-                        }
-                        break;
-                    case "isNumber":
-                        const isNumberPassed = this.validatorCheck.isNumber(fieldValue);
-                        if (!isNumberPassed) {
-                            this.addValidationError(fieldKey, `${fieldKey} must be a valid number`);
-                        }
-                        break;
-                    case "isString":
-                        const isStringPassed = this.validatorCheck.isString(fieldValue);
-                        if (!isStringPassed) {
-                            this.addValidationError(fieldKey, `${fieldKey} must be a valid string`);
-                        }
-                        break;
-                    case "isAlphaNumeric":
-                        const isAlphaNumericPassed = this.validatorCheck.isAlphaNumeric(fieldValue);
-                        if (!isAlphaNumericPassed) {
-                            this.addValidationError(fieldKey, `${fieldKey} must be alphanumeric`);
-                        }
-                        break;
-                    case "in":
-                        const inPassed = this.validatorCheck.in(fieldValue, ruleMap.ruleValue!.split(","));
-                        if (!inPassed) {
-                            this.addValidationError(fieldKey, `${fieldKey} must be one of the specified values`);
-                        }
-                        break;
-                    case "isBetween":
-                        const isBetweenPassed = this.validatorCheck.isBetween(parseFloat(fieldValue), ruleMap.ruleValue!);
-                        if (!isBetweenPassed) {
-                            this.addValidationError(fieldKey, `${fieldKey} must be between ${ruleMap.ruleValue}`);
-                        }
-                        break;
-                        case "customValidator":
-                            const passed = JSON.parse(String(ruleMap.ruleValue));                            
-                            if(!passed) {
-                                this.addValidationError(fieldKey, `${fieldKey} failed the custom validation`);
-                            }
-                            break;
+    ruleMapper.forEach((ruleMap) => {
+      const { ruleName, ruleValue } = ruleMap;
+      switch (ruleName) {
+        case "required":
+          if (!this.validatorCheck.required(fieldValue)) {
+            this.addValidationError(fieldKey, `${fieldLabel} is required`);
+          }
+          break;
+        case "minValue":
+          if (!this.validatorCheck.minValue(fieldValue, parseFloat(ruleValue!))) {
+            this.addValidationError(fieldKey, `${fieldLabel} must be greater than or equal to ${ruleValue}`);
+          }
+          break;
+        case "maxValue":
+          if (!this.validatorCheck.maxValue(fieldValue, parseFloat(ruleValue!))) {
+            this.addValidationError(fieldKey, `${fieldLabel} must be less than or equal to ${ruleValue}`);
+          }
+          break;
+        case "minLength":
+          if (!this.validatorCheck.minLength(fieldValue, parseInt(ruleValue!))) {
+            this.addValidationError(fieldKey, `${fieldLabel} must have a minimum length of ${ruleValue}`);
+          }
+          break;
+        case "maxLength":
+          if (!this.validatorCheck.maxLength(fieldValue, parseInt(ruleValue!))) {
+            this.addValidationError(fieldKey, `${fieldLabel} must have a maximum length of ${ruleValue}`);
+          }
+          break;
+        case "isEmail":
+          if (!this.validatorCheck.isEmail(fieldValue)) {
+            this.addValidationError(fieldKey, `The ${fieldLabel} field must be a valid email address`);
+          }
+          break;
+        case "sameAs":
+          const sameAsField = ruleValue as keyof TFormData;
+          const sameAsValue = get(this.formData, sameAsField as string);
+          if (fieldValue !== sameAsValue) {
+            this.addValidationError(
+              fieldKey,
+              `The field ${fieldLabel} must be the same as ${this.getFieldLabel(sameAsField)}`
+            );
+          }
+          break;
+        case "isPassword":
+          if (!this.validatorCheck.isPassword(fieldValue)) {
+            this.addValidationError(
+              fieldKey,
+              `The field ${fieldLabel} must be a valid password. It should contain at least one uppercase letter, one lowercase letter, one number, one special character, and be at least 8 characters long.`
+            );
+          }
+          break;
+        case "isUrl":
+          if (!this.validatorCheck.isUrl(fieldValue)) {
+            this.addValidationError(fieldKey, `${fieldLabel} must be a valid URL`);
+          }
+          break;
+        case "isNumber":
+          if (!this.validatorCheck.isNumber(fieldValue)) {
+            this.addValidationError(fieldKey, `${fieldLabel} must be a valid number`);
+          }
+          break;
+        case "isString":
+          if (!this.validatorCheck.isString(fieldValue)) {
+            this.addValidationError(fieldKey, `${fieldLabel} must be a valid string`);
+          }
+          break;
+        case "isAlphaNumeric":
+          if (!this.validatorCheck.isAlphaNumeric(fieldValue)) {
+            this.addValidationError(fieldKey, `${fieldLabel} must be alphanumeric`);
+          }
+          break;
+        case "in":
+          if (!this.validatorCheck.in(fieldValue, ruleValue!.split(","))) {
+            this.addValidationError(fieldKey, `${fieldLabel} must be one of the specified values`);
+          }
+          break;
+        case "isBetween":
+          if (!this.validatorCheck.isBetween(parseFloat(fieldValue), ruleValue!)) {
+            this.addValidationError(fieldKey, `${fieldLabel} must be between ${ruleValue}`);
+          }
+          break;
+        case "customValidator":
+          if (ruleValue) {
+            const passed = JSON.parse(String(ruleValue));
+            if (!passed) {
+              this.addValidationError(fieldKey, `${fieldLabel} failed the custom validation`);
+            }
+          } else {
+            this.addValidationError(fieldKey, `${fieldLabel} failed the custom validation`);
+          }
+          break;
+        default:
+          break;
+      }
+    });
+  }
 
-                    default:
-                        break;
-                }
-            });
-        }
-    }
-
-    addCustomValidation(data: {
-        fieldKey:keyof TFormData, 
-        fieldPassed: (value?: any)=> boolean,
-        errorMessage?: string
-    }) {
-        const {fieldKey , fieldPassed } = data;
-        if(this.formData[data.fieldKey]){
-            const passed = fieldPassed(this.formData[data.fieldKey]);
-            this.rules = {...this.rules, [fieldKey]: `customValidator:${passed}`}
-        }
-    }
-
-
-    failed(): boolean {
-        return this.validationErrors.length > 0;
-    }
-
-    passed(): boolean {
-        return !this.failed();
-    }
-
-    errors() {
-        return this.validationErrors;
-    }
-
-    getFieldError(fieldKey: string) {
-        return this.errors().find((error) => error.field === fieldKey);
-    }
-    getValidationErrorsByIndex(index = 0) {
-        const errors: {[P in keyof TFormData]?: string}  = {};
-
-        this.errors().forEach((err) => {
-                errors![err.field] = err.messages[index];
+  private validateArrayField(fieldPath: string, rules: string[], labelPath: string) {
+    const arrayFieldValue = get(this.formData, fieldPath);
+    if (isArray(arrayFieldValue)) {
+      arrayFieldValue.forEach((_, index) => {
+        const nestedFieldPath = `${fieldPath}[${index}]`;
+        const nestedLabelPath = `${labelPath}[${index}]`;
+        rules.forEach((rule) => {
+          const [ruleName] = rule.split(":");
+          const nestedFieldKey = `${nestedFieldPath}${ruleName ? `.${ruleName}` : ""}`;
+          const nestedFieldLabel = this.getFieldLabel(nestedLabelPath as keyof TFormData);
+          const nestedFieldValue = get(this.formData, nestedFieldKey);
+          this.validateField(nestedFieldKey as keyof TFormData, nestedFieldValue, nestedFieldLabel, [rule]);
         });
-        return errors;
-
+      });
     }
+  }
+
+  validate(): void {
+    for (const fieldKey in this.rules) {
+      if (fieldKey.includes("[")) {
+        // handle arrays
+        const arrayFieldPath = fieldKey.substring(0, fieldKey.indexOf("["));
+        const rules = get(this.rules, fieldKey)?.split("|") || [];
+        this.validateArrayField(arrayFieldPath, rules, fieldKey);
+      } else {
+        const fieldValue = get(this.formData, fieldKey);
+        const fieldLabel = this.getFieldLabel(fieldKey as keyof TFormData);
+        const rules = get(this.rules, fieldKey)?.split("|") || [];
+        this.validateField(fieldKey as keyof TFormData, fieldValue, fieldLabel, rules);
+      }
+    }
+  }
+
+  addCustomValidation(data: {
+    fieldKey: keyof TFormData;
+    fieldPassed: (value?: any) => boolean;
+    errorMessage?: string;
+  }) {
+    const { fieldKey, fieldPassed } = data;
+    if (has(this.formData, fieldKey as string)) {
+      const passed = fieldPassed(get(this.formData, fieldKey as string));
+      this.rules = { ...this.rules, [fieldKey]: `customValidator:${passed}` };
+    }
+  }
+
+  failed(): boolean {
+    return this.validationErrors.length > 0;
+  }
+
+  passed(): boolean {
+    return !this.failed();
+  }
+
+  errors() {
+    return this.validationErrors;
+  }
+
+  getFieldError(fieldKey: keyof TFormData) {
+    return this.errors().find((error) => error.field === fieldKey);
+  }
+
+  addError(fieldKey: keyof TFormData, messages: string[]) {
+    this.validationErrors.push({ field: fieldKey, messages });
+  }
+
+  getValidationErrorsByIndex(index = 0) {
+    const errors: { [P in keyof TFormData]?: string } = {};
+
+    this.errors().forEach((err) => {
+      errors[err.field] = err.messages[index];
+    });
+    return errors;
+  }
 }

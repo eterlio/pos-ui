@@ -1,48 +1,63 @@
 import { FC } from "react";
-import { FormIconProps } from "../type";
+import { HandlerProps } from "../type";
 import InputLabel from "../FieldLabel";
-
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { OptionsProps } from "@/interfaces";
+import InputError from "../input/InputError";
 
 interface RadioBoxFieldProps {
-  value: any;
-  name?: string;
-  label?: string | { text: string; icon?: FormIconProps; className?: string };
   isRequired?: boolean;
   id?: string;
   description?: string;
+  fieldKey: string;
+  handleFieldChange: (data: HandlerProps) => void;
+  value?: string;
+  options: OptionsProps[];
+  errorMessage?: string;
+  disabled?: boolean;
 }
 const RadioBoxField: FC<RadioBoxFieldProps> = ({
   value,
   isRequired,
-  label,
-  name,
   id,
   description,
+  handleFieldChange,
+  fieldKey,
+  options,
+  errorMessage,
+  disabled
 }) => {
-  const handleOnChange = (e: any) => {
-    console.log(e.target.value);
+  const handleOnChange = (value: any) => {
+    handleFieldChange({ key: fieldKey, value });
   };
   return (
-    <div className="flex items-center">
-      <div className="flex items-center justify-center">
-        <input
-          name={name}
-          id={id}
-          aria-describedby="helper-radio-text"
-          type="radio"
-          value={value}
-          className="w-5 h-5"
-          onChange={handleOnChange}
-        />
-      </div>
+    <div>
+      <RadioGroup
+        id={id}
+        aria-describedby="helper-radio-text"
+        value={value}
+        onValueChange={handleOnChange}
+        disabled={disabled}
+      >
+        {options &&
+          options.length > 0 &&
+          options.map((option, index) => {
+            return (
+              <div key={index} className="flex items-center space-x-2">
+                <RadioGroupItem
+                  value={option.value}
+                  id={option.value}
+                  defaultValue={option.value}
+                  disabled={disabled}
+                />
+                <InputLabel id={option.value} required={isRequired || false} label={option.label} />
+              </div>
+            );
+          })}
+      </RadioGroup>
+      {errorMessage && <InputError message={errorMessage} />}
       <div className="ms-2 text-sm">
-        {label && (
-          <InputLabel id={id} required={isRequired || false} label={label} />
-        )}
-        <p
-          id="helper-radio-text"
-          className="text-xs font-normal text-gray-500 dark:text-gray-300"
-        >
+        <p id="helper-radio-text" className="text-xs font-normal text-gray-500 dark:text-gray-300">
           {description}
         </p>
       </div>

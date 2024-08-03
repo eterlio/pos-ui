@@ -1,10 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
 import { CalendarIcon, X } from "lucide-react";
 import { FC, useState } from "react";
@@ -21,9 +16,10 @@ interface DatePickerProps {
   isRequired?: boolean;
   id?: string;
   fieldKey: string;
+  className?: string;
 }
 const DatePicker: FC<DatePickerProps> = ({
-  value,
+  value = undefined,
   resetDate,
   onChange,
   disabled,
@@ -31,8 +27,8 @@ const DatePicker: FC<DatePickerProps> = ({
   isRequired,
   id,
   fieldKey,
+  className
 }) => {
-  const [date, setDate] = useState<Date | undefined>(value);
   const [openPopOver, setOpenPopOver] = useState<boolean>(false);
 
   const handleOpenPopOver = () => {
@@ -41,37 +37,35 @@ const DatePicker: FC<DatePickerProps> = ({
   const handleChange = (value: any) => {
     if (onChange && value) {
       onChange({ key: fieldKey, value });
-      setDate(value);
     }
   };
   return (
-    <>
+    <div className={className}>
       {label && (
-        <InputLabel id={id} required={isRequired || false} label={label} />
+        <div className="my-2">
+          <InputLabel id={id} required={isRequired || false} label={label} />
+        </div>
       )}
-      <Popover open={openPopOver} onOpenChange={handleOpenPopOver} >
+      <Popover open={openPopOver} onOpenChange={handleOpenPopOver}>
         <PopoverTrigger asChild>
           <Button
             variant={"outline"}
-            className={cn(
-              "w-full justify-start text-left font-normal min-h-[41px]",
-              !date && "text-muted-foreground disabled:opacity-50"
-            )}
+            className={`w-full justify-start text-left font-normal h-10 py-2 px-3 rounded-[3px] 
+              ${
+                !value && "text-muted-foreground"
+              } disabled:bg-gray-100 disabled:opacity-75 text-gray-500 disabled:cursor-not-allowed ${className}`}
             disabled={disabled}
           >
-            <CalendarIcon className="mr-2 h-4 w-4" size={16}  />
-            {date ? (
+            <CalendarIcon className="mr-2 h-4 w-4" size={16} />
+            {value ? (
               <div className="flex items-center justify-between flex-1">
-                <span className="ml-2 text-center">
-                  {format(date, "MM/dd/yyy")}
-                </span>
+                <span className="ml-2 text-center">{format(value, "MM/dd/yyy")}</span>
                 <span className=" -mr-3">
                   {resetDate && (
                     <X
                       className="mr-2 h-4 w-4"
                       size={10}
                       onClick={() => {
-                        setDate(undefined);
                         if (openPopOver) {
                           setOpenPopOver(false);
                         }
@@ -89,7 +83,7 @@ const DatePicker: FC<DatePickerProps> = ({
           <Calendar
             mode="single"
             captionLayout="dropdown-buttons"
-            selected={date}
+            selected={value ? value : undefined}
             onSelect={handleChange}
             fromYear={1960}
             toYear={2050}
@@ -98,7 +92,7 @@ const DatePicker: FC<DatePickerProps> = ({
           />
         </PopoverContent>
       </Popover>
-    </>
+    </div>
   );
 };
 

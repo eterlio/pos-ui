@@ -1,4 +1,3 @@
-
 import { ColumnDef, Row } from "@tanstack/react-table";
 import { MouseEventHandler } from "react";
 
@@ -6,7 +5,7 @@ export interface OptionsProps {
   label: string;
   value: any;
 }
-type IconType = React.ComponentType<{ className?: string }>;
+export type IconType = React.ComponentType<{ className?: string }>;
 export interface DataFilterProps {
   column: string;
   title: string;
@@ -16,6 +15,7 @@ export interface DataFilterProps {
     icon?: IconType;
   }[];
   isNumber?: boolean;
+  isDate?: boolean;
   extra?: {
     mainIcon?: IconType;
   };
@@ -25,17 +25,25 @@ export type SortType = "asc" | "desc";
 export interface ActionButton {
   label: string;
   action: MouseEventHandler;
+  show?: boolean;
 }
+
+export interface TableActionProps {
+  label: string;
+  action: () => void;
+  show?: boolean;
+}
+
 export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   showExportButton?: boolean;
   actionButtons?: ActionButton[];
   filters?: DataFilterProps[];
   fetchQuery?: any;
-  selectedDocuments?: Record<string, any>;
+  selectedDocuments?: TData[];
   allowRowSelect?: boolean;
   data: TData[];
-  paginator?: Paginator;
+  paginator: Paginator | null;
   showSearchSelection?: boolean;
   searchSelectionOptions?: OptionsProps[];
   showSelectColumns?: boolean;
@@ -44,6 +52,8 @@ export interface DataTableProps<TData, TValue> {
   description?: string;
   isLoading?: boolean;
   loadingText?: string;
+  showSearch?: boolean;
+  tableActions?: TableActionProps[];
 }
 
 export interface Paginator {
@@ -53,7 +63,21 @@ export interface Paginator {
   totalPages: number;
 }
 
-export interface OptionsProps{
+export interface OptionsProps {
   value: any;
   label: string;
 }
+
+
+export type SimpleTableColumn = {
+  key: string;
+  label: string;
+  className?: string;
+};
+
+export type SimpleTableProps = {
+  data: Record<string, any>[];
+  columns: SimpleTableColumn[];
+  caption?: string;
+  footerData?: Record<string, any>[]; // Add this line
+};

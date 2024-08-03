@@ -11,17 +11,10 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  useReactTable,
+  useReactTable
 } from "@tanstack/react-table";
 import { DataTablePagination } from "./DataTablePagination";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import TableBodyItem from "./TableBodyItem";
 import NoDataImg from "./no-data.svg";
 import { DataTableRowActions } from "./DataTableRowActions";
@@ -43,6 +36,8 @@ export function DataTable<TData, TValue>({
   handleRowClick,
   isLoading,
   loadingText,
+  showSearch,
+  tableActions
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -70,6 +65,8 @@ export function DataTable<TData, TValue>({
   useEffect(() => {
     if (!queryColumn) {
       setQueryParam("columns", columnsForDefaultValues.join(","));
+      setQueryParam("limit", (30).toString());
+      setQueryParam("currentPage", (1).toString());
     }
   }, []);
 
@@ -81,10 +78,8 @@ export function DataTable<TData, TValue>({
           ...prevCols,
           {
             id: "actions",
-            cell: ({ row }) => (
-              <DataTableRowActions actionButtons={actionButtons} row={row} />
-            ),
-          },
+            cell: ({ row }) => <DataTableRowActions actionButtons={actionButtons} row={row} />
+          }
         ]);
       }
 
@@ -95,9 +90,7 @@ export function DataTable<TData, TValue>({
             header: ({ table }) => (
               <Checkbox
                 checked={table.getIsAllPageRowsSelected()}
-                onCheckedChange={(value) =>
-                  table.toggleAllPageRowsSelected(!!value)
-                }
+                onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
                 aria-label="Select all"
                 className="translate-y-[2px]"
               />
@@ -108,12 +101,15 @@ export function DataTable<TData, TValue>({
                 onCheckedChange={(value) => row.toggleSelected(!!value)}
                 aria-label="Select row"
                 className="translate-y-[2px]"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
               />
             ),
             enableSorting: false,
-            enableHiding: false,
+            enableHiding: false
           },
-          ...prevCols,
+          ...prevCols
         ]);
       }
       initialized.current = true;
@@ -128,7 +124,7 @@ export function DataTable<TData, TValue>({
       sorting,
       columnVisibility,
       rowSelection,
-      columnFilters,
+      columnFilters
     },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
@@ -154,21 +150,22 @@ export function DataTable<TData, TValue>({
         searchSelectionOptions={searchSelectionOptions}
         showSearchSelection={showSearchSelection}
         showSelectColumns={showSelectColumns}
+        showSearch={showSearch}
+        tableActions={tableActions}
       />
-      <div className="rounded border border-[#f6f6f6] border-md mt-5 min-h-[350px]">
-        <Table  className="-striped -highlight">
+      <div className="rounded border border-[#f6f6f6] border-md mt-5">
+        <Table className="-striped -highlight">
           <TableHeader className="w-full">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                    <TableHead
+                      key={header.id}
+                      className={`table-head__title p-2 `}
+                      style={{ width: `${header.getSize()}px` }}
+                    >
+                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   );
                 })}
@@ -179,7 +176,7 @@ export function DataTable<TData, TValue>({
             {isLoading ? (
               <TableRow>
                 <TableCell colSpan={9}>
-                  <div className="flex justify-center items-center h-full flex-col gap-4">
+                  <div className="flex justify-center items-center h-full flex-col gap-4 min-h-[350px]">
                     <FetchLoader />
                     {loadingText && <h3>{loadingText}</h3>}
                   </div>
@@ -188,21 +185,12 @@ export function DataTable<TData, TValue>({
             ) : table.getRowModel().rows?.length ? (
               table
                 .getRowModel()
-                .rows.map((row) => (
-                  <TableBodyItem
-                    row={row}
-                    key={row.id}
-                    handleRowClick={handleRowClick}
-                  />
-                ))
+                .rows.map((row) => <TableBodyItem row={row} key={row.id} handleRowClick={handleRowClick} />)
             ) : (
-              <TableRow className=" w-full">
-                <TableCell
-                  colSpan={9}
-                  className="text-center w-full"
-                >
+              <TableRow className="w-full">
+                <TableCell colSpan={9} className="text-center w-full">
                   <div className="p-10 flex items-center justify-center flex-col gap-4  w-full">
-                    <img src={NoDataImg} alt="" style={{ width: "20%" }} />
+                    <img src={NoDataImg} alt="" style={{ width: "10%" }} />
                     <p className="text-lg">No results.</p>
                   </div>
                 </TableCell>
@@ -211,9 +199,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      {!isLoading && data.length > 0 && (
-        <DataTablePagination table={table} paginator={paginator} />
-      )}
+      {!isLoading && data.length > 0 && <DataTablePagination table={table} paginator={paginator} />}
     </div>
   );
 }

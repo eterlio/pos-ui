@@ -1,76 +1,91 @@
-import PasswordInput from '@/components/customFields/input/Password';
-import { HandlerProps } from '@/components/customFields/type';
-import { Button } from '@/components/ui/button';
-import { useBaseRequestService } from '@/hooks/request/useAxiosPrivate';
-import { formReducer, getErrorMessageFromApi } from '@/utils';
-import { useReducer } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { toast } from 'sonner';
+import PrimaryButton from "@/components/PrimaryButton";
+import PasswordInput from "@/components/customFields/input/Password";
+import { HandlerProps } from "@/components/customFields/type";
+import { useAuthResetPassword } from "@/hooks/request/useAuthRequest";
+import { useError } from "@/hooks/useError";
+import { useFormFieldUpdate } from "@/hooks/useFormFieldUpdate";
+import { Validator } from "@/validator";
+import { LockKeyhole } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 
 const ResetPasswordScreen = () => {
   const location = useLocation();
-  const { axiosInstance } = useBaseRequestService();
+  const [, token] = location.search.split("=");
   const initialData = {
-    password: '',
-    confirmPassword: ''
+    password: "",
+    confirmPassword: ""
   };
-  const [state, dispatch] = useReducer(formReducer(initialData), initialData);
+  const { isPending, mutate } = useAuthResetPassword();
+  const { addErrors, errors, resetError } = useError<typeof initialData>();
+  const { formValues, updateFormFieldValue } = useFormFieldUpdate<typeof initialData>(initialData);
 
   const formFieldHandler = (data: HandlerProps) => {
-    dispatch({ type: 'UPDATE_FIELD', fieldName: data.key, value: data.value });
+    const { key, value } = data;
+    updateFormFieldValue(key, value);
   };
 
-  const handleForgotPassword = async () => {
-    const [, token] = location.search.split('=');
-    dispatch({ type: 'MAKE_REQUEST' });
+  const handleForgotPassword = () => {
+    const validator = new Validator<typeof initialData>({
+      formData: { password: "", confirmPassword: "" },
+      rules: {
+        password: "required|isPassword",
+        confirmPassword: "required|sameAs:password"
+      }
+    });
 
-    try {
-      await axiosInstance.put('/auth/reset-password', { password: state.password, confirmPassword: '', token });
-      toast.success('Success', {
-        description: 'Password reset successful'
-      });
-      dispatch({ type: 'RESET_FIELDS' });
-    } catch (error) {
-      toast.error('Error', {
-        description: getErrorMessageFromApi(error)
-      });
-    } finally {
-      dispatch({ type: 'REQUEST_DONE' });
+    validator.validate();
+
+    if (validator.failed()) {
+      return addErrors(validator.getValidationErrorsByIndex());
+    } else {
+      resetError();
     }
+    mutate({ ...formValues, token });
   };
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="md:min-w-[450px] m-auto p-5 space-y-3">
         <div className="heading my-4 space-y-1">
-          <h1 className="text-xl font-medium">Reset Password</h1>
+        <div className="flex items-center gap-3 mb-5">
+              <span className="w-10 h-10 border rounded-full bg-primary flex justify-center items-center">
+                <LockKeyhole className="text-white" size={18} />
+              </span>
+              <h1 className="text-xl font-medium">Reset Password</h1>
+            </div>
           <p className="text-sm font-light">Enter your new password to reset the password</p>
         </div>
         <div>
           <PasswordInput
-            name="password"
+            fieldKey="password"
             handleInputChange={formFieldHandler}
-            value={state.password}
+            value={formValues?.password}
             isRequired
-            label={{ text: 'New Password' }}
+            label={{ text: "New Password" }}
+            errorMessage={errors?.password}
           />
         </div>
         <div>
           <PasswordInput
-            name="confirmPassword"
+            fieldKey="confirmPassword"
             handleInputChange={formFieldHandler}
-            value={state.confirmPassword}
+            value={formValues?.confirmPassword}
             isRequired
-            label={{ text: 'Confirm password' }}
+            label={{ text: "Confirm password" }}
+            errorMessage={errors?.confirmPassword}
           />
         </div>
         <div className="mt-4">
-          <Button onClick={handleForgotPassword} className="w-full">
-            Submit
-          </Button>
+          <PrimaryButton
+            onClick={handleForgotPassword}
+            className="w-full"
+            loading={isPending}
+            disabled={isPending}
+            text="Submit"
+          />
         </div>
         <div className="mt-6 text-center text-sm">
           <p>
-            <span className="text-gray-500">Already have an account?</span>{' '}
+            <span className="text-gray-500">Already have an account?</span>{" "}
             <Link to="/auth/login" className="underline">
               Login
             </Link>

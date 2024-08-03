@@ -1,21 +1,32 @@
-import React from "react";
+import React, { memo, useMemo } from "react";
 import SidebarMenuItem from "./SidebarMenuItem";
 import { MenuSidebarRoute } from "@/route/sidebar";
+
 interface SidebarMenuProps {
-  title: string;
-  routesData: MenuSidebarRoute[];
+  title?: string;
+  routesData?: MenuSidebarRoute[];
 }
+
 const SidebarMenu: React.FC<SidebarMenuProps> = ({ title, routesData }) => {
+  const processedItems = useMemo(() => {
+    if (routesData && routesData.length) {
+      return routesData.map((item) => ({
+        ...item
+      }));
+    }
+    return [];
+  }, []);
+
   return (
     <div className="my-5">
-      <p className="section-title  pl-3 text-[0.655rem]">{title}</p>
+      <p className="section-title  pl-3 text-[0.655rem] text-white font-bold">{title && title}</p>
       <ul>
-        {routesData &&
-          routesData.length &&
-          routesData.map((data, index) => {
+        {processedItems &&
+          processedItems.length > 0 &&
+          processedItems.map((data, index) => {
             return (
               <SidebarMenuItem
-                icon={<data.icon size={19} />}
+                icon={data.icon && ((<data.icon size={19} className="group-hover:text-green-400" />) as any)}
                 title={data.title}
                 url={data.url}
                 key={index}
@@ -30,4 +41,4 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({ title, routesData }) => {
   );
 };
 
-export default SidebarMenu;
+export default memo(SidebarMenu);

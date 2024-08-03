@@ -1,14 +1,10 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useLocation, Navigate, Outlet } from "react-router-dom";
 
-import {
-  PermissionOperation,
-  PermissionString,
-  hasPermission,
-} from "@/helpers/permission";
+import { PermissionOperation, PermissionString, hasPermission } from "@/helpers/permission";
 import { Meta } from "@/interfaces/route";
-import { UserRole } from "@/interfaces/users";
-import { StoreContext, StoreContextProps } from "@/utils/store";
+import { UserRole, specialRoles } from "@/interfaces/user";
+import useAuthStore from "@/store/auth";
 
 interface RequireAuthProps {
   permission: [PermissionString, PermissionOperation];
@@ -16,43 +12,38 @@ interface RequireAuthProps {
   meta?: Meta;
 }
 
-const RequireAuth: React.FC<RequireAuthProps> = ({
-  permission,
-  allowedRoles,
-  meta,
-}) => {
-  const {authUser: auth } = useContext(StoreContext) as StoreContextProps;
+const RequireAuth: React.FC<RequireAuthProps> = ({ permission, allowedRoles, meta }) => {
+  const { authUser: auth } = useAuthStore();
   const location = useLocation();
   const userRole = auth?.role;
-  const permissionVerified = hasPermission(
-    String(auth?.permission?.access),
-    permission
-  );  
+  const permissionVerified =
+    permission && permission.length ? hasPermission(String(auth?.permission?.access), permission) : true;
+
 
   // Check if userRole is admin or support
-  if (userRole && ["admin", "support"].includes(userRole)) {
+  if (userRole && [...specialRoles, "admin"].includes(userRole)) {
     return <Outlet context={{ meta }} />;
   }
 
   // Check if userRole exists and no specific permission is required
-  if (userRole && !permission) {
+  if (userRole && !permission && !allowedRoles?.length) {
     return <Outlet context={{ meta }} />;
   }
 
   // Check if userRole has the required permission
   if (userRole && permissionVerified) {
-    // Check if allowedRoles is not defined or userRole is in allowedRoles
-    if (!allowedRoles || allowedRoles.includes(userRole as UserRole)) {
+    if (!allowedRoles || !allowedRoles.length) {
+      return <Outlet context={{ meta }} />;
+    }
+    if (allowedRoles && allowedRoles.length && allowedRoles.includes(userRole as UserRole)) {
       return <Outlet context={{ meta }} />;
     } else {
-      // UserRole is not in allowedRoles, navigate to unauthorized
-      return <Navigate to="/notFound" state={{ from: location }} replace />;
+      return <Navigate to="/unauthorized" state={{ from: location }} />;
     }
   }
-  if (userRole && !permissionVerified){
-    return <Navigate to="/unauthorized" state={{ from: location }} replace />;
+  if (userRole && !permissionVerified) {
+    return <Navigate to="/unauthorized" state={{ from: location }} />;
   }
-
 
   // Default case: navigate to login if none of the conditions are met
   return <Navigate to="/auth/login" state={{ from: location }} replace />;
