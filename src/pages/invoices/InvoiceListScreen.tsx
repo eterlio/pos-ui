@@ -33,17 +33,12 @@ const InvoiceListScreen = () => {
     enabled: !!Object.keys(queryObject).length
   });
 
-  const { canCreateInvoice, canDeleteInvoice } = usePermission();
+  const { canCreateInvoice, canDeleteInvoice, canUpdateInvoice, canReadInvoice } = usePermission();
 
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
 
   const rowActions = [
-    {
-      label: "Edit",
-      action: handleEditRowActionClick,
-      show: false
-    },
     {
       label: "Delete",
       action: (data: Record<string, any>) => {
@@ -51,6 +46,18 @@ const InvoiceListScreen = () => {
         setSelectedInvoice(data);
       },
       show: canDeleteInvoice
+    },
+    {
+      label: "Edit",
+      action: (data: Record<string, any>) => {
+        navigate(`/invoices/${data._id}/edit`);
+      },
+      show: canUpdateInvoice
+    },
+    {
+      label: "View",
+      action: handleEditRowActionClick,
+      show: canReadInvoice
     }
   ];
 
@@ -86,7 +93,9 @@ const InvoiceListScreen = () => {
   };
 
   function handleEditRowActionClick(data: Record<string, any>) {
-    navigate(`/invoices/${data._id}`);
+    if (canReadInvoice) {
+      navigate(`/invoices/${data._id}`);
+    }
   }
 
   const actionButtonProps = canCreateInvoice
