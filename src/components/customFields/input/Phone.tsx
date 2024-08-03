@@ -1,36 +1,37 @@
 import { FormIconProps } from "../type";
 import { PhoneProps } from "@/interfaces";
 import { FC, FocusEventHandler } from "react";
-import { PhoneInput, defaultCountries, parseCountry } from "react-international-phone";
+import {
+  PhoneInput,
+  defaultCountries,
+  parseCountry,
+} from "react-international-phone";
 import "react-international-phone/style.css";
 import InputLabel from "../FieldLabel";
-import InputError from "./InputError";
 
 interface InputPhoneProps {
   value?: PhoneProps;
   fieldKey: string;
-  handleInputChange: (data: { key: string; value: PhoneProps }) => void;
+  onChange: (data: { key: string; value: PhoneProps }) => void;
   disabled?: boolean;
   label?: string | { text: string; icon?: FormIconProps; className?: string };
   isRequired?: boolean;
   id?: string;
   onblur?: FocusEventHandler<HTMLInputElement>;
-  name?: string;
-  placeholder?: string;
-  errorMessage?: string;
+  name?: string,
+  placeholder?: string
 }
 const PhoneInputField: FC<InputPhoneProps> = ({
   value,
   fieldKey,
-  handleInputChange,
+  onChange,
   disabled,
   label,
   isRequired,
   id,
   onblur,
   name,
-  placeholder,
-  errorMessage
+  placeholder
 }) => {
   const handleChange = ({}, meta: any) => {
     const fieldValue = meta?.inputValue?.split(" ")[1] || "";
@@ -38,9 +39,9 @@ const PhoneInputField: FC<InputPhoneProps> = ({
     const stateValue = {
       prefix: meta?.country?.dialCode || "233",
       number: fieldValue || "",
-      country: meta?.country?.iso2 || "gh"
+      country: meta?.country?.iso2 || "gh",
     };
-    handleInputChange({ key: fieldKey, value: stateValue });
+    onChange({ key: fieldKey, value: stateValue });
   };
   const countries = defaultCountries.filter((country) => {
     const { iso2 } = parseCountry(country);
@@ -50,9 +51,7 @@ const PhoneInputField: FC<InputPhoneProps> = ({
   return (
     <div>
       {label && (
-        <div className="my-2">
-          <InputLabel id={id} required={isRequired || false} label={label} />
-        </div>
+        <InputLabel id={id} required={isRequired || false} label={label} />
       )}
       <PhoneInput
         defaultCountry="gh"
@@ -66,7 +65,6 @@ const PhoneInputField: FC<InputPhoneProps> = ({
         name={name}
         placeholder={placeholder}
       />
-      {errorMessage && <InputError message={errorMessage} />}
     </div>
   );
 };

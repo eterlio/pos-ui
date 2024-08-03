@@ -1,8 +1,7 @@
 import { MouseEventHandler } from "react";
 
-export interface DefaultPluginProps {
+export interface IDefaultPlugin {
   _id?: string;
-  id?: string;
   createdAt?: Date;
   updatedBy?: string;
   updatedAt?: Date;
@@ -16,6 +15,7 @@ export interface PhoneProps {
   prefix: string;
   number: string;
   country: string;
+  _id?: string;
 }
 
 export interface AddressProps {
@@ -39,7 +39,7 @@ export interface RequestStateProps {
 
 export interface AuthProps {
   email: string;
-  password: string;
+  password: string; 
 }
 
 export interface ActionButtonProps {
@@ -56,7 +56,6 @@ export interface ModalActionButtonProps {
   className?: string;
   action: () => void;
   loading?: boolean;
-  disabled?: false;
   type: "cancel" | "action";
 }
 
@@ -69,7 +68,3 @@ export interface OptionsProps {
   label: string;
   value: string;
 }
-
-export type FieldKeys<T> = T extends object
-  ? { [K in keyof T]: T[K] extends Function ? never : `${K & string}` | `${K & string}.${FieldKeys<T[K]>}` }[keyof T]
-  : never;

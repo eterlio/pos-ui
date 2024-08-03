@@ -20,7 +20,7 @@ import { useSetQueryParam } from "./hooks/useSetQueryParam";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
-  paginator: Paginator | null;
+  paginator?: Paginator;
 }
 export function DataTablePagination<TData>({
   table,
@@ -68,13 +68,13 @@ export function DataTablePagination<TData>({
               </div>
             }
             <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-              Page <span className="mx-1">{paginator?.page}</span> of
+              Page <span className="mx-1">{totalPageToView}</span> of
               <span className="mx-1">{Number(paginator?.totalPages)}</span>
             </div>
             <div className="flex items-center space-x-2">
               <Button
                 variant="outline"
-                className="h-8 w-8 p-0 flex disabled:bg-gray-100"
+                className="h-8 w-8 p-0 flex"
                 onClick={() => handleGoToNextOrPreviousPage(1)}
                 disabled={paginator?.page === 1}
               >
@@ -83,7 +83,7 @@ export function DataTablePagination<TData>({
               </Button>
               <Button
                 variant="outline"
-                className="h-8 w-8 p-0 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="h-8 w-8 p-0"
                 onClick={() =>
                   handleGoToNextOrPreviousPage(paginator?.page! - 1)
                 }
@@ -94,12 +94,11 @@ export function DataTablePagination<TData>({
               </Button>
               <PaginationNumbers
                 itemsPerPage={paginator?.perPage!}
-                page={paginator?.page!}
                 totalDocument={paginator?.totalDocuments as number}
               />
               <Button
                 variant="outline"
-                className="h-8 w-8 p-0 disabled:bg-gray-100"
+                className="h-8 w-8 p-0"
                 onClick={() =>
                   handleGoToNextOrPreviousPage(paginator?.page! + 1)
                 }
@@ -113,7 +112,7 @@ export function DataTablePagination<TData>({
               </Button>
               <Button
                 variant="outline"
-                className="h-8 w-8 p-0 flex disabled:bg-gray-100"
+                className="h-8 w-8 p-0 flex"
                 onClick={() =>
                   handleGoToNextOrPreviousPage(paginator?.totalPages)
                 }

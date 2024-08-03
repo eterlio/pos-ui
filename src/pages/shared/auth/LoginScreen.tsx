@@ -1,40 +1,48 @@
 import Preloader from "@/components/Preloader";
-import PrimaryButton from "@/components/PrimaryButton";
+import PrimaryButton from "@/components/PrimayButton";
 import InputField from "@/components/customFields/input/InputField";
 import PasswordInput from "@/components/customFields/input/Password";
 import { HandlerProps } from "@/components/customFields/type";
-import { useAuthLogin, useGetAuthUser } from "@/hooks/request/useAuthRequest";
-import { useError } from "@/hooks/useError";
-import { useFormFieldUpdate } from "@/hooks/useFormFieldUpdate";
-import useAuthStore from "@/store/auth";
+import { useBaseRequestService } from "@/hooks/request/useAxiosPrivate";
+import { formReducer, getErrorMessageFromApi } from "@/utils";
+import { StoreContext, StoreContextProps } from "@/utils/store";
 import { Validator } from "@/validator";
-import { useEffect } from "react";
+import { useContext, useEffect, useReducer, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
 const LoginScreen = () => {
-  const authDefault = {
+  const { axiosInstance, getAuth } = useBaseRequestService({ useToken: true, tokenType: "accessToken" });
+  const { saveAuthUser, authUser } = useContext(StoreContext) as StoreContextProps;
+  const initialData = {
     password: "",
     email: ""
   };
-  const { authUser } = useAuthStore();
-  const { formValues, updateFormFieldValue } = useFormFieldUpdate(authDefault);
-  const { isFetching } = useGetAuthUser();
-  const { mutateAsync, isPending } = useAuthLogin();
+  const [state, dispatch] = useReducer(formReducer(initialData), initialData);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-  const { addErrors, errors, resetError } = useError<Partial<typeof formValues>>();
 
+  const verifyUserIsAuthenticated = async () => {
+    try {
+      await getAuth();
+    } finally {
+      setIsLoading(false);
+    }
+  };
   useEffect(() => {
-    if (authUser && authUser?.role) {
-      navigate(`/dashboard/${authUser?.role}`);
+    verifyUserIsAuthenticated();
+    if (authUser && authUser.role) {
+      navigate(`/${authUser?.role}`);
     }
   }, [authUser]);
+
   const formFieldHandler = (data: HandlerProps) => {
-    const { key, value } = data;
-    updateFormFieldValue(key, value);
+    dispatch({ type: "UPDATE_FIELD", fieldName: data.key, value: data.value });
   };
 
   const handleUserLogin = async () => {
-    const validator = new Validator<typeof formValues>({
-      formData: formValues,
+    const validator = new Validator<typeof initialData>({
+      formData: { email: state.email, password: state.password },
       rules: {
         email: "required|isEmail",
         password: "required"
@@ -43,23 +51,40 @@ const LoginScreen = () => {
 
     validator.validate();
 
-    validator.validate();
-    if (!validator.passed()) {
-      return addErrors(validator.getValidationErrorsByIndex());
+    if (validator.failed()) {
+      dispatch({ type: "FIELD_HAS_ERRORS", errorMessages: validator.getValidationErrorsByIndex() });
+      return;
     } else {
-      resetError();
+      dispatch({ type: "RESET_ERROR_FIELDS" });
     }
 
-    await mutateAsync(formValues);
+    try {
+      dispatch({ type: "MAKE_REQUEST" });
+      const { data } = await axiosInstance.post("/auth/login", { email: state.email, password: state.password });
+      saveAuthUser(data.response);
+      dispatch({ type: "RESET_FIELDS" });
+
+      navigate("/admin");
+
+      toast.success("Success", {
+        description: "Login successful. Redirecting user"
+      });
+    } catch (error) {
+      toast.error("Error", {
+        description: getErrorMessageFromApi(error)
+      });
+    } finally {
+      dispatch({ type: "REQUEST_DONE" });
+    }
   };
 
   return (
     <div className="min-h-screen flex">
-      {isFetching ? (
+      {isLoading ? (
         <Preloader />
       ) : (
         <>
-          <div className="min-h-full flex-1 hidden md:block w-full bg-[url('@/assets/authBg.jpg')] bg-cover bg-blend-darken bg-no-repeat brightness-50"></div>
+          <div className="min-h-full bg-red-200 flex-1 hidden md:block w-full"></div>
           <div className="flex items-center justify-center p-2 flex-1">
             <div className="md:max-w-[450px] m-auto p-5 w-full">
               <div className="heading my-4 space-y-1">
@@ -68,22 +93,22 @@ const LoginScreen = () => {
               </div>
               <div>
                 <InputField
-                  fieldKey="email"
+                  name="email"
                   handleInputChange={formFieldHandler}
-                  value={formValues.email}
+                  value={state.email}
                   isRequired
                   label={{ text: "Email" }}
-                  errorMessage={errors?.email}
+                  errorMessage={state.errors?.email}
                 />
               </div>
               <div>
                 <PasswordInput
-                  fieldKey="password"
+                  name="password"
                   handleInputChange={formFieldHandler}
-                  value={formValues.password}
+                  value={state.password}
                   isRequired
                   label={{ text: "Password" }}
-                  errorMessage={errors?.password}
+                  errorMessage={state.errors?.password}
                 />
                 <div className="flex items-center justify-end text-sm mb-8 mt-3">
                   <Link to="/auth/forgot-password">Forgot Password</Link>
@@ -93,8 +118,8 @@ const LoginScreen = () => {
                 <PrimaryButton
                   text="Login"
                   onClick={handleUserLogin}
-                  loading={isFetching || isPending}
-                  disabled={isFetching || isPending}
+                  loading={state.isLoading}
+                  disabled={state.isLoading}
                 />
               </div>
             </div>

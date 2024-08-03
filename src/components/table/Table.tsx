@@ -22,36 +22,36 @@ const Table = ({
   description,
   isLoading,
   loadingText,
-  showSearch,
-  tableActions
 }: TableProps) => {
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between space-y-2">
-        <div>
-          {title && <h2 className="text-2xl font-bold tracking-tight">{title}</h2>}
-          {description && <p className="text-muted-foreground mt-1">{description}</p>}
+        <div className="flex items-center justify-between space-y-2">
+          <div>
+            {title && (
+              <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
+            )}
+            {description && (
+              <p className="text-muted-foreground mt-1">{description}</p>
+            )}
+          </div>
         </div>
-      </div>
-      <DataTable
-        handleRowClick={handleRowClick}
-        columns={columns}
-        showExportButton={showExportButton}
-        actionButtons={actionButtons}
-        filters={filters}
-        fetchQuery={fetchQuery}
-        data={data}
-        paginator={paginator}
-        allowRowSelect={allowRowSelect}
-        selectedDocuments={selectedDocuments}
-        searchSelectionOptions={searchSelectionOptions}
-        showSearchSelection={showSearchSelection}
-        showSelectColumns={showSelectColumns}
-        isLoading={isLoading}
-        loadingText={loadingText}
-        showSearch={showSearch}
-        tableActions={tableActions}
-      />
+        <DataTable
+          handleRowClick={handleRowClick}
+          columns={columns}
+          showExportButton={showExportButton}
+          actionButtons={actionButtons}
+          filters={filters}
+          fetchQuery={fetchQuery}
+          data={data}
+          paginator={paginator}
+          allowRowSelect={allowRowSelect}
+          selectedDocuments={selectedDocuments}
+          searchSelectionOptions={searchSelectionOptions}
+          showSearchSelection={showSearchSelection}
+          showSelectColumns={showSelectColumns}
+          isLoading={isLoading}
+          loadingText={loadingText}
+        />
     </div>
   );
 };

@@ -1,17 +1,19 @@
-import Preloader from "@/components/Preloader";
-import { useBaseRequestService } from "@/hooks/request/useAxiosPrivate";
-import useAuthStore from "@/store/auth";
-import { AxiosError } from "axios";
-import { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import Preloader from '@/components/Preloader';
+import { useBaseRequestService } from '@/hooks/request/useAxiosPrivate';
+import { StoreContext, StoreContextProps } from '@/utils/store';
+import { AxiosError } from 'axios';
+import { useContext, useEffect, useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 export const PersistLogin = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-  const { authUser: auth } = useAuthStore();
+  const { authUser: auth } = useContext(StoreContext) as StoreContextProps;
+
+  // Retrieve refreshToken function from useBaseRequestService
   const { getAuth } = useBaseRequestService({
-    useToken: true,
-    tokenType: "accessToken"
+    useToken:true,
+    tokenType:"accessToken"
   });
 
   const verifyUserIsAuthenticated = async () => {
@@ -19,20 +21,16 @@ export const PersistLogin = () => {
       await getAuth();
     } catch (e) {
       if (e instanceof AxiosError && e.response?.status === 403 && !auth) {
-        navigate("/auth/login");
+        navigate('/auth/login');
       }
     } finally {
       setIsLoading(false);
     }
   };
-  const { getInitData } = useBaseRequestService({
-    useToken: true,
-    tokenType: "accessToken"
-  });
+
   useEffect(() => {
     if (!auth || !Object.keys(auth).length) {
       verifyUserIsAuthenticated();
-      getInitData();
     } else {
       setIsLoading(false);
     }

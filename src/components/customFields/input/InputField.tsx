@@ -8,11 +8,11 @@ interface InputFieldProps extends InputProps {
   label?: string | { text: string; icon?: FormIconProps; className?: string };
   isRequired?: boolean;
   handleInputChange: (data: HandlerProps) => void;
-  fieldKey: string;
+  name: string;
   errorMessage?: string;
 }
 const InputField: FC<InputFieldProps> = ({
-  fieldKey,
+  name,
   value,
   onBlur,
   handleInputChange,
@@ -29,23 +29,20 @@ const InputField: FC<InputFieldProps> = ({
     } = event;
 
     if (handleInputChange) {
-      handleInputChange({ key: fieldKey, value });
+      handleInputChange({ key: name, value });
     }
   };
   return (
     <div className="w-full">
-      {label && (
-        <div className="my-2">
-          <InputLabel id={id || fieldKey} required={isRequired || false} label={label} />
-        </div>
-      )}
+      {label && <InputLabel id={id} required={isRequired || false} label={label} />}
       <Input
+        type={name}
         value={value || ""}
         onBlur={onBlur}
         onChange={handleInputFieldChange}
         disabled={disabled}
         {...props}
-        id={id || fieldKey}
+        id={id}
       />
       {errorMessage && <InputError message={errorMessage} />}
     </div>

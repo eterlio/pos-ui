@@ -1,20 +1,22 @@
-import { FC, useState, useEffect } from "react";
-import { GetManyProps } from "@/hooks/types";
-import SelectField from "./SelectField";
-import { toast } from "sonner";
+import { FC, useState } from 'react';
+
+import { GetManyProps } from '@/hooks/types';
+import SelectField from './SelectField';
+import { toast } from 'sonner';
 import { useBaseRequestService } from "@/hooks/request/useAxiosPrivate";
 import { BaseResponse } from "@/helpers/baseResponse";
 import InputLabel from "../FieldLabel";
 import { OptionsProps, PromiseSelectProps } from "./type";
-import { HandlerProps } from "../type";
+import { useSearchRequestQuery } from "./hook/useRequest";
 
 interface PromiseSelectDataProps extends PromiseSelectProps {
-  onChange?: (data: HandlerProps) => void;
+  onChange?: (selectedValues: any) => void;
 }
 export const PromiseSelect: FC<PromiseSelectDataProps> = ({
   query,
   url,
   value,
+  selectFields,
   searchKey,
   valueKey,
   labelKey,
@@ -23,73 +25,73 @@ export const PromiseSelect: FC<PromiseSelectDataProps> = ({
   label,
   isMulti,
   minSearchLength = 3,
-  onChange,
-  fieldKey
+  onChange
 }) => {
   const [loading, setLoading] = useState(false);
-  const [mappedOptions, setMappedOptions] = useState<OptionsProps[]>([]);
-  const { axiosInstance } = useBaseRequestService({ useToken: true, tokenType: "accessToken" });
-
-  const handleSelectFieldChange = async (data: HandlerProps) => {
+  const {axiosInstance} = useBaseRequestService({useToken: true, tokenType:"accessToken"})
+  let mappedOptions: OptionsProps[] = [];
+  const handleSelectFieldChange = async (value: any) => {
     if (onChange) {
-      onChange(data);
+      onChange(value);
     }
   };
-
-  const fetchData = async (params: Record<string, any>) => {
-    try {
-      setLoading(true);
-      const { data } = await axiosInstance.get<BaseResponse<GetManyProps<any[]>>>(url, { params });
-      if (data) {
-        const options = data.response.data.map((field) => ({
-          label: field[labelKey] || "",
-          value: field[valueKey] || ""
-        }));
-        setMappedOptions(options);
+  const selectSearchFieldChanged = async (searchValue: string) => {
+    if (typeof searchValue === 'string' && (searchValue.length >= minSearchLength || searchValue.length === 0)) {
+      try {
+        setLoading(true);
+        const {data} = await axiosInstance.get<BaseResponse<GetManyProps<any>>>(url, {
+          [`${searchKey}_eq`]: searchValue,
+          ...query
+        });
+        if (data) {
+          const options = data.response.data.map((field) => {
+            return {
+              label: field[labelKey] || '',
+              value: field[valueKey] || ''
+            };
+          });
+          mappedOptions = [...mappedOptions, ...options];
+        }
+      } catch (error: any) {
+        toast.error('Error', { description: error.message });
+      } finally {
+        setLoading(false);
       }
-    } catch (error: any) {
-      toast.error("Error", { description: error.message });
-    } finally {
-      setLoading(false);
     }
   };
+  const selectFieldMapper = selectFields && selectFields.length ? selectFields.join(',') : null;
 
-  const selectSearchFieldChanged = (searchValue: string) => {
-    if (typeof searchValue === "string" && (searchValue.length >= minSearchLength || searchValue.length === 0)) {
-      fetchData({
-        ...query,
-        [`${searchKey}_eq`]: searchValue
-      });
-    }
-  };
+  if (selectFieldMapper) {
+    query = {
+      ...query,
+      columns: selectFieldMapper
+    };
+  }
+  const { data, isLoading } = useSearchRequestQuery<GetManyProps<any>>(url, query);
 
-  useEffect(() => {
-    if (value && value.length) {
-      fetchData({
-        [`${valueKey}_in`]: value
-      });
-    }
-  }, []);
+  if (data) {
+    const options = data.response.data.map((field) => {
+      return {
+        label: field[labelKey] || '',
+        value: field[valueKey] || ''
+      };
+    });
+    mappedOptions = [...mappedOptions, ...options];
+  }
 
   return (
-    <div>
-      {label && (
-        <div className="my-2">
-          <InputLabel id={id} required={isRequired || false} label={label} />
-        </div>
-      )}
+    <>
+      {label && <InputLabel id={id} required={isRequired || false} label={label} />}
       <SelectField
         options={mappedOptions}
-        isLoading={loading}
+        isLoading={isLoading || loading}
         onChange={handleSelectFieldChange}
         selectValue={value}
         closeOnSelect
         isMulti={isMulti}
         isSearchable
         searchFieldChanged={selectSearchFieldChanged}
-        key={fieldKey}
-        fieldKey={fieldKey}
       />
-    </div>
+    </>
   );
 };

@@ -3,14 +3,16 @@ import { useSetQueryParam } from "./hooks/useSetQueryParam";
 interface PaginationNumbersProps {
   itemsPerPage: number;
   totalDocument: number;
-  page: number;
 }
-export default function PaginationNumbers({ itemsPerPage, totalDocument, page }: PaginationNumbersProps) {
-  const { setQueryParam } = useSetQueryParam();
+export default function PaginationNumbers({
+  itemsPerPage,
+  totalDocument,
+}: PaginationNumbersProps) {
+  const { setQueryParam, getQueryParam } = useSetQueryParam();
 
   const totalPages = Math.ceil(totalDocument / itemsPerPage);
   const pageRange = 1; // Number of page numbers to display around the current page.
-  const currentPage = page || 1;
+  const currentPage = Number(getQueryParam("currentPage")) || 1;
   // Function to generate an array of page numbers to display.
   const generatePageNumbers = () => {
     const pageNumbers = [];
@@ -23,17 +25,29 @@ export default function PaginationNumbers({ itemsPerPage, totalDocument, page }:
     } else {
       // Otherwise, determine which page numbers to display.
       if (currentPage <= pageRange + 1) {
-        pageNumbers.push(...Array.from({ length: pageRange * 2 + 1 }, (_, i) => i + 1));
+        pageNumbers.push(
+          ...Array.from({ length: pageRange * 2 + 1 }, (_, i) => i + 1)
+        );
         pageNumbers.push("...");
         pageNumbers.push(totalPages);
       } else if (currentPage >= totalPages - pageRange) {
         pageNumbers.push(1);
         pageNumbers.push("...");
-        pageNumbers.push(...Array.from({ length: pageRange * 2 + 1 }, (_, i) => totalPages - pageRange * 2 + i));
+        pageNumbers.push(
+          ...Array.from(
+            { length: pageRange * 2 + 1 },
+            (_, i) => totalPages - pageRange * 2 + i
+          )
+        );
       } else {
         pageNumbers.push(1);
         pageNumbers.push("...");
-        pageNumbers.push(...Array.from({ length: pageRange * 2 + 1 }, (_, i) => currentPage - pageRange + i));
+        pageNumbers.push(
+          ...Array.from(
+            { length: pageRange * 2 + 1 },
+            (_, i) => currentPage - pageRange + i
+          )
+        );
         pageNumbers.push("...");
         pageNumbers.push(totalPages);
       }

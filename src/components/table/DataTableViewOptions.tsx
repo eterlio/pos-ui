@@ -27,13 +27,13 @@ export function DataTableViewOptions<TData>({
           <Button
             variant="outline"
             size="sm"
-            className="ml-auto lg:flex"
+            className="ml-auto hidden lg:flex"
           >
-            <Columns className="mr-2 min-h-4 min-w-4" />
+            <Columns className="mr-2 h-4 w-4" />
             Columns
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
+        <DropdownMenuContent align="end" className="w-[150px]">
           <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
           <DropdownMenuSeparator />
           {table
@@ -43,17 +43,14 @@ export function DataTableViewOptions<TData>({
                 typeof column.accessorFn !== "undefined" && column.getCanHide()
             )
             .map((column) => {
-              const columnDef = column.columnDef ;
-              //@ts-ignore
-              const title = (typeof columnDef.header === 'function' ? columnDef.header({column})?.props.title : column.id);              
               return (
                 <DropdownMenuCheckboxItem
                   key={column.id}
-                  className="capitalize cursor-pointer"
+                  className="capitalize"
                   checked={column.getIsVisible()}
                   onCheckedChange={(value) => column.toggleVisibility(!!value)}
                 >
-                  {title || column.id}
+                  {column.id}
                 </DropdownMenuCheckboxItem>
               );
             })}

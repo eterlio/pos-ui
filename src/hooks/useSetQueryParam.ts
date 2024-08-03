@@ -14,7 +14,7 @@ export const useSetQueryParam = () => {
     });
     setQueryObject(newQueryObject);
   }, [location.search]);
-
+  
   const setQueryParam = (param: string, value: string) => {
     queryParams.set(param, value);
     updateUrl();
@@ -31,7 +31,7 @@ export const useSetQueryParam = () => {
 
   const updateUrl = () => {
     navigate({
-      search: `?${queryParams.toString()}`
+      search: `?${queryParams.toString()}`,
     });
   };
 

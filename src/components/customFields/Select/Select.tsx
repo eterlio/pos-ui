@@ -1,13 +1,22 @@
 import { ChevronDown, X } from "lucide-react";
 import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 
-import { Command, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Command,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import Loader from "@/components/Loader";
 import SingleOption from "./SingleOption";
 import { FormIconProps, HandlerProps } from "../type";
 import InputLabel from "../FieldLabel";
-import InputError from "../input/InputError";
+
 
 interface SelectProp<T = any> {
   isMulti?: boolean;
@@ -25,7 +34,6 @@ interface SelectProp<T = any> {
   id?: string;
   searchFieldChanged?: (data: HandlerProps) => void;
   fieldKey: string;
-  errorMessage?: string;
 }
 const SelectField: FC<SelectProp> = ({
   isClearable,
@@ -43,7 +51,6 @@ const SelectField: FC<SelectProp> = ({
   id,
   searchFieldChanged,
   fieldKey,
-  errorMessage
 }) => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [selectedValues, setSelectedValues] = React.useState(new Set<string>());
@@ -94,7 +101,7 @@ const SelectField: FC<SelectProp> = ({
     }
   }
 
-  useEffect(() => {    
+  useEffect(() => {
     if (selectValue) {
       if (!Array.isArray(selectValue)) {
         setSelectedValues(() => new Set([selectValue]));
@@ -112,7 +119,9 @@ const SelectField: FC<SelectProp> = ({
 
     // Logic to update selectedValues based on the value prop
     if (onChange) {
-      const values = isMulti ? Array.from(selectedValues) : Array.from(selectedValues)[0];
+      const values = isMulti
+        ? Array.from(selectedValues)
+        : Array.from(selectedValues)[0];
       onChange({ key: fieldKey, value: values });
     }
   }, [selectedValues]);
@@ -120,33 +129,50 @@ const SelectField: FC<SelectProp> = ({
     <div>
       <div>
         {label && (
-          <div className="my-1">
-            <InputLabel id={id} required={isRequired || false} label={label} />
-          </div>
+          <InputLabel id={id} required={isRequired || false} label={label} />
         )}
       </div>
-      <Popover open={isPopoverOpen} onOpenChange={() => setIsPopoverOpen(!isPopoverOpen)}>
-        <PopoverTrigger disabled={isDisabled} className="w-full disabled:opacity-75">
+      <Popover
+        open={isPopoverOpen}
+        onOpenChange={() => setIsPopoverOpen(!isPopoverOpen)}
+  
+      >
+        <PopoverTrigger  disabled={isDisabled} className="w-full">
           <div
-            className="cursor-pointer relative flex min-h-10 items-center justify-end rounded-[3px] border data-[state=open]:border-ring"
+            className="cursor-pointer relative flex min-h-[42px] items-center justify-end rounded-[3px] border data-[state=open]:border-ring"
             aria-disabled={isDisabled}
           >
             <div className="relative mr-auto flex flex-grow flex-wrap items-center px-3 py-1">
               {selectedValues?.size > 0 ? (
                 isMulti ? (
                   Array.from(selectedValues).map((value) => {
-                    const label = options.find((option) => option.value === value)?.label;
+                    const label = options.find(
+                      (option) => option.value === value
+                    )?.label;
                     return label ? (
-                      <SingleOption label={label} key={value} value={value} handleItemDelete={handleItemDelete} />
+                      <SingleOption
+                        label={label}
+                        key={value}
+                        value={value}
+                        handleItemDelete={handleItemDelete}
+                      />
                     ) : null;
                   })
                 ) : (
                   <>
-                    <div>{options.find((opt) => opt.value === Array.from(selectedValues)[0])?.label}</div>
+                    <div>
+                      {
+                        options.find(
+                          (opt) => opt.value === Array.from(selectedValues)[0]
+                        )?.label
+                      }
+                    </div>
                   </>
                 )
               ) : (
-                <span className="mr-auto text-gray-400 text-[12px]">{placeholder ? placeholder : "Select..."}</span>
+                <span className="mr-auto text-gray-400 text-[12px]">
+                  {placeholder ? placeholder : "Select..."}
+                </span>
               )}
             </div>
             <div className="flex flex-shrink-0 items-center self-stretch px-1 text-muted-foreground/60">
@@ -171,7 +197,10 @@ const SelectField: FC<SelectProp> = ({
             </div>
           </div>
         </PopoverTrigger>
-        <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
+        <PopoverContent
+          className="w-[var(--radix-popover-trigger-width)] p-0"
+          align="start"
+        >
           <Command>
             {isSearchable && (
               <CommandInput
@@ -181,7 +210,10 @@ const SelectField: FC<SelectProp> = ({
                 disabled={isDisabled}
               />
             )}
-            {!options || (options && options.length < 1 && <p className="text-sm text-center p-4">No result found</p>)}
+            {!options ||
+              (options && options.length < 1 && (
+                <p className="text-sm text-center p-4">No result found</p>
+              ))}
             {!isLoading && (
               <CommandGroup className="overflow-y-auto max-h-[350px] rounded-none" aria-disabled={isDisabled}>
                 {options.map((option, index) => {
@@ -190,7 +222,10 @@ const SelectField: FC<SelectProp> = ({
                     <CommandItem
                       key={index}
                       onSelect={() => {
-                        handleItemSelected<typeof option.value>(option.value, isSelected);
+                        handleItemSelected<typeof option.value>(
+                          option.value,
+                          isSelected
+                        );
                       }}
                       className={`${isSelected ? "" : ""} cursor-pointer p-3`}
                       disabled={isDisabled}
@@ -204,7 +239,6 @@ const SelectField: FC<SelectProp> = ({
           </Command>
         </PopoverContent>
       </Popover>
-      {errorMessage && <InputError message={errorMessage} />}
     </div>
   );
 };

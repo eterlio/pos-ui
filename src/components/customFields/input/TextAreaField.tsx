@@ -2,17 +2,15 @@ import { Textarea, TextareaProps } from "@/components/ui/textarea";
 import { FormIconProps } from "../type";
 import { ChangeEvent, FC } from "react";
 import InputLabel from "../FieldLabel";
-import InputError from "./InputError";
 
 interface TextAreaFieldProps extends TextareaProps {
   label?: string | { text: string; icon?: FormIconProps; className?: string };
   isRequired?: boolean;
   handleInputChange: (data: { key: string; value: any }) => void;
-  fieldKey: string;
-  errorMessage?: string;
+  name: string;
 }
 const TextAreaField: FC<TextAreaFieldProps> = ({
-  fieldKey,
+  name,
   value,
   onBlur,
   handleInputChange,
@@ -20,36 +18,33 @@ const TextAreaField: FC<TextAreaFieldProps> = ({
   label,
   id,
   isRequired,
-  errorMessage,
   ...props
 }) => {
-  const handleInputFieldChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputFieldChange = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const {
-      target: { value }
+      target: { value },
     } = event;
 
-    if (handleInputChange && fieldKey) {
-      handleInputChange({ key: fieldKey, value });
+    if (handleInputChange && name) {
+      handleInputChange({ key: name, value });
     }
   };
   return (
     <div>
       {label && (
-        <div className="my-1">
-          <InputLabel id={id} required={isRequired || false} label={label} />
-        </div>
+        <InputLabel id={id} required={isRequired || false} label={label} />
       )}
       <Textarea
-        name={fieldKey}
+        name={name}
         value={value}
         disabled={disabled}
         onChange={handleInputFieldChange}
         onBlur={onBlur}
-        id={id}
-        className="resize-none"
         {...props}
+        id={id}
       />
-      {errorMessage && <InputError message={errorMessage} />}
     </div>
   );
 };
