@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { HandlerProps } from "@/components/customFields/type";
 import { useFormFieldUpdate } from "@/hooks/useFormFieldUpdate";
 import { invoiceDefault } from "@/defaults";
@@ -7,10 +7,20 @@ import { objectDifference } from "@/helpers";
 import { useGeneralMutation } from "@/hooks/request/useGeneralMutation";
 import { toast } from "sonner";
 import InvoiceEditFields from "./components/InvoiceEditFields";
+import { useGeneralQuery } from "@/hooks/request/useGeneralQuery";
+import { InvoiceProps } from "@/interfaces/invoice";
+import { useEffect } from "react";
 
-const CreateInvoiceScreen = () => {
+const EditInvoiceScreen = () => {
+  const params = useParams<{ id: string }>();
+  const invoiceId = params.id;
   const navigate = useNavigate();
-  const { formValues, updateFormFieldValue } = useFormFieldUpdate(invoiceDefault());
+  const { data } = useGeneralQuery<InvoiceProps>({
+    queryKey: ["invoice", invoiceId],
+    url: `/invoices/${invoiceId}`,
+    enabled: !!invoiceId
+  });
+  const { formValues, updateFormFieldValue, setFormValues } = useFormFieldUpdate(data);
 
   const handleFormFieldChange = (data: HandlerProps) => {
     const { key, value } = data;
@@ -29,9 +39,9 @@ const CreateInvoiceScreen = () => {
   const payload = objectDifference(invoiceDefault(), formValues);
 
   const { isPending, mutate } = useGeneralMutation({
-    httpMethod: "post",
-    mutationKey: ["createInvoice"],
-    url: "/invoices"
+    httpMethod: "put",
+    mutationKey: ["updateInvoice"],
+    url: `/invoices/${invoiceId}`
   });
   const handleItemSubmit = () => {
     mutate(
@@ -39,24 +49,29 @@ const CreateInvoiceScreen = () => {
       {
         onSuccess() {
           toast.success("Success", {
-            description: "Invoice created"
+            description: "Invoice updated"
           });
           navigate("/invoices");
         }
       }
     );
   };
+  useEffect(() => {
+    if (data) {
+      setFormValues(data);
+    }
+  }, [params.id, data]);
   return (
     <InvoiceEditFields
-      buttonTitle="Save invoice"
+      buttonTitle="Edit invoice"
       handleFormFieldChange={handleFormFieldChange}
       onsubmitHandler={handleItemSubmit}
-      pageDescription="Fill the form to create a new invoice"
-      pageTitle="New Invoice"
+      pageDescription="Edit the form to update the invoice"
+      pageTitle="Edit invoice"
       disabledButton={isPending}
       formFields={formValues}
     />
   );
 };
 
-export default CreateInvoiceScreen;
+export default EditInvoiceScreen;

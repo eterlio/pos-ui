@@ -9,10 +9,17 @@ interface InvoiceItemProps {
     name: string;
   };
   id: string;
-  handleInvoiceItemRemove: (id: string) => void;
+  handleInvoiceItemRemove?: (id: string) => void;
+  showDelete?: boolean;
 }
-const InvoiceItem: FC<InvoiceItemProps> = ({ item, handleInvoiceItemRemove, id }) => {
+const InvoiceItem: FC<InvoiceItemProps> = ({ item, handleInvoiceItemRemove, id, showDelete = true }) => {
   const totalPrice = item.quantity * item.amount;
+  const handleIteRemove = () => {
+    console.log(id, handleInvoiceItemRemove);
+    if (handleInvoiceItemRemove) {
+      handleInvoiceItemRemove(id);
+    }
+  };
   return (
     <div className="flex item-center text-[12px] relative border-b pb-1">
       <div className="w-[60%] flex gap-x-4 items-center">
@@ -25,14 +32,13 @@ const InvoiceItem: FC<InvoiceItemProps> = ({ item, handleInvoiceItemRemove, id }
         <p className="text-center w-[30%]">{formatCurrency({ value: item.amount, showCurrencySign: false })}</p>
         <p className=" w-1/3 text-right">{formatCurrency({ value: totalPrice })}</p>
       </div>
-      <div className="absolute top-[-0.25rem] right-[-37px]">
-        <button
-          className="p-1 hover:bg-primary hover:text-white bg-transparent"
-          onClick={() => handleInvoiceItemRemove(id)}
-        >
-          <Trash size={16} />
-        </button>
-      </div>
+      {showDelete && (
+        <div className="absolute top-[-0.25rem] right-[-37px]">
+          <button className="p-1 hover:bg-primary hover:text-white bg-transparent" onClick={handleIteRemove}>
+            <Trash size={16} />
+          </button>
+        </div>
+      )}
     </div>
   );
 };
