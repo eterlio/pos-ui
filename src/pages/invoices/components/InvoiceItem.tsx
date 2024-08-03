@@ -6,16 +6,18 @@ interface InvoiceItemProps {
   item: {
     amount: number;
     quantity: number;
-    item: string;
+    name: string;
   };
+  id: string;
+  handleInvoiceItemRemove: (id: string) => void;
 }
-const InvoiceItem: FC<InvoiceItemProps> = ({ item }) => {
+const InvoiceItem: FC<InvoiceItemProps> = ({ item, handleInvoiceItemRemove, id }) => {
   const totalPrice = item.quantity * item.amount;
   return (
     <div className="flex item-center text-[12px] relative border-b pb-1">
       <div className="w-[60%] flex gap-x-4 items-center">
         <div className="item-title">
-          <p>{item.item}</p>
+          <p>{item.name}</p>
         </div>
       </div>
       <div className="w-[40%] flex items-center justify-between">
@@ -24,7 +26,10 @@ const InvoiceItem: FC<InvoiceItemProps> = ({ item }) => {
         <p className=" w-1/3 text-right">{formatCurrency({ value: totalPrice })}</p>
       </div>
       <div className="absolute top-[-0.25rem] right-[-37px]">
-        <button className="p-1 hover:bg-primary hover:text-white bg-transparent">
+        <button
+          className="p-1 hover:bg-primary hover:text-white bg-transparent"
+          onClick={() => handleInvoiceItemRemove(id)}
+        >
           <Trash size={16} />
         </button>
       </div>

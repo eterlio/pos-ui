@@ -1,16 +1,27 @@
 import Modal from "@/components/Modal";
 import SelectField from "@/components/customFields/Select/SelectField";
-import InputField from "@/components/customFields/input/InputField";
 import NumberField from "@/components/customFields/input/NumberField";
-import TextAreaField from "@/components/customFields/input/TextAreaField";
-import { ModalActionButtonProps } from "@/interfaces";
+import { HandlerProps } from "@/components/customFields/type";
+import { ModalActionButtonProps, OptionsProps } from "@/interfaces";
+import { InvoiceItem } from "@/interfaces/invoice";
 import { FC } from "react";
 
 interface InvoiceItemModalProps {
   showModal: boolean;
   handleShowModal: () => void;
+  invoiceItem: InvoiceItem;
+  handleFormFieldChange: (data: HandlerProps) => void;
+  productOptions: OptionsProps[];
+  emitInvoiceItem: (data: InvoiceItem) => void;
 }
-const InvoiceItemModal: FC<InvoiceItemModalProps> = ({ handleShowModal, showModal }) => {
+const InvoiceItemModal: FC<InvoiceItemModalProps> = ({
+  handleShowModal,
+  showModal,
+  handleFormFieldChange,
+  invoiceItem,
+  productOptions,
+  emitInvoiceItem
+}) => {
   const handleCloseModal = () => {
     handleShowModal();
   };
@@ -26,12 +37,15 @@ const InvoiceItemModal: FC<InvoiceItemModalProps> = ({ handleShowModal, showModa
       },
       {
         title: "Add Item",
-        action: async () => {},
-        type: "action"
+        action: () => {
+          emitInvoiceItem(invoiceItem);
+          handleCloseModal();
+        },
+        type: "action",
+        disabled: !(invoiceItem._id && invoiceItem.price && invoiceItem.quantity)
       }
     ] as ModalActionButtonProps[]
   };
-  const handleFormFieldChange = () => {};
   return (
     <Modal
       modalTitle={modalData.modalTitle}
@@ -39,10 +53,20 @@ const InvoiceItemModal: FC<InvoiceItemModalProps> = ({ handleShowModal, showModa
       showModal={modalData.showModal}
       actionButtons={modalData.actionButtons}
     >
-      <SelectField fieldKey="" onChange={handleFormFieldChange} options={[]} label="Product" />
-      <NumberField fieldKey="" handleInputChange={handleFormFieldChange} label="Quantity" />
-      <NumberField fieldKey="" handleInputChange={handleFormFieldChange} label="Amount" />
-      <TextAreaField fieldKey="" handleInputChange={handleFormFieldChange} label="Description" />
+      <SelectField
+        fieldKey="_id"
+        onChange={handleFormFieldChange}
+        options={productOptions}
+        label="Product"
+        selectValue={invoiceItem?._id}
+      />
+      <NumberField
+        fieldKey="quantity"
+        handleInputChange={handleFormFieldChange}
+        label="Quantity"
+        value={invoiceItem?.quantity}
+      />
+      <NumberField fieldKey="price" handleInputChange={() => {}} label="Amount" value={invoiceItem?.price} disabled />
     </Modal>
   );
 };

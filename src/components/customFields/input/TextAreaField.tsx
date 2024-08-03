@@ -45,9 +45,9 @@ const TextAreaField: FC<TextAreaFieldProps> = ({
         disabled={disabled}
         onChange={handleInputFieldChange}
         onBlur={onBlur}
-        {...props}
         id={id}
         className="resize-none"
+        {...props}
       />
       {errorMessage && <InputError message={errorMessage} />}
     </div>
