@@ -119,8 +119,8 @@ const InvoiceListScreen = () => {
           actionButtons={rowActions}
           showSearchSelection
           searchSelectionOptions={[{ label: "Customer", value: "customerName" }]}
-          // allowRowSelect
-          //   handleRowClick={handleEditRowActionClick}
+          allowRowSelect
+          handleRowClick={handleEditRowActionClick}
           showSelectColumns
         />
       </Container>

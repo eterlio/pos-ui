@@ -3,9 +3,9 @@ import DatePicker from "@/components/customFields/date/DatePicker";
 import DashboardLayout from "@/components/dashboard/Layout";
 import PageContainer from "@/components/dashboard/PageContainer";
 import { Button } from "@/components/ui/button";
-import { PencilLine, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import InvoiceItemModal from "./components/InvoiceItemModal";
 import InvoiceItemHeader from "./components/InvoiceItemHeader";
 import InvoiceItem from "./components/InvoiceItem";
@@ -30,6 +30,7 @@ import PrimaryButton from "@/components/PrimaryButton";
 import { formatCurrency, objectDifference } from "@/helpers";
 import { useGeneralMutation } from "@/hooks/request/useGeneralMutation";
 import { toast } from "sonner";
+import BillingAddress from "./components/BillingAddress";
 
 const CreateInvoiceScreen = () => {
   const navigate = useNavigate();
@@ -134,7 +135,7 @@ const CreateInvoiceScreen = () => {
   const payload = objectDifference(invoiceDefault(), formValues);
 
   const enableInvoiceButton = Boolean(formValues?.items.length && formValues?.customerId && formValues?.invoiceDate);
-
+  const selectedCustomer = customers?.data?.find((cus) => cus?._id === formValues?.customerId);
   const { isPending, mutate } = useGeneralMutation({
     httpMethod: "post",
     mutationKey: ["createInvoice"],
@@ -169,39 +170,21 @@ const CreateInvoiceScreen = () => {
           </div>
         </div>
         <div className="md:flex items-center justify-between relative">
-          <div className="relative">
-            <p className="text-gray-500 text-sm">BILLING FROM</p>
-            <h1 className="text-2x font-medium">Oseikrom Hardware Enterprise</h1>
-            <span className="text-xs">admin@oseikrom.com</span>
-            <div className="my-7 text-sm">
-              <p>P.O BOX 34, Agona Swdru</p>
-              <p>Akwamkurom</p>
-              <p>(233) 543814868</p>
-              <Link to="" className="font-bold text-primary my-3 flex items-center gap-x-1">
-                <span>
-                  <PencilLine size={18} />
-                </span>
-                <span>Edit Info</span>
-              </Link>
-            </div>
-          </div>
+          <BillingAddress
+            address={{ poBox: "P.O BOX 34, Agona Swdru", state: "Ekwamkurom" }}
+            email="admin@oseikrom.com"
+            name="Oseikrom Hardware Enterprise"
+            phone={{ number: "543814868", country: "GH", prefix: "233" }}
+            type="from"
+          />
           <div className="absolute md:border-r h-full bg-red-50 left-1/2"></div>
-          <div className="relative">
-            <p className="text-gray-500 text-sm">BILLING TO</p>
-            <h1 className="text-2x font-medium">Oseikrom Hardware Enterprise</h1>
-            <span className="text-xs">admin@oseikrom.com</span>
-            <div className="my-7 text-sm">
-              <p>P.O BOX 34, Agona Swdru</p>
-              <p>Akwamkurom</p>
-              <p>(233) 543814868</p>
-              <Link to="" className="font-bold text-primary my-3 flex items-center gap-x-1">
-                <span>
-                  <PencilLine size={18} />
-                </span>
-                <span>Edit Info</span>
-              </Link>
-            </div>
-          </div>
+          <BillingAddress
+            address={selectedCustomer?.address || {}}
+            email={selectedCustomer?.email || ""}
+            name={`${selectedCustomer?.firstName || "N/A"} ${selectedCustomer?.lastName || "N/A"}`}
+            phone={selectedCustomer?.phone}
+            type="to"
+          />
         </div>
 
         <div className="md:flex items-center justify-end">
