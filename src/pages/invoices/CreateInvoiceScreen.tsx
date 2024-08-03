@@ -168,7 +168,7 @@ const CreateInvoiceScreen = () => {
             />
           </div>
         </div>
-        <div className="flex items-center justify-between relative">
+        <div className="md:flex items-center justify-between relative">
           <div className="relative">
             <p className="text-gray-500 text-sm">BILLING FROM</p>
             <h1 className="text-2x font-medium">Oseikrom Hardware Enterprise</h1>
@@ -185,7 +185,7 @@ const CreateInvoiceScreen = () => {
               </Link>
             </div>
           </div>
-          <div className="absolute border-r h-full bg-red-50 left-1/2"></div>
+          <div className="absolute md:border-r h-full bg-red-50 left-1/2"></div>
           <div className="relative">
             <p className="text-gray-500 text-sm">BILLING TO</p>
             <h1 className="text-2x font-medium">Oseikrom Hardware Enterprise</h1>
@@ -204,8 +204,8 @@ const CreateInvoiceScreen = () => {
           </div>
         </div>
 
-        <div className="flex items-center justify-end">
-          <div className="w-[40%] flex justify-between gap-x-4">
+        <div className="md:flex items-center justify-end">
+          <div className="lg:w-[40%] flex justify-between gap-x-4">
             <div className="flex-1">
               <DatePicker
                 fieldKey="invoiceDate"
@@ -326,7 +326,7 @@ const CreateInvoiceScreen = () => {
             )}
           </div>
         )}
-        <div className="my-5 flex items-center justify-between gap-x-5">
+        <div className="my-5 md:flex items-center justify-between gap-x-5">
           <div className="flex-1 w-full">
             <TextAreaField
               fieldKey="termsAndConditions"
@@ -344,15 +344,15 @@ const CreateInvoiceScreen = () => {
             />
           </div>
         </div>
-        <div className="flex item-center justify-end">
-          <div className="w-1/2 flex items-end justify-end flex-col">
+        <div className="md:flex item-center justify-end">
+          <div className="md:w-1/2 flex items-end justify-end flex-col">
             <div className="invoice-summary flex-1 w-full text-right mb-5">
               <div className="text-sm flex items-end justify-end flex-col space-y-1">
-                <p className="w-[40%] flex justify-between items-center">
+                <p className="w-1/2 lg:w-[40%] flex justify-between items-center">
                   <span>Sub Total: </span>
                   <span>{formatCurrency({ value: invoiceSubTotal })}</span>
                 </p>
-                <p className="w-[40%] flex justify-between items-center">
+                <p className="w-1/2 lg:w-[40%] flex justify-between items-center">
                   <span>
                     Discount(
                     {formValues?.discount?.type === "percentage"
@@ -362,16 +362,16 @@ const CreateInvoiceScreen = () => {
                   </span>
                   <span>{formatCurrency({ value: invoiceDiscountTotal })}</span>
                 </p>
-                <p className="font-medium w-[40%] flex justify-between items-center">
+                <p className="font-medium w-1/2 lg:w-[40%] flex justify-between items-center">
                   <span>Total:</span> <span>{formatCurrency({ value: invoiceSubTotal - invoiceDiscountTotal })}</span>
                 </p>
-                <p className="font-medium w-[40%] flex justify-between items-center">
+                <p className="font-medium w-1/2 lg:w-[40%] flex justify-between items-center">
                   <span>Amount Due:</span>
                   <span>{formatCurrency({ value: invoiceSubTotal - invoiceDiscountTotal })}</span>
                 </p>
               </div>
             </div>
-            <div className="Submit-button w-1/3 flex justify-end flex-1">
+            <div className="Submit-button lg:w-1/3 flex justify-end flex-1">
               <PrimaryButton
                 text="Save invoice"
                 onClick={handleItemSubmit}
