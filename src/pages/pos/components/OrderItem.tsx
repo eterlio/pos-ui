@@ -1,10 +1,10 @@
 import { Trash2 } from "lucide-react";
-
 import Tile from "@/assets/tile.jpg";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import usePosStore from "@/store/pos";
 import useProductStore from "@/store/products";
+import { Input } from "@/components/ui/input";
 
 interface Item {
   id: string;
@@ -14,8 +14,15 @@ interface Item {
 }
 
 export const OrderItem: FC<{ item: Item }> = ({ item }) => {
-  const { removeItem, incrementItemQuantity, decrementItemQuantity } = usePosStore();
+  const { removeItem, incrementItemQuantity, decrementItemQuantity, setItemQuantity } = usePosStore();
   const { getProductById } = useProductStore();
+
+  const [quantity, setQuantity] = useState<string>(item.quantity.toString());
+
+  useEffect(() => {
+    setQuantity(item.quantity.toString());
+  }, [item.quantity]);
+
   const handleIncrement = () => {
     incrementItemQuantity(item.id, 1);
   };
@@ -23,9 +30,31 @@ export const OrderItem: FC<{ item: Item }> = ({ item }) => {
   const handleDecrement = () => {
     decrementItemQuantity(item.id, 1);
   };
+
   const handleItemRemove = () => {
     removeItem(item.id);
   };
+
+  const handleItemQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    console.log({ value });
+    if (value === "" || /^[0-9\b]+$/.test(value)) {
+      setQuantity(value);
+    }
+  };
+
+  const handleBlur = () => {
+    const value = Number(quantity);
+    console.log(value);
+    if (value >= 1) {
+      setItemQuantity(item.id, value);
+    } else {
+      const v = 1;
+      setQuantity(v.toString());
+      setItemQuantity(item.id, v);
+    }
+  };
+
   const product = getProductById(item.id);
   return (
     <div className="border-b my-3 item-container p-0.5">
@@ -38,7 +67,13 @@ export const OrderItem: FC<{ item: Item }> = ({ item }) => {
           <div className="flex flex-1 items-end">
             <div className="flex flex-1 gap-2">
               <QuantityButton isIncrement={false} onClick={handleDecrement} disabled={item.quantity === 1} />
-              <p>{item.quantity || 0}</p>
+              <Input
+                type="number"
+                value={quantity}
+                className="w-[40%] text-center border outline-none h-8"
+                onChange={handleItemQuantityChange}
+                onBlur={handleBlur}
+              />
               <QuantityButton
                 isIncrement={true}
                 onClick={handleIncrement}
