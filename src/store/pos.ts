@@ -128,7 +128,7 @@ const usePosStore = create<State & Action>()((set, get) => ({
     });
   },
   setItemQuantity: (id, quantity) => {
-    const { getProductById, decrementProductQuantity } = useProductStore.getState();
+    const { getProductById, decrementProductQuantity, incrementProductQuantity } = useProductStore.getState();
 
     set((state) => {
       let product = getProductById(id);
@@ -138,9 +138,18 @@ const usePosStore = create<State & Action>()((set, get) => ({
         });
         return state;
       }
-      if (isNaN(quantity)) return state;
+      if (isNaN(quantity) || quantity < 1) return state;
 
-      decrementProductQuantity(id, quantity);
+      const existingItem = state.items.find((item) => item.id === id);
+      if (existingItem) {
+        const quantityDifference = quantity - existingItem.quantity;
+        if (quantityDifference > 0) {
+          decrementProductQuantity(id, quantityDifference);
+        } else {
+          incrementProductQuantity(id, -quantityDifference);
+        }
+      }
+
       const updatedItems = state.items.map((item) => (item.id === id ? { ...item, quantity } : item));
       return { ...state, items: updatedItems };
     });
