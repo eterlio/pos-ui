@@ -1,5 +1,6 @@
 import { PERMISSIONS_LIST, PermissionString } from "@/helpers/permission";
 import { PhoneProps } from "@/interfaces";
+import { Discount, InvoiceItem } from "@/interfaces/invoice";
 
 import { format, isValid, parseISO } from "date-fns";
 import { toLower, trim } from "lodash";
@@ -157,3 +158,26 @@ export function downloadDocument(pdf: string, fileName: string) {
 export function formatDate(date: string, formatType: string) {
   return isValid(parseISO(date)) ? format(parseISO(date), formatType) : date;
 }
+
+export const computeInvoiceAmounts = (invoiceData: { items: InvoiceItem[]; discount?: Discount }) => {
+  const calculateDiscountAmount = function (totalItemAmount: number): number {
+    if (invoiceData?.discount) {
+      const invoiceValue = invoiceData?.discount.value || 0;
+      if (invoiceData?.discount.type === "fixed") {
+        return invoiceValue;
+      } else if (invoiceData?.discount.type === "percentage") {
+        return (invoiceValue / 100) * totalItemAmount;
+      }
+    }
+
+    return 0;
+  };
+  const invoiceSubTotal = invoiceData.items.reduce((inc, item) => item.price * item.quantity + inc, 0);
+  const invoiceDiscountTotal = calculateDiscountAmount(invoiceSubTotal);
+  const invoiceTotal = invoiceSubTotal - invoiceDiscountTotal;
+  return {
+    invoiceSubTotal,
+    invoiceDiscountTotal,
+    invoiceTotal
+  };
+};

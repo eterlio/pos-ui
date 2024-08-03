@@ -1,10 +1,12 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/components/table/DataTableColumnHeader";
-import { InvoiceProps, InvoiceStatus } from "@/interfaces/invoice";
+import { INVOICE_STATUSES, InvoiceProps, InvoiceStatus } from "@/interfaces/invoice";
 import { format } from "date-fns";
 import { startCase } from "lodash";
 import TableStatus from "@/components/TableStatus";
 import { formatCurrency } from "@/helpers";
+import { DataFilterProps } from "@/components/table/type";
+import { Banknote, CalendarHeart, Settings2 } from "lucide-react";
 
 const invoiceStatusColors: { [key in InvoiceStatus]: { bg: string; text: string; circleBg?: string } } = {
   paid: {
@@ -29,6 +31,34 @@ const invoiceStatusColors: { [key in InvoiceStatus]: { bg: string; text: string;
   }
 };
 
+export const invoiceTableFilters: DataFilterProps[] = [
+  {
+    column: "createdAt",
+    options: [],
+    title: "Created At",
+    extra: {
+      mainIcon: CalendarHeart
+    },
+    isDate: true
+  },
+  {
+    column: "totalAmount",
+    options: [],
+    title: "Total Amount",
+    extra: {
+      mainIcon: Banknote
+    },
+    isNumber: true
+  },
+  {
+    column: "status",
+    options: INVOICE_STATUSES.map((st) => ({ label: startCase(st), value: st })),
+    title: "Status",
+    extra: {
+      mainIcon: Settings2
+    }
+  }
+];
 export const invoiceSchema: ColumnDef<InvoiceProps>[] = [
   {
     accessorKey: "invoiceNumber",
@@ -40,8 +70,11 @@ export const invoiceSchema: ColumnDef<InvoiceProps>[] = [
   },
   {
     accessorKey: "customerId",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Customer ID" />,
-    cell: ({ row }) => <div className=" w-[200px]">{row.getValue("customerId")}</div>,
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Customer" />,
+    cell: ({ row: { original } }) => {
+      const fullName = `${original.customerData?.firstName} ${original.customerData?.lastName}`;
+      return <div className="w-[100px]">{fullName}</div>;
+    },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
     }
@@ -57,16 +90,28 @@ export const invoiceSchema: ColumnDef<InvoiceProps>[] = [
     }
   },
   {
-    accessorKey: "dueDate",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Due Date" />,
-    cell: ({ row }) => {
-      const date: Date = row.getValue("dueDate");
-      return <div className="flex space-x-2">{date ? format(date, "dd-MM-yyyy") : ""}</div>;
+    accessorKey: "createdBy",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Created By" />,
+    cell: ({ row: { original } }) => {
+      const fullName = `${original.createdByData?.fullName}`;
+      return <div className="w-[200px]">{fullName}</div>;
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
     }
   },
+  {
+    accessorKey: "createdAt",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Created At" />,
+    cell: ({ row }) => {
+      const date: Date = row.getValue("createdAt");
+      return <div className="flex space-x-2 w-[200px]">{date ? format(date, "dd-MM-yyyy H:mm:ss") : ""}</div>;
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    }
+  },
+
   {
     accessorKey: "status",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,

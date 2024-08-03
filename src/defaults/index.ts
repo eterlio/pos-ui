@@ -36,6 +36,7 @@ import {
   SettingsProps,
   StoreInformationProps
 } from "@/interfaces/settings";
+import { InvoiceProps } from "@/interfaces/invoice";
 
 export const mopArr: MOP[] = ["cash", "mobile money", "bank", "cheque"];
 export const defaultPlugin: DefaultPluginProps = {
@@ -442,3 +443,26 @@ export const defaultSettings: () => SettingsProps = () => ({
   accountId: "",
   warehouseId: ""
 });
+
+export const invoiceDefault: () => InvoiceProps = () => {
+  return {
+    ...defaultPlugin,
+    warehouseId: "",
+    accountId: "",
+    items: [],
+    customerId: "",
+    invoiceNumber: "",
+    invoiceDate: undefined,
+    dueDate: undefined,
+    totalAmount: 0,
+    discount: undefined,
+    status: "not paid",
+    isRecurring: false,
+    recurrence: undefined,
+    description: "",
+    termsAndCondition: "",
+    note: "",
+    customerData: undefined,
+    createdByData: undefined
+  };
+};

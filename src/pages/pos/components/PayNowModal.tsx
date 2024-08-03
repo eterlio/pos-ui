@@ -168,7 +168,7 @@ const PayNowModal: FC<PayNowProps> = ({ customers }) => {
             />
           </TabsContent>
         </Tabs>
-        <OrderSummary totalItemAmount={getItemTotalAmount()} totalItems={getTotalItems()} title="Order Summary" />
+        <OrderSummary totalItemAmount={getItemTotalAmount()} totalItems={getTotalItems()} title="" />
         <div className="flex items-center justify-between gap-x-3">
           <h1 className="font-bold text-sm flex-1">Amount paid:</h1>
           <p className="text-right flex-1">{formatCurrency({ value: state.amountPaid || 0 })}</p>
