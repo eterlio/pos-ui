@@ -25,7 +25,8 @@ const CustomersListScreen = () => {
   const { data, isFetching } = useGeneralQuery<GetManyProps<CustomerProps[]>>({
     queryKey: ["customers", queryObject],
     url: "/customers",
-    enabled: !!Object.keys(queryObject).length
+    enabled: !!Object.keys(queryObject).length,
+    query: queryObject
   });
   const { isPending, mutate } = useGeneralMutation<CustomerProps>({
     httpMethod: "delete",
