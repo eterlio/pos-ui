@@ -3,6 +3,7 @@ import useProductStore from "./products";
 import { toast } from "sonner";
 import { set as setValue } from "lodash";
 import { BankPaymentProps, ChequePaymentProps, MOP, MobileMoneyPaymentProps } from "@/interfaces/sales";
+import { Discount } from "@/interfaces/invoice";
 interface ItemProps {
   id: string;
   name: string;
@@ -13,10 +14,8 @@ interface ItemProps {
 export interface SalesProps {
   customerId: string;
   items: ItemProps[];
-  discount?: {
-    type: "fixed" | "percentage";
-    amount: number;
-  };
+  hasDiscount?: boolean;
+  discount?: Discount;
   tax: number;
   modeOfPayment?: MOP;
   amountPaid: number;
@@ -53,6 +52,7 @@ export const initialState: State = {
   tax: 0,
   modeOfPayment: "cash",
   discount: undefined,
+  hasDiscount: false,
   amountPaid: 0,
   bankPayment: undefined,
   chequePayment: undefined,
