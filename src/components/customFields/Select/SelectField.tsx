@@ -71,7 +71,7 @@ const SelectField: FC<SelectProp> = ({
   return (
     <div>
       {label && <InputLabel id={id} required={isRequired || false} label={label} />}
-      <div className="select_field-container">
+      <div className="select_field-container my-2.5">
         <Select
           value={constructOption()}
           options={options}

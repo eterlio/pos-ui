@@ -1,5 +1,5 @@
 import { AddressProps, DefaultPluginProps, PhoneProps } from ".";
-import { Gender } from "./user";
+import { Gender, UserProps } from "./user";
 
 export interface CustomerProps extends DefaultPluginProps {
   _id?: string;
@@ -7,9 +7,12 @@ export interface CustomerProps extends DefaultPluginProps {
   lastName: string;
   phone?: PhoneProps;
   dateOfBirth?: Date;
-  email: string;
+  email?: string;
   gender?: Gender;
   address?: AddressProps;
-  accountId: string;
-  warehouseId: string;
+  accountId?: string;
+  warehouseId?: string;
+
+  //   virtuals
+  createdByData?: UserProps;
 }
