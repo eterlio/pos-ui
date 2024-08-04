@@ -23,7 +23,8 @@ const UpdateProductUnitScreen = () => {
   const { addErrors, errors, resetError } = useError<ValidatorProps>();
   const { data } = useGeneralQuery<ProductUnitProps>({
     queryKey: ["productUnit", unitId],
-    url: `/product-units/${unitId}`
+    url: `/product-units/${unitId}`,
+    enabled: !!unitId
   });
 
   const { formValues, updateFormFieldValue, setFormValues } = useFormFieldUpdate(data);
@@ -36,8 +37,8 @@ const UpdateProductUnitScreen = () => {
   const validator = new Validator<Partial<ValidatorProps>>({
     formData: formValues as ValidatorProps,
     rules: {
-      description: "required|minLength:5",
-      name: "required:minLength:5",
+      description: "required|minLength:3",
+      name: "required:minLength:3",
       title: "required:minLength:3"
     }
   });

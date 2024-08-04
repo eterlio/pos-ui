@@ -7,6 +7,7 @@ import { useGeneralQuery } from "@/hooks/request/useGeneralQuery";
 import { useOptimisticUpdates } from "@/hooks/request/useOptimisticUpdates";
 import { GetManyProps } from "@/hooks/types";
 import { useSetQueryParam } from "@/hooks/useSetQueryParam";
+import { usePermission } from "@/hooks/usePermission"; // Import usePermission
 import { ModalActionButtonProps } from "@/interfaces";
 import { ProductCategoryProps } from "@/interfaces/productCategories";
 import { productCategorySchema } from "@/tableSchema/productCategories";
@@ -24,31 +25,37 @@ const ListProductCategoriesScreen = () => {
     url: `/product-categories/${selectedCategory.id}`
   });
 
-  const { data, isFetching } = useGeneralQuery<GetManyProps<ProductCategoryProps>>({
+  const { data, isFetching } = useGeneralQuery<GetManyProps<ProductCategoryProps[]>>({
     queryKey: ["productCategories", queryObject],
     url: "/product-categories",
     query: queryObject,
     enabled: !!Object.keys(queryObject).length
   });
+
+  const { canCreateProductCategory, canUpdateProductCategory, canDeleteProductCategory } = usePermission(); // Use usePermission hook
+
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
+
   const rowActions = [
     {
       label: "Edit",
-      action: handleEditRowActionClick
+      action: handleEditRowActionClick,
+      show: canUpdateProductCategory
     },
     {
       label: "Delete",
       action: (data: Record<string, any>) => {
         setOpenModal(true);
         setSelectedCategory(data);
-      }
+      },
+      show: canDeleteProductCategory
     }
   ];
 
   const modalData = {
     showModal: openModal,
-    modalTitle: (name: string) => `Are you sure you want to delete  ${name}`,
+    modalTitle: (name: string) => `Are you sure you want to delete ${name}`,
     modalDescription: `Deleting the product category will permanently remove it from the system. Continue?`,
     actionButtons: [
       {
@@ -81,13 +88,18 @@ const ListProductCategoriesScreen = () => {
     navigate(`/product-categories/${data.id}`);
   }
 
+  const actionButtonProps = canCreateProductCategory
+    ? {
+        createButton: {
+          name: "Create Product Category",
+          onClick: () => navigate("/product-categories/create"),
+          disabled: isFetching
+        }
+      }
+    : undefined;
+
   return (
-    <DashboardLayout
-      pageTitle="Product Categories"
-      actionButton={{
-        createButton: { name: "Create Product Category", onClick: () => navigate("/product-categories/create") }
-      }}
-    >
+    <DashboardLayout pageTitle="Product Categories" actionButton={actionButtonProps}>
       <Modal
         showModal={modalData.showModal}
         modalTitle={modalData.modalTitle(selectedCategory.name)}
@@ -98,12 +110,12 @@ const ListProductCategoriesScreen = () => {
         <Table
           columns={productCategorySchema}
           data={data?.data || []}
-          isLoading={isFetching}
+          isLoading={isFetching || isPending}
           loadingText="Fetching product category data"
           showExportButton
-          paginator={data?.paginator}
+          paginator={data?.paginator || null}
           filters={[]}
-          actionButtons={rowActions}
+          actionButtons={rowActions} // Pass the row actions without filtering
           allowRowSelect
           handleRowClick={handleEditRowActionClick}
           showSelectColumns

@@ -10,31 +10,37 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { memo, useContext } from "react";
+import { memo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useBaseRequestService } from "@/hooks/request/useAxiosPrivate";
-import { StoreContext, StoreContextProps } from "@/utils/store";
 import { toast } from "sonner";
 import { getErrorMessageFromApi } from "@/utils";
+import { useRoles } from "@/hooks/useRoles";
+import useAuthStore from "@/store/auth";
 // import Preloader from '../Preloader';
 
 const UserNav = memo(() => {
+  const { isAdmin } = useRoles();
   const navLinks = [
     {
       name: "Profile",
-      route: "/profile",
+      route: "/me",
       allowedRoles: [],
       shortcut: "⇧⌘P"
-    },
-    {
+    }
+  ];
+
+  if (isAdmin) {
+    navLinks.push({
       name: "Settings",
       route: "/settings",
       allowedRoles: [],
       shortcut: "⌘S"
-    }
-  ];
+    });
+  }
+
   const { axiosInstance } = useBaseRequestService({ useToken: true, tokenType: "accessToken" });
-  const { authUser: userDetails, clearAuthUser } = useContext(StoreContext) as StoreContextProps;
+  const { authUser: userDetails, clearAuthUser } = useAuthStore();
 
   const userNameExists = userDetails && (userDetails.firstName || userDetails?.lastName);
   const fullName = userNameExists ? `${userDetails.firstName} ${userDetails.lastName}` : "";

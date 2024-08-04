@@ -1,8 +1,8 @@
 import axios from "axios";
-import { AuthUserResponse, InitData } from "@/interfaces/users";
+import { AuthUserResponse, InitData } from "@/interfaces/user";
 import { BaseResponse } from "@/helpers/baseResponse";
-import { useContext } from "react";
-import { StoreContext, StoreContextProps } from "@/utils/store";
+import useAuthStore from "@/store/auth";
+import useNotificationStore from "@/store/notification";
 
 type TokenType = "accessToken";
 interface RequestOptions {
@@ -20,9 +20,8 @@ export const useBaseRequestService = (
     useToken: false
   }
 ) => {
-  const { saveAuthUser, authUser, setHasUnreadNotificationData, setSettingsData } = useContext(
-    StoreContext
-  ) as StoreContextProps;
+  const { saveAuthUser, authUser } = useAuthStore();
+  const { setHasUnreadNotificationData } = useNotificationStore();
   const axiosInstance = axios.create({
     baseURL: VITE_BASE_API_URL,
     withCredentials: true
@@ -86,7 +85,6 @@ export const useBaseRequestService = (
   const getInitData = async () => {
     const { data } = await axiosInstance.get<BaseResponse<InitData>>("/init");
     setHasUnreadNotificationData(data.response.hasUnreadNotification);
-    setSettingsData(data.response.settings);
   };
 
   return { axiosInstance, refreshToken, getAuth, getInitData };

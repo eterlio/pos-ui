@@ -1,12 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useBaseRequestService } from "./useAxiosPrivate";
-import { AuthUserResponse } from "@/interfaces/users";
+import { AuthUserResponse } from "@/interfaces/user";
 import { toast } from "sonner";
 import { getErrorMessageFromApi } from "@/utils";
 import { BaseResponse } from "@/helpers/baseResponse";
-import { useContext } from "react";
-import { StoreContext, StoreContextProps } from "@/utils/store";
 import { useNavigate } from "react-router-dom";
+import useAuthStore from "@/store/auth";
 
 export const useGetAuthUser = () => {
   const { getAuth } = useBaseRequestService({ useToken: true, tokenType: "accessToken" });
@@ -21,7 +20,7 @@ export const useGetAuthUser = () => {
 
 export const useAuthLogin = () => {
   const queryClient = useQueryClient();
-  const { saveAuthUser } = useContext(StoreContext) as StoreContextProps;
+  const { saveAuthUser } = useAuthStore();
   const { axiosInstance } = useBaseRequestService({ useToken: true, tokenType: "accessToken" });
   const navigate = useNavigate();
 

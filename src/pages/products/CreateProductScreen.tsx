@@ -39,8 +39,8 @@ const CreateProductScreen = () => {
         brandId: "required",
         availability: "required",
         categoryId: "required",
-        description: "required|minLength:5",
-        name: "required|minLength:5",
+        description: "required|minLength:3",
+        name: "required|minLength:3",
         barcodeSymbology: "required",
         productCodeId: "required",
         productSellingPrice: "required|isNumber|minValue:0.1",
@@ -73,23 +73,26 @@ const CreateProductScreen = () => {
     }
     resetError();
 
-    if (!productImage) {
-      return toast.error("Error", {
-        description: "Product image is required"
-      });
-    }
+    // if (!productImage) {
+    //   return toast.error("Error", {
+    //     description: "Product image is required"
+    //   });
+    // }
     const payload = objectDifference(productDefaults(), formValues);
-    const formData = new FormData();
-    formData.append("product_image", productImage || "");
-    for (const data in payload) {
-      if (isObject(payload[data])) {
-        formData.append(data, JSON.stringify(payload[data]));
-      } else {
-        formData.append(data, payload[data]);
+    let formData = new FormData();
+
+    if (productImage) {
+      formData.append("product_image", productImage || "");
+      for (const data in payload) {
+        if (isObject(payload[data])) {
+          formData.append(data, JSON.stringify(payload[data]));
+        } else {
+          formData.append(data, payload[data]);
+        }
       }
     }
     mutate(
-      { payload: formData },
+      { payload: productImage ? formData : payload },
       {
         onSuccess() {
           toast.success("Success", {

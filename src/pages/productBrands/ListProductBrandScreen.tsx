@@ -7,6 +7,7 @@ import { useGeneralQuery } from "@/hooks/request/useGeneralQuery";
 import { useOptimisticUpdates } from "@/hooks/request/useOptimisticUpdates";
 import { GetManyProps } from "@/hooks/types";
 import { useSetQueryParam } from "@/hooks/useSetQueryParam";
+import { usePermission } from "@/hooks/usePermission";
 import { ModalActionButtonProps } from "@/interfaces";
 import { ProductBrandProps } from "@/interfaces/productBrands";
 import { productBrandSchema } from "@/tableSchema/productBrands";
@@ -25,31 +26,37 @@ const ListProductBrandScreen = () => {
     url: `/product-brands/${brandId}`
   });
 
-  const { data, isFetching } = useGeneralQuery<GetManyProps<ProductBrandProps>>({
+  const { data, isFetching } = useGeneralQuery<GetManyProps<ProductBrandProps[]>>({
     queryKey: ["productBrands", queryObject],
     url: "/product-brands",
     query: queryObject,
     enabled: !!Object.keys(queryObject).length
   });
+
+  const { canCreateProductBrand, canUpdateProductBrand, canDeleteProductBrand } = usePermission();
+
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
+
   const rowActions = [
     {
       label: "Edit",
-      action: handleEditRowActionClick
+      action: handleEditRowActionClick,
+      show: canUpdateProductBrand
     },
     {
       label: "Delete",
       action: (data: Record<string, any>) => {
         setOpenModal(true);
         setSelectedBrand(data);
-      }
+      },
+      show: canDeleteProductBrand
     }
   ];
 
   const modalData = {
     showModal: openModal,
-    modalTitle: (name: string) => `Are you sure you want to delete  ${name}`,
+    modalTitle: (name: string) => `Are you sure you want to delete ${name}`,
     modalDescription: `Deleting the product brand will permanently remove it from the system. Continue?`,
     actionButtons: [
       {
@@ -82,13 +89,18 @@ const ListProductBrandScreen = () => {
     navigate(`/product-brands/${data.id}`);
   }
 
+  const actionButtonProps = canCreateProductBrand
+    ? {
+        createButton: {
+          name: "Create Product Brand",
+          onClick: () => navigate("/product-brands/create"),
+          disabled: isFetching
+        }
+      }
+    : undefined;
+
   return (
-    <DashboardLayout
-      pageTitle="Product Brands"
-      actionButton={{
-        createButton: { name: "Create Product Brand", onClick: () => navigate("/product-brands/create") }
-      }}
-    >
+    <DashboardLayout pageTitle="Product Brands" actionButton={actionButtonProps}>
       <Modal
         showModal={modalData.showModal}
         modalTitle={modalData.modalTitle(selectedBrand.name)}
@@ -99,10 +111,10 @@ const ListProductBrandScreen = () => {
         <Table
           columns={productBrandSchema}
           data={data?.data || []}
-          isLoading={isFetching}
+          isLoading={isFetching || isPending}
           loadingText="Fetching product brand data"
           showExportButton
-          paginator={data?.paginator}
+          paginator={data?.paginator || null}
           filters={[]}
           actionButtons={rowActions}
           allowRowSelect

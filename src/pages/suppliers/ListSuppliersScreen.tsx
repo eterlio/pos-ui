@@ -7,6 +7,7 @@ import { useGeneralQuery } from "@/hooks/request/useGeneralQuery";
 import { useOptimisticUpdates } from "@/hooks/request/useOptimisticUpdates";
 import { GetManyProps } from "@/hooks/types";
 import { useSetQueryParam } from "@/hooks/useSetQueryParam";
+import { usePermission } from "@/hooks/usePermission"; // Import usePermission
 import { ModalActionButtonProps } from "@/interfaces";
 import { SupplierProps } from "@/interfaces/supplier";
 import { suppliersTableSchema } from "@/tableSchema/suppliers";
@@ -24,7 +25,7 @@ const ListSuppliersScreen = () => {
     url: `/suppliers/${selectedSupplier.id}`
   });
 
-  const { data, isFetching } = useGeneralQuery<GetManyProps<SupplierProps>>({
+  const { data, isFetching } = useGeneralQuery<GetManyProps<SupplierProps[]>>({
     queryKey: ["suppliers", queryObject],
     url: "/suppliers",
     query: queryObject,
@@ -32,23 +33,28 @@ const ListSuppliersScreen = () => {
   });
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
+
+  const { canCreateSuppliers, canUpdateSuppliers, canDeleteSuppliers } = usePermission();
+
   const rowActions = [
     {
       label: "Edit",
-      action: handleEditRowActionClick
+      action: handleEditRowActionClick,
+      show: canUpdateSuppliers
     },
     {
       label: "Delete",
       action: (data: Record<string, any>) => {
         setOpenModal(true);
         setSelectedSupplier(data);
-      }
+      },
+      show: canDeleteSuppliers
     }
   ];
 
   const modalData = {
     showModal: openModal,
-    modalTitle: (name: string) => `Are you sure you want to delete  ${name}`,
+    modalTitle: (name: string) => `Are you sure you want to delete ${name}`,
     modalDescription: `Deleting the supplier will permanently remove it from the system. Continue?`,
     actionButtons: [
       {
@@ -81,13 +87,18 @@ const ListSuppliersScreen = () => {
     navigate(`/suppliers/${data.id}`);
   }
 
+  const actionButtonProps = canCreateSuppliers
+    ? {
+        createButton: {
+          name: "Create Supplier",
+          onClick: () => navigate("/suppliers/create"),
+          disabled: isFetching
+        }
+      }
+    : undefined;
+
   return (
-    <DashboardLayout
-      pageTitle="Suppliers"
-      actionButton={{
-        createButton: { name: "Create Supplier", onClick: () => navigate("/suppliers/create") }
-      }}
-    >
+    <DashboardLayout pageTitle="Suppliers" actionButton={actionButtonProps}>
       <Modal
         showModal={modalData.showModal}
         modalTitle={modalData.modalTitle(selectedSupplier.name)}
@@ -101,7 +112,7 @@ const ListSuppliersScreen = () => {
           isLoading={isFetching}
           loadingText="Fetching supplier data"
           showExportButton
-          paginator={data?.paginator}
+          paginator={data?.paginator || null}
           filters={[]}
           actionButtons={rowActions}
           allowRowSelect

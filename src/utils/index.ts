@@ -1,5 +1,8 @@
 import { PERMISSIONS_LIST, PermissionString } from "@/helpers/permission";
 import { PhoneProps } from "@/interfaces";
+import { Discount, InvoiceItem } from "@/interfaces/invoice";
+
+import { format, isValid, parseISO } from "date-fns";
 import { toLower, trim } from "lodash";
 
 export const getErrorMessageFromApi = (error: any) => {
@@ -40,7 +43,11 @@ export const ROLE_OPTIONS = [
   },
   {
     label: "Sales Personnel",
-    value: "salesPersonnel"
+    value: "sales-personnel"
+  },
+  {
+    label: "Warehouse Manager",
+    value: "warehouse-manager"
   }
 ];
 
@@ -114,3 +121,63 @@ export function formatQueryParams(params?: Record<string, any>): string {
   }
   return formattedQueryString;
 }
+export const printPDF = async (base64: any) => {
+  // Decode base64 string to binary data
+  const { atob, URL, open } = window;
+  const binaryString = atob(base64);
+  const len = binaryString.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+
+  // Create a Blob from the binary data
+  const blob = new Blob([bytes], { type: "application/pdf" });
+
+  // Create a URL for the Blob
+  const url = URL.createObjectURL(blob);
+
+  // Open a new tab and display the PDF
+  const newTab = open(url, "_blank");
+  if (!newTab) {
+    // Handle the case where popups are blocked
+    alert("Please allow popups for this website");
+  }
+};
+export function downloadDocument(pdf: string, fileName: string) {
+  const linkSource = `data:application/pdf;base64,${pdf}`;
+
+  // Create a link element for downloading the PDF
+  const downloadLink = document.createElement("a");
+  downloadLink.href = linkSource;
+  downloadLink.download = fileName;
+
+  // // Trigger the download
+  downloadLink.click();
+}
+export function formatDate(date: string, formatType: string) {
+  return isValid(parseISO(date)) ? format(parseISO(date), formatType) : date;
+}
+
+export const computeInvoiceAmounts = (invoiceData: { items: InvoiceItem[]; discount?: Discount }) => {
+  const calculateDiscountAmount = function (totalItemAmount: number): number {
+    if (invoiceData?.discount) {
+      const invoiceValue = invoiceData?.discount.value || 0;
+      if (invoiceData?.discount.type === "fixed") {
+        return invoiceValue;
+      } else if (invoiceData?.discount.type === "percentage") {
+        return (invoiceValue / 100) * totalItemAmount;
+      }
+    }
+
+    return 0;
+  };
+  const invoiceSubTotal = invoiceData.items.reduce((inc, item) => item.price * item.quantity + inc, 0);
+  const invoiceDiscountTotal = calculateDiscountAmount(invoiceSubTotal);
+  const invoiceTotal = invoiceSubTotal - invoiceDiscountTotal;
+  return {
+    invoiceSubTotal,
+    invoiceDiscountTotal,
+    invoiceTotal
+  };
+};

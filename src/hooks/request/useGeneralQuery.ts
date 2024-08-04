@@ -7,10 +7,11 @@ export const useGeneralQuery = <T>(queryData: {
   queryKey: any[];
   url: string;
   requireAuth?: boolean;
-  query?: Record<string, string | number | boolean>;
+  query?: Record<string, string | number | boolean | Date>;
   enabled?: boolean;
+  staleTime?: number;
 }) => {
-  const { queryKey, url, requireAuth = true, query, enabled } = queryData;
+  const { queryKey, url, requireAuth = true, query, enabled, staleTime = 10000 } = queryData;
 
   // Conditionally call useBaseRequestService based on requireAuth
   const { axiosInstance } = requireAuth
@@ -18,17 +19,18 @@ export const useGeneralQuery = <T>(queryData: {
     : useBaseRequestService();
 
   let dataEnabled = false;
+
   const [, key] = queryKey;
+
   if (typeof key === "string") {
     dataEnabled = !!key;
   } else if (isActualObject(key)) {
     dataEnabled = !!Object.keys(key).length;
-  } else {
-    dataEnabled = !!key;
   }
-  const { data, isFetching, isRefetching, error } = useQuery({
+
+  const { data, isFetching, isRefetching, error, refetch } = useQuery({
     queryKey,
-    staleTime: 10000,
+    staleTime,
     refetchOnMount: true,
     enabled: enabled || dataEnabled,
     retry: 0,
@@ -42,5 +44,5 @@ export const useGeneralQuery = <T>(queryData: {
     }
   });
 
-  return { data, isFetching, isRefetching, error };
+  return { data, isFetching, isRefetching, error, refetch };
 };

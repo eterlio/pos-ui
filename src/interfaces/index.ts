@@ -56,6 +56,7 @@ export interface ModalActionButtonProps {
   className?: string;
   action: () => void;
   loading?: boolean;
+  disabled?: false;
   type: "cancel" | "action";
 }
 

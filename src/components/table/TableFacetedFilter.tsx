@@ -12,13 +12,9 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
+  CommandSeparator
 } from "../ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "../ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { useSetQueryParam } from "./hooks/useSetQueryParam";
 interface DataTableFacetedFilterProps {
   column: string;
@@ -33,12 +29,7 @@ interface DataTableFacetedFilterProps {
   };
 }
 
-export function DataTableFacetedFilter({
-  title,
-  options,
-  extra,
-  column,
-}: DataTableFacetedFilterProps) {
+export function DataTableFacetedFilter({ title, options, extra, column }: DataTableFacetedFilterProps) {
   const { getQueryParam, removeQueryParam, setQueryParam } = useSetQueryParam();
   const selected =
     !!getQueryParam(`${column}_in`) && getQueryParam(`${column}_in`)?.length
@@ -48,8 +39,7 @@ export function DataTableFacetedFilter({
   }
   const [selectedValues, setSelectedValues] = useState<string[]>(selected);
 
-  const itemExists = (item: string) =>
-    !!options.find((option) => option.value === item);
+  const itemExists = (item: string) => !!options.find((option) => option.value === item);
 
   const handleItemChange = (item: string) => {
     if (!itemExists(item)) return;
@@ -72,35 +62,23 @@ export function DataTableFacetedFilter({
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline" size="sm" className="h-8 border-dashed">
-          {extra && extra.mainIcon && (
-            <extra.mainIcon className="mr-2 h-4 w-4" />
-          )}
+          {extra && extra.mainIcon && <extra.mainIcon className="mr-2 h-4 w-4" />}
           {title}
           {selectedValues?.length > 0 && (
             <>
-              <Badge
-                variant="secondary"
-                className="rounded-sm px-1 font-normal lg:hidden"
-              >
+              <Badge variant="secondary" className="rounded-sm px-1 font-normal lg:hidden">
                 {selectedValues.length}
               </Badge>
               <div className="hidden space-x-1 lg:flex">
                 {selectedValues.length > 2 ? (
-                  <Badge
-                    variant="secondary"
-                    className="rounded-sm px-1 font-normal"
-                  >
+                  <Badge variant="secondary" className="rounded-sm px-1 font-normal">
                     {selectedValues.length} selected
                   </Badge>
                 ) : (
                   options
                     .filter((option) => selectedValues.includes(option.value))
                     .map((option, index) => (
-                      <Badge
-                        variant="secondary"
-                        key={index}
-                        className="rounded-sm px-1 font-normal"
-                      >
+                      <Badge variant="secondary" key={index} className="rounded-sm px-1 font-normal">
                         {option.label}
                       </Badge>
                     ))
@@ -135,16 +113,12 @@ export function DataTableFacetedFilter({
                       <div
                         className={cn(
                           "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
-                          isSelected
-                            ? "bg-primary text-primary-foreground"
-                            : "opacity-50 [&_svg]:invisible"
+                          isSelected ? "bg-primary text-primary-foreground" : "opacity-50 [&_svg]:invisible"
                         )}
                       >
                         <CheckIcon className={cn("h-4 w-4")} />
                       </div>
-                      {option.icon && (
-                        <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-                      )}
+                      {option.icon && <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />}
                       <span>{option.label}</span>
                     </CommandItem>
                   );
@@ -154,10 +128,7 @@ export function DataTableFacetedFilter({
               <>
                 <CommandSeparator />
                 <CommandGroup>
-                  <CommandItem
-                    onSelect={resetItems}
-                    className="justify-center text-center cursor-pointer"
-                  >
+                  <CommandItem onSelect={resetItems} className="justify-center text-center cursor-pointer">
                     Clear filters
                   </CommandItem>
                 </CommandGroup>

@@ -45,17 +45,19 @@ const StockEditFieldsScreen: FC<EditProductCategoryFieldsProps> = ({
 }) => {
   const defaultStockDataValues = stockDataDefault();
 
-  const { data: supplierData } = useGeneralQuery<GetManyProps<SupplierProps>>({
-    queryKey: ["suppliers", {}],
+  const { data: supplierData } = useGeneralQuery<GetManyProps<SupplierProps[]>>({
+    queryKey: ["suppliers"],
     url: "/suppliers",
     query: { deleted: false, columns: "name" },
-    requireAuth: true
+    requireAuth: true,
+    enabled: true
   });
-  const { data: productData } = useGeneralQuery<GetManyProps<ProductProps>>({
-    queryKey: ["products", {}],
+  const { data: productData } = useGeneralQuery<GetManyProps<ProductProps[]>>({
+    queryKey: ["products"],
     url: "/products",
     query: { deleted: false, columns: "name" },
-    requireAuth: true
+    requireAuth: true,
+    enabled: true
   });
 
   const supplierOptions =

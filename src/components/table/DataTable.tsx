@@ -35,7 +35,9 @@ export function DataTable<TData, TValue>({
   showSelectColumns = true,
   handleRowClick,
   isLoading,
-  loadingText
+  loadingText,
+  showSearch,
+  tableActions
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -148,6 +150,8 @@ export function DataTable<TData, TValue>({
         searchSelectionOptions={searchSelectionOptions}
         showSearchSelection={showSearchSelection}
         showSelectColumns={showSelectColumns}
+        showSearch={showSearch}
+        tableActions={tableActions}
       />
       <div className="rounded border border-[#f6f6f6] border-md mt-5">
         <Table className="-striped -highlight">
@@ -156,7 +160,11 @@ export function DataTable<TData, TValue>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id} className="table-head__title p-2">
+                    <TableHead
+                      key={header.id}
+                      className={`table-head__title p-2 `}
+                      style={{ width: `${header.getSize()}px` }}
+                    >
                       {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   );
@@ -168,7 +176,7 @@ export function DataTable<TData, TValue>({
             {isLoading ? (
               <TableRow>
                 <TableCell colSpan={9}>
-                  <div className="flex justify-center items-center h-full flex-col gap-4">
+                  <div className="flex justify-center items-center h-full flex-col gap-4 min-h-[350px]">
                     <FetchLoader />
                     {loadingText && <h3>{loadingText}</h3>}
                   </div>

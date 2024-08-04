@@ -1,15 +1,15 @@
 import { DefaultPluginProps } from ".";
-import { UserRole } from "./users";
+import { UserProps, UserRole } from "./user";
 
 export interface NotificationProps extends DefaultPluginProps {
   id?: string;
   type: NotificationTypeProps;
   message: string;
-  timestamp: Date;
+  timestamp?: Date;
   status?: NotificationStatusProps;
   priority: NotificationPriorityProps;
   actions?: NotificationActionProps[];
-  read?: boolean;
+  readUsers?: string[];
   recipients: string[];
   recipientsByRole?: UserRole;
   context?: NotificationContextProps;
@@ -17,6 +17,9 @@ export interface NotificationProps extends DefaultPluginProps {
   warehouseId?: string;
   accountId?: string;
   service?: "stock";
+
+  // virtuals
+  createdByData?: UserProps;
 }
 
 export enum NotificationTypeProps {

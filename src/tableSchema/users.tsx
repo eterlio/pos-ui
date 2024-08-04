@@ -5,7 +5,7 @@ import { DataTableColumnHeader } from "@/components/table/DataTableColumnHeader"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { DataFilterProps } from "@/components/table/type";
-import { UserProps, UserStatus } from "@/interfaces/users";
+import { UserProps, UserStatus } from "@/interfaces/user";
 import { startCase } from "lodash";
 import { GENDER_OPTIONS, ROLE_OPTIONS, USER_STATUS_OPTIONS } from "@/utils";
 import TableStatus from "@/components/TableStatus";

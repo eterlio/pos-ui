@@ -13,6 +13,7 @@ import { startCase } from "lodash";
 import { timeAgoOrDate } from "@/utils/time";
 import { useGeneralMutation } from "@/hooks/request/useGeneralMutation";
 import Loader from "../Loader";
+import useAuthStore from "@/store/auth";
 
 const Shimmer = () => {
   return (
@@ -27,13 +28,15 @@ const Shimmer = () => {
 };
 const Notification = ({ hasUnreadNotification }: { hasUnreadNotification: boolean }) => {
   const [openNotificationModal, setOpenNotificationModal] = useState(false);
-  const { data: notifications, isFetching } = useGeneralQuery<GetManyProps<NotificationProps>>({
+  const { authUser } = useAuthStore();
+  const { data: notifications, isFetching } = useGeneralQuery<GetManyProps<NotificationProps[]>>({
     queryKey: ["notification", openNotificationModal],
     url: "/notifications",
     requireAuth: true,
     query: {
       limit: 3
-    }
+    },
+    enabled: openNotificationModal
   });
   const { mutate, isPending } = useGeneralMutation({
     httpMethod: "patch",
@@ -41,13 +44,13 @@ const Notification = ({ hasUnreadNotification }: { hasUnreadNotification: boolea
     mutationKey: ["notification"]
   });
   const handleReadNotification = (ids?: string[]) => {
-    mutate({ payload: { read: true, ...(ids?.length && { ids }) } });
+    mutate({ payload: { ...(ids?.length && { ids }) } });
   };
 
   const hasNotifications = !!(notifications && notifications?.data?.length > 0);
   const hasAtLeastOneUnread = () => {
     if (!notifications?.data?.length) return false;
-    return notifications.data.some((notification) => !notification.read);
+    return notifications.data.some((notification) => !notification.readUsers?.includes(authUser?._id || ""));
   };
   return (
     <div className="notification-icon w-8 h-8 bg-gray-50 rounded-full flex items-center justify-center relative">
@@ -112,13 +115,18 @@ const Notification = ({ hasUnreadNotification }: { hasUnreadNotification: boolea
                               <Link to="">
                                 <Avatar className="h-8 w-8 outline-none">
                                   <AvatarImage src="https://github.com/shadcn.pg" alt="Avatar" />
-                                  <AvatarFallback>BA</AvatarFallback>
+                                  <AvatarFallback>
+                                    {`${notification?.createdByData?.firstName?.[0]}${notification?.createdByData?.lastName?.[0]}` ||
+                                      "N/A"}
+                                  </AvatarFallback>
                                 </Avatar>
                               </Link>
                               <div>
-                                <div className="text-sm font-medium">Elisa edited the status of New Project</div>
+                                <div className="text-sm font-medium">
+                                  {notification?.createdByData?.fullName || "N/A"} {notification.message}
+                                </div>
                                 <div className="text-xs text-gray-400">
-                                  {notification.timestamp && timeAgoOrDate(notification.timestamp)} |{" "}
+                                  {notification.timestamp && timeAgoOrDate(notification.timestamp)} |
                                   {startCase(notification?.service)}
                                 </div>
                                 {notification.actions?.map((action, i) => {
@@ -134,7 +142,7 @@ const Notification = ({ hasUnreadNotification }: { hasUnreadNotification: boolea
                                 })}
                               </div>
                             </div>
-                            {!notification?.read && (
+                            {!notification?.readUsers?.includes(authUser?._id || "") && (
                               <div className="h-2.5 w-2.5 bg-primaryButton rounded-full mt-1.5"></div>
                             )}
                           </div>

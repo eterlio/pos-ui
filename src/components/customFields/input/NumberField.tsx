@@ -12,8 +12,9 @@ interface NumberFieldProps extends InputProps {
   fieldKey: string;
   value?: number;
 }
+
 const NumberField: FC<NumberFieldProps> = ({
-  value = 0,
+  value = "",
   onBlur,
   handleInputChange,
   disabled,
@@ -29,7 +30,7 @@ const NumberField: FC<NumberFieldProps> = ({
       target: { value }
     } = event;
 
-    const numericValue = !value ? undefined : parseFloat(value);
+    const numericValue = value === "" ? "" : parseFloat(value);
 
     if (handleInputChange) {
       handleInputChange({ key: fieldKey, value: numericValue });
@@ -38,11 +39,7 @@ const NumberField: FC<NumberFieldProps> = ({
 
   return (
     <div className="w-full">
-      {label && (
-        <div className="my-2">
-          <InputLabel id={id} required={isRequired || false} label={label} />
-        </div>
-      )}
+      {label && <InputLabel id={id} required={isRequired || false} label={label} />}
       <Input
         type="number"
         name={fieldKey}

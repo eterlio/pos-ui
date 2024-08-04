@@ -7,6 +7,7 @@ import { useGeneralQuery } from "@/hooks/request/useGeneralQuery";
 import { useOptimisticUpdates } from "@/hooks/request/useOptimisticUpdates";
 import { GetManyProps } from "@/hooks/types";
 import { useSetQueryParam } from "@/hooks/useSetQueryParam";
+import { usePermission } from "@/hooks/usePermission"; // Import usePermission
 import { ModalActionButtonProps } from "@/interfaces";
 import { ProductCodeProps } from "@/interfaces/productCode";
 import { productCodeSchema } from "@/tableSchema/productCodes";
@@ -24,33 +25,37 @@ const ListProductCodeScreen = () => {
     url: `/product-codes/${selectedCode.id}`
   });
 
-  const { data, isFetching } = useGeneralQuery<GetManyProps<ProductCodeProps>>({
+  const { data, isFetching } = useGeneralQuery<GetManyProps<ProductCodeProps[]>>({
     queryKey: ["productCodes", queryObject],
     url: "/product-codes",
     query: queryObject,
     enabled: !!Object.keys(queryObject).length
   });
+
+  const { canCreateProductCode, canUpdateProductCode, canDeleteProductCode } = usePermission(); // Use usePermission hook
+
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
+
   const rowActions = [
     {
       label: "Edit",
-      action: handleEditRowActionClick
+      action: handleEditRowActionClick,
+      show: canUpdateProductCode // Only show if user can update product codes
     },
     {
       label: "Delete",
       action: (data: Record<string, any>) => {
         setOpenModal(true);
         setSelectedCode(data);
-      }
+      },
+      show: canDeleteProductCode // Only show if user can delete product codes
     }
   ];
 
   const modalData = {
     showModal: openModal,
-    modalTitle: (code: string) => {
-      return `Are you sure you want to delete  ${code}`;
-    },
+    modalTitle: (code: string) => `Are you sure you want to delete ${code}`,
     modalDescription: `Deleting the product code will permanently remove it from the system. Continue?`,
     actionButtons: [
       {
@@ -83,13 +88,18 @@ const ListProductCodeScreen = () => {
     navigate(`/product-codes/${data.id}`);
   }
 
+  const actionButtonProps = canCreateProductCode
+    ? {
+        createButton: {
+          name: "Create Product Code",
+          onClick: () => navigate("/product-codes/create"),
+          disabled: isFetching
+        }
+      }
+    : undefined;
+
   return (
-    <DashboardLayout
-      pageTitle="Product Codes"
-      actionButton={{
-        createButton: { name: "Create Product Code", onClick: () => navigate("/product-codes/create") }
-      }}
-    >
+    <DashboardLayout pageTitle="Product Codes" actionButton={actionButtonProps}>
       <Modal
         showModal={modalData.showModal}
         modalTitle={modalData.modalTitle(selectedCode.code)}
@@ -100,10 +110,10 @@ const ListProductCodeScreen = () => {
         <Table
           columns={productCodeSchema}
           data={data?.data || []}
-          isLoading={isFetching}
+          isLoading={isFetching || isPending}
           loadingText="Fetching product code data"
           showExportButton
-          paginator={data?.paginator}
+          paginator={data?.paginator || null}
           filters={[]}
           actionButtons={rowActions}
           allowRowSelect

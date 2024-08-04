@@ -1,5 +1,5 @@
 import { CheckIcon, ChevronsUpDownIcon, CornerDownRight } from "lucide-react";
-import React, { ChangeEvent, useCallback, useState } from "react";
+import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { cn } from "../../lib/utils";
 import { Button } from "../ui/button";
 import { Command, CommandGroup, CommandItem, CommandList } from "../ui/command";
@@ -11,7 +11,8 @@ import { DataFilterProps } from "./type";
 import { toast } from "sonner";
 import DatePicker from "../customFields/date/DatePicker";
 import { HandlerProps } from "../customFields/type";
-import { format } from "date-fns";
+import { parseISO } from "date-fns";
+import { formateSimpleDate } from "@/utils/time";
 
 interface DataFacetedFilterForNumbersProps {
   filter: DataFilterProps;
@@ -54,13 +55,19 @@ const DataFacetedFilterForNumberDate: React.FC<DataFacetedFilterForNumbersProps>
   };
   const less = getQueryParam(`${filter.column}_gte`);
   const high = getQueryParam(`${filter.column}_lte`);
+  const singleDate =
+    getQueryParam(`${filter.column}_eq`) ||
+    getQueryParam(`${filter.column}_lt`) ||
+    getQueryParam(`${filter.column}_gt`);
   const [open, setOpen] = useState(false);
 
   const [parentOpen, setParentOpen] = useState(false);
   const [value, setValue] = useState<FilterGroupValues | null>(null);
   const [label, setLabel] = useState("");
   const [inputValue, setInputValue] = useState("");
-  const [singleDateValue, setSingleDateValue] = useState<Date>();
+  const [singleDateValue, setSingleDateValue] = useState<Date | undefined>(
+    singleDate ? parseISO(singleDate) : undefined
+  );
   const [isBetweenValues, setIsBetweenValues] = useState<{
     lesserValue?: string | Date;
     higherValue?: string | Date;
@@ -128,7 +135,7 @@ const DataFacetedFilterForNumberDate: React.FC<DataFacetedFilterForNumbersProps>
         }
         setQueryParam(`${filter.column}_gte`, new Date(lesserValue).toISOString());
         setQueryParam(`${filter.column}_lte`, new Date(higherValue).toISOString());
-        setFacetData(`${format(lesserValue, "dd-MM-y")} ${symbol} ${format(higherValue, "dd-MM-y")}`);
+        setFacetData(`${formateSimpleDate(lesserValue)} ${symbol} ${formateSimpleDate(higherValue)}`);
       } else {
         if (Number(lesserValue) > Number(higherValue)) {
           return toast.warning("Warning", {
@@ -144,7 +151,7 @@ const DataFacetedFilterForNumberDate: React.FC<DataFacetedFilterForNumbersProps>
       setFacetData(`${symbol} ${inputValue}`);
     } else if (isDate && singleDateValue) {
       setQueryParam(`${filter.column}_eq`, singleDateValue.toISOString());
-      setFacetData(`${symbol} ${format(singleDateValue, "dd-MM-y")}`);
+      setFacetData(`${symbol} ${formateSimpleDate(singleDateValue)}`);
     }
   };
 
@@ -190,6 +197,21 @@ const DataFacetedFilterForNumberDate: React.FC<DataFacetedFilterForNumbersProps>
     return !!inputValue;
   };
 
+  useEffect(() => {
+    if (singleDateValue) {
+      const dateFormatted = formateSimpleDate(singleDateValue);
+      setFacetData(dateFormatted);
+    }
+
+    if (isBetweenValues && isBetweenValues.higherValue && isBetweenValues.lesserValue) {
+      const higherDateFormatted = formateSimpleDate(isBetweenValues.higherValue);
+      const lowerDateFormatted = formateSimpleDate(isBetweenValues.lesserValue);
+      setFacetData(`${higherDateFormatted}${formatFilterDisplay("isBetween")}${lowerDateFormatted}`);
+    }
+  }, []);
+  const handleDateChange = (data: HandlerProps) => {
+    setSingleDateValue(data.value);
+  };
   return (
     <Popover open={parentOpen} onOpenChange={setParentOpen}>
       <PopoverTrigger asChild>
@@ -257,7 +279,7 @@ const DataFacetedFilterForNumberDate: React.FC<DataFacetedFilterForNumbersProps>
                             fieldKey="date"
                             className="w-full"
                             value={singleDateValue}
-                            onChange={(data: HandlerProps) => setSingleDateValue(data.value)}
+                            onChange={handleDateChange}
                           />
                         )}
                         {!isDate && (

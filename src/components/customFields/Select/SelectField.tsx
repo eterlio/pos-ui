@@ -70,11 +70,7 @@ const SelectField: FC<SelectProp> = ({
 
   return (
     <div>
-      {label && (
-        <div className="my-2">
-          <InputLabel id={id} required={isRequired || false} label={label} />
-        </div>
-      )}
+      {label && <InputLabel id={id} required={isRequired || false} label={label} />}
       <div className="select_field-container">
         <Select
           value={constructOption()}
@@ -95,7 +91,6 @@ const SelectField: FC<SelectProp> = ({
               }`
           }}
           noOptionsMessage="No data found"
-          
         />
         {errorMessage && <InputError message={errorMessage} />}
       </div>

@@ -1,10 +1,10 @@
 import DashboardLayout from "@/components/dashboard/Layout";
-import { StoreContext, StoreContextProps } from "@/utils/store";
-import { useContext, useEffect } from "react";
+import useAuthStore from "@/store/auth";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const OtherRoleDashboard = () => {
-  const { authUser } = useContext(StoreContext) as StoreContextProps;
+  const { authUser } = useAuthStore();
   const navigate = useNavigate();
   useEffect(() => {
     if (
@@ -15,7 +15,11 @@ const OtherRoleDashboard = () => {
       navigate("/unauthorized");
     }
   }, []);
-  return <DashboardLayout>Welcome, {authUser?.fullName}</DashboardLayout>;
+  return (
+    <DashboardLayout>
+      <h1 className="text-medium">Welcome, {authUser?.fullName}</h1>
+    </DashboardLayout>
+  );
 };
 
 export default OtherRoleDashboard;

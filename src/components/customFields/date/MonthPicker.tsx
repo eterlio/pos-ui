@@ -1,5 +1,5 @@
 import { FC } from "react";
-import SelectField from "../Select/Select";
+import SelectField from "../Select/SelectField";
 import { eachMonthOfInterval, format } from "date-fns";
 import { FormIconProps, HandlerProps } from "../type";
 
@@ -36,9 +36,9 @@ const MonthPicker: FC<MonthPickerProps> = ({
     number: formatArray("MM")
   };
 
-  const monthOptions = monthOption[type].map((month) => ({
+  const monthOptions = monthOption[type].map((month, index) => ({
     label: String(month),
-    value: month
+    value: index + 1 
   }));
 
   return (

@@ -9,7 +9,7 @@ export function useOptimisticUpdates() {
 
   const addToOrUpdateList = <T extends Entity>(key: any[], item: T) => {
     //@ts-ignore
-    queryClient.setQueryData<GetManyProps<T>>(key, (data) => {
+    queryClient.setQueryData<GetManyProps<T[]>>(key, (data) => {
       if (!data) return { data: [item] };
       const index = data.data.findIndex((i) => i.id === item.id);
 
@@ -24,7 +24,7 @@ export function useOptimisticUpdates() {
   };
 
   const removeItemFromList = <T extends Entity>(key: any[], id: string) => {
-    queryClient.setQueryData<GetManyProps<T>>(key, (data) => {
+    queryClient.setQueryData<GetManyProps<T[]>>(key, (data) => {
       if (!data) return undefined;
       return {
         ...data,

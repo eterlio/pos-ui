@@ -20,7 +20,7 @@ import { useSetQueryParam } from "./hooks/useSetQueryParam";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
-  paginator?: Paginator;
+  paginator: Paginator | null;
 }
 export function DataTablePagination<TData>({
   table,
@@ -68,7 +68,7 @@ export function DataTablePagination<TData>({
               </div>
             }
             <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-              Page <span className="mx-1">{totalPageToView}</span> of
+              Page <span className="mx-1">{paginator?.page}</span> of
               <span className="mx-1">{Number(paginator?.totalPages)}</span>
             </div>
             <div className="flex items-center space-x-2">
@@ -94,6 +94,7 @@ export function DataTablePagination<TData>({
               </Button>
               <PaginationNumbers
                 itemsPerPage={paginator?.perPage!}
+                page={paginator?.page!}
                 totalDocument={paginator?.totalDocuments as number}
               />
               <Button

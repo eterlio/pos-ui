@@ -77,7 +77,9 @@ const ListUsersScreen = () => {
   return (
     <DashboardLayout
       pageTitle="Users List"
-      actionButton={{ createButton: { name: "Create user", onClick: () => navigate("/users/create") } }}
+      actionButton={{
+        createButton: { name: "Create user", onClick: () => navigate("/users/create"), disabled: isFetching }
+      }}
     >
       <Modal
         showModal={modalData.showModal}
@@ -93,13 +95,14 @@ const ListUsersScreen = () => {
           loadingText="Fetching user data"
           showExportButton
           filters={userTableFilters}
-          paginator={data?.paginator}
+          paginator={data?.paginator || null}
           actionButtons={rowActions}
           allowRowSelect
           handleRowClick={handleRowClick}
           searchSelectionOptions={searchSelectionOptions}
           showSelectColumns
           showSearchSelection
+          tableActions={[{ action: () => {}, label: "Export Users", show: true }]}
         />
       </Container>
     </DashboardLayout>

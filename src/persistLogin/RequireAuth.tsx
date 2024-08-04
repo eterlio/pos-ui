@@ -1,11 +1,10 @@
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import { useLocation, Navigate, Outlet } from "react-router-dom";
 
 import { PermissionOperation, PermissionString, hasPermission } from "@/helpers/permission";
 import { Meta } from "@/interfaces/route";
-import { UserRole, specialRoles } from "@/interfaces/users";
-import { StoreContext, StoreContextProps } from "@/utils/store";
-import { useBaseRequestService } from "@/hooks/request/useAxiosPrivate";
+import { UserRole, specialRoles } from "@/interfaces/user";
+import useAuthStore from "@/store/auth";
 
 interface RequireAuthProps {
   permission: [PermissionString, PermissionOperation];
@@ -14,20 +13,12 @@ interface RequireAuthProps {
 }
 
 const RequireAuth: React.FC<RequireAuthProps> = ({ permission, allowedRoles, meta }) => {
-  const { authUser: auth } = useContext(StoreContext) as StoreContextProps;
+  const { authUser: auth } = useAuthStore();
   const location = useLocation();
   const userRole = auth?.role;
   const permissionVerified =
     permission && permission.length ? hasPermission(String(auth?.permission?.access), permission) : true;
 
-  const { getInitData } = useBaseRequestService({
-    useToken: true,
-    tokenType: "accessToken"
-  });
-
-  useEffect(() => {
-    getInitData();
-  }, [location.pathname]);
 
   // Check if userRole is admin or support
   if (userRole && [...specialRoles, "admin"].includes(userRole)) {

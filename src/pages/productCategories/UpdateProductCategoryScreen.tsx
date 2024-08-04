@@ -23,7 +23,8 @@ const UpdateProductCategoryScreen = () => {
   const { addErrors, errors, resetError } = useError<ValidatorProps>();
   const { data } = useGeneralQuery<ProductCategoryProps>({
     queryKey: ["productCategory", categoryId],
-    url: `/product-categories/${categoryId}`
+    url: `/product-categories/${categoryId}`,
+    enabled: !!categoryId
   });
 
   const { formValues, updateFormFieldValue, setFormValues } = useFormFieldUpdate(data);
@@ -36,8 +37,8 @@ const UpdateProductCategoryScreen = () => {
   const validator = new Validator<Partial<ValidatorProps>>({
     formData: formValues as ValidatorProps,
     rules: {
-      description: "required|minLength:10",
-      name: "required:minLength:5"
+      description: "required|minLength:5",
+      name: "required:minLength:3"
     }
   });
 

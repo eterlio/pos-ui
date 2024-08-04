@@ -1,8 +1,9 @@
 import SidebarMenu from "./SidebarMenu";
-import { MouseEventHandler, memo, useContext } from "react";
+import { MouseEventHandler, memo } from "react";
 import { generalSidebarRoutes, menuSidebarRoutes } from "@/route/sidebar";
-import { ChevronsLeft } from "lucide-react";
-import { StoreContext, StoreContextProps } from "@/utils/store";
+import { ArrowRightLeft, ChevronsLeft } from "lucide-react";
+import { Button } from "../ui/button";
+import useAuthStore from "@/store/auth";
 const DashboardSidebar = ({
   displaySidebar,
   handleDisplaySidebar
@@ -10,7 +11,7 @@ const DashboardSidebar = ({
   displaySidebar: boolean;
   handleDisplaySidebar: MouseEventHandler;
 }) => {
-  const { authUser } = useContext(StoreContext) as StoreContextProps;
+  const { authUser } = useAuthStore();
 
   const menuSidebarRoutesLinks = menuSidebarRoutes(authUser?.role || "", authUser?.permission?.access || "");
   const generalSidebarRoutesLinks = generalSidebarRoutes(authUser?.role);
@@ -23,7 +24,7 @@ const DashboardSidebar = ({
     >
       <div className="h-full w-full p-5 pr-0">
         <div className="flex h-full min-h-0 flex-col">
-          <div className="relative h-full w-full flex-1 items-start border-white/20 flex flex-col">
+          <div className="relative h-full w-full flex-1 border-white/20 flex flex-col">
             <div className="sidebar-main__content flex-grow w-full">
               <div className="logo mb-10 flex items-center justify-between text-white pr-3">
                 {/* <img src=Logo} alt="Logo" className="w-[120px]" /> */}
@@ -38,6 +39,13 @@ const DashboardSidebar = ({
                 />
               </div>
             </div>
+            {false && (
+              <div className="ml-[-30px] flex items-center justify-center w-full text-white">
+                <Button variant={"outline"} size={"icon"} className="bg-[#38585e24 hover:bg-transparent">
+                  <ArrowRightLeft />
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>

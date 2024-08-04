@@ -10,8 +10,9 @@ import { useCallback, useState } from "react";
 import { useSetQueryParam } from "./hooks/useSetQueryParam";
 
 import Dropdown from "./Dropdown";
-import { DataFilterProps } from "./type";
+import { DataFilterProps, TableActionProps } from "./type";
 import { OptionsProps } from "./type";
+import { TableActions } from "./TableActions";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -20,6 +21,8 @@ interface DataTableToolbarProps<TData> {
   showSearchSelection?: boolean;
   searchSelectionOptions?: OptionsProps[];
   showSelectColumns?: boolean;
+  showSearch?: boolean;
+  tableActions?: TableActionProps[];
 }
 export function DataTableToolbar<TData>({
   table,
@@ -27,7 +30,9 @@ export function DataTableToolbar<TData>({
   filters,
   searchSelectionOptions,
   showSearchSelection,
-  showSelectColumns = true
+  showSelectColumns = true,
+  showSearch = true,
+  tableActions
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
   const { setQueryParam, getQueryParam } = useSetQueryParam();
@@ -54,7 +59,7 @@ export function DataTableToolbar<TData>({
     <>
       <div className="flex flex-col lg:flex-row items-center justify-between mb-5">
         <div className="flex flex-1 items-center">
-          {showSearchSelection && (
+          {showSearchSelection && showSearch && (
             <Dropdown
               options={searchSelectionOptions}
               icon={<ListFilter />}
@@ -63,50 +68,59 @@ export function DataTableToolbar<TData>({
               defaultValue={searchSelection}
             />
           )}
-          <Input
-            placeholder="Search..."
-            value={value}
-            onChange={handleOnChange}
-            className="h-10 w-full lg:w-[250px] my-2 lg:my-0 rounded-l-none border border-gray-100"
-          />
+          {showSearch && (
+            <Input
+              placeholder="Search..."
+              value={value}
+              onChange={handleOnChange}
+              className="h-10 w-full lg:w-[250px] my-2 lg:my-0 rounded-l-none border border-gray-100"
+            />
+          )}
         </div>
         {showSelectColumns && <DataTableViewOptions table={table} showExportButton={showExportButton} />}
       </div>
-      <div className="flex items-center justify-between my-5  overflow-x-scroll">
+      <div className="flex justify-between items-center flex-wrap">
         {/* TABLE FILTERS */}
-        <div>
-          <div className="filters flex gap-2">
-            {filters &&
-              filters.length > 0 &&
-              filters.map((filter, index) => {
-                if (!table.getColumn(filter.column)) return null;
+        <div className="flex items-center justify-between my-5  overflow-x-scroll">
+          <div>
+            <div className="filters flex gap-2">
+              {filters &&
+                filters.length > 0 &&
+                filters.map((filter, index) => {
+                  if (!table.getColumn(filter.column)) return null;
 
-                if (filter.isNumber || filter.isDate) {
-                  return <DataFacetedFilterForNumberDate key={index} filter={filter} isDate={filter.isDate} />;
-                }
+                  if (filter.isNumber || filter.isDate) {
+                    return <DataFacetedFilterForNumberDate key={index} filter={filter} isDate={filter.isDate} />;
+                  }
 
-                return (
-                  <DataTableFacetedFilter
-                    column={filter.column}
-                    title={filter.title}
-                    options={filter.options}
-                    extra={filter.extra}
-                    key={index}
-                  />
-                );
-              })}
-          </div>
-          <div className="reset">
-            {isFiltered && (
-              <Button variant="ghost" onClick={() => table.resetColumnFilters()} className="h-8 px-2 lg:px-3">
-                Reset
-                <X className="ml-2 h-4 w-4" />
-              </Button>
-            )}
+                  return (
+                    <DataTableFacetedFilter
+                      column={filter.column}
+                      title={filter.title}
+                      options={filter.options}
+                      extra={filter.extra}
+                      key={index}
+                    />
+                  );
+                })}
+            </div>
+            <div className="reset">
+              {isFiltered && (
+                <Button variant="ghost" onClick={() => table.resetColumnFilters()} className="h-8 px-2 lg:px-3">
+                  Reset
+                  <X className="ml-2 h-4 w-4" />
+                </Button>
+              )}
+            </div>
           </div>
         </div>
-        {/* BULK ACTION */}
-        <div>{/* <BulkAction /> */}</div>
+
+        {/* TABLE ACTION */}
+        {tableActions && tableActions.length > 0 && (
+          <div>
+            <TableActions tableActions={tableActions} />
+          </div>
+        )}
       </div>
     </>
   );

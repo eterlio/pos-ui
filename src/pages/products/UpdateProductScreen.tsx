@@ -25,7 +25,8 @@ const UpdateProductScreen = () => {
   const { addErrors, errors, resetError } = useError<ValidatorProps>();
   const { data, isFetching } = useGeneralQuery<ProductProps>({
     queryKey: ["product", productId],
-    url: `/products/${productId}`
+    url: `/products/${productId}`,
+    enabled: !!productId
   });
 
   const { formValues, updateFormFieldValue, setFormValues } = useFormFieldUpdate(data);
@@ -84,22 +85,25 @@ const UpdateProductScreen = () => {
     } else {
       resetError();
     }
-    if (!productImage) {
-      return toast.error("Error", {
-        description: "Product image is required"
-      });
-    }
-    const formData = new FormData();
-    formData.append("product_image", productImage || "");
-    for (const data in payload) {
-      if (isObject(payload[data])) {
-        formData.append(data, JSON.stringify(payload[data]));
-      } else {
-        formData.append(data, payload[data]);
+    // if (!productImage) {
+    //   return toast.error("Error", {
+    //     description: "Product image is required"
+    //   });
+    // }
+    let formData = new FormData();
+
+    if (productImage) {
+      formData.append("product_image", productImage || "");
+      for (const data in payload) {
+        if (isObject(payload[data])) {
+          formData.append(data, JSON.stringify(payload[data]));
+        } else {
+          formData.append(data, payload[data]);
+        }
       }
     }
     mutate(
-      { payload: formData },
+      { payload:  productImage ? formData : payload },
       {
         onSuccess() {
           toast.success("Success", {

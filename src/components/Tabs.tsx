@@ -7,17 +7,34 @@ interface TabProps {
 }
 
 interface TabsProps {
-  children: ReactElement<TabProps>[] | ReactElement<TabProps>;
+  children: ReactElement<TabProps>[] | ReactElement<TabProps> | any;
+  getActiveTab?: (tab: { value: string }) => void;
+  defaultTab?: string;
 }
 
-const Tabs: React.FC<TabsProps> = ({ children }) => {
+const Tabs: React.FC<TabsProps> = ({ children, getActiveTab, defaultTab }) => {
   const childrenArray = React.Children.toArray(children) as ReactElement<TabProps>[];
 
-  const [activeTab, setActiveTab] = useState(childrenArray.length > 0 ? childrenArray[0].props.value : "");
+  const [activeTab, setActiveTab] = useState(
+    defaultTab || (childrenArray.length > 0 ? childrenArray[0].props.value : "")
+  );
+
+  // useEffect(() => {
+  //   if (getActiveTab) {
+  //     getActiveTab({
+  //       value: activeTab
+  //     });
+  //   }
+  // }, []);
 
   const handleClick = (e: MouseEvent<HTMLButtonElement>, newActiveTab: string) => {
     e.preventDefault();
     setActiveTab(newActiveTab);
+    if (getActiveTab) {
+      getActiveTab({
+        value: newActiveTab
+      });
+    }
   };
 
   return (

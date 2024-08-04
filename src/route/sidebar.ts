@@ -1,5 +1,5 @@
 import { hasPermission } from "@/helpers/permission";
-import { UserRole, specialRoles } from "@/interfaces/users";
+import { UserRole, specialRoles } from "@/interfaces/user";
 import {
   ArrowRightLeft,
   Box,
@@ -14,7 +14,9 @@ import {
   UsersIcon,
   MinusCircle,
   Puzzle,
-  LucideIcon
+  LucideIcon,
+  Coins,
+  FileSpreadsheet
 } from "lucide-react";
 
 interface RouteLink {
@@ -180,6 +182,32 @@ export const menuSidebarRoutes = (userRole: string, userPermission: string): Men
           }
         ]
       },
+
+      {
+        title: "Sales",
+        url: "/sales",
+        icon: Coins,
+        isVisible: hasPermission(userPermission, ["sales", "read"])
+      },
+      {
+        title: "Invoicing",
+        url: "/invoices",
+        icon: FileSpreadsheet,
+        isVisible: hasPermission(userPermission, ["invoice", "read"]),
+        subLinks: [
+          {
+            title: "List invoices",
+            url: "/invoices",
+            isVisible: hasPermission(userPermission, ["invoice", "read"])
+          },
+          {
+            title: "Add new invoice",
+            url: "/invoices/create",
+            isVisible: hasPermission(userPermission, ["invoice", "create"]),
+            isDisabled: false
+          }
+        ]
+      },
       {
         title: "Customer",
         url: "/customers",
@@ -203,6 +231,11 @@ export const menuSidebarRoutes = (userRole: string, userPermission: string): Men
               isDisabled: false,
               isVisible: true,
               subLinks: [
+                {
+                  title: "Sales Analysis",
+                  url: "/sales/analysis",
+                  isDisabled: false
+                },
                 {
                   title: "Profit/Loss",
                   url: "/users/create",
@@ -300,6 +333,7 @@ export const generalSidebarRoutes = (userRole?: UserRole) => {
       routeLinks: [
         {
           isDisabled: true,
+          isVisible: false,
           title: "Settings",
           url: "/settings",
           icon: SettingsIcon

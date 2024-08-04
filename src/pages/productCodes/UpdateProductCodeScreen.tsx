@@ -17,26 +17,27 @@ interface ValidatorProps {
 }
 const UpdateProductCodeScreen = () => {
   const params = useParams<{ id: string }>();
-  const categoryId = params.id;
+  const codeId = params.id;
   const buttonTitle = "Update";
   const { addErrors, errors, resetError } = useError<ValidatorProps>();
   const { data } = useGeneralQuery<ProductCodeProps>({
-    queryKey: ["productCode", categoryId],
-    url: `/product-codes/${categoryId}`
+    queryKey: ["productCode", codeId],
+    url: `/product-codes/${codeId}`,
+    enabled: true
   });
 
   const { formValues, updateFormFieldValue, setFormValues } = useFormFieldUpdate(data);
   const navigate = useNavigate();
   const { isPending, mutate } = useGeneralMutation({
     httpMethod: "put",
-    mutationKey: ["updateCode", categoryId as string],
-    url: `/product-codes/${categoryId}`
+    mutationKey: ["updateCode", codeId as string],
+    url: `/product-codes/${codeId}`
   });
   const validator = new Validator<Partial<ValidatorProps>>({
     formData: formValues as ValidatorProps,
     rules: {
-      description: "required|minLength:10",
-      code: "required:minLength:5"
+      description: "required|minLength:3",
+      code: "required:minLength:3"
     }
   });
 
