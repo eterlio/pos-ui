@@ -2,6 +2,7 @@ import Container from "@/components/Container";
 import PrimaryButton from "@/components/PrimaryButton";
 import SelectField from "@/components/customFields/Select/SelectField";
 import AddressBox from "@/components/customFields/address/AddressBox";
+import DatePicker from "@/components/customFields/date/DatePicker";
 import InputField from "@/components/customFields/input/InputField";
 import PhoneInputField from "@/components/customFields/input/Phone";
 import { HandlerProps } from "@/components/customFields/type";
@@ -31,7 +32,7 @@ const CustomerEditFields: FC<CustomerEditFieldsProps> = ({
 }) => {
   return (
     <DashboardLayout
-      pageTitle="Create Customer"
+      pageTitle={pageTitle}
       pageDescription="Fill the details to create a customer"
       isLoading={isLoading}
     >
@@ -86,6 +87,13 @@ const CustomerEditFields: FC<CustomerEditFieldsProps> = ({
               errorMessage={errors?.gender}
               isDisabled={isLoading}
               key={formFields?.gender}
+            />
+            <DatePicker
+              fieldKey="dateOfBirth"
+              disabled={isLoading}
+              onChange={handleFormFieldChange}
+              value={formFields?.dateOfBirth}
+              label={"Date of birth"}
             />
           </div>
         </div>

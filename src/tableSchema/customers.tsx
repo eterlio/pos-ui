@@ -65,7 +65,7 @@ export const customerTableSchema: ColumnDef<CustomerProps>[] = [
       const dateOfBirth: Date = row.getValue("dateOfBirth");
       return (
         <div className="flex space-x-2">
-          <span className="truncate font-medium">{dateOfBirth ? dateOfBirth.toLocaleDateString() : "N/A"}</span>
+          <span className="truncate font-medium">{dateOfBirth ? format(dateOfBirth, "dd-MM-y") : "N/A"}</span>
         </div>
       );
     }

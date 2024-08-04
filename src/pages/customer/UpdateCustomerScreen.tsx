@@ -90,7 +90,7 @@ const UpdateCustomerScreen = () => {
   }, [params.id, data]);
   return (
     <CustomerEditFields
-      pageTitle="Update Supplier"
+      pageTitle="Update Customer"
       buttonTitle={buttonTitle}
       formFields={formValues as Record<string, any>}
       handleFormFieldChange={handleFormFieldChange}
