@@ -7,6 +7,7 @@ import { SUPPLIERS_ROUTES } from "./suppliers";
 import { STOCK_ROUTES } from "./stock";
 import { POS_ROUTES } from "./pos";
 import Test from "@/pages/Test";
+import { CUSTOMERS_ROUTES } from "./customers";
 
 export const ROUTES: RoutesProps[] = [
   ...AUTH_ROUTES,
@@ -16,6 +17,7 @@ export const ROUTES: RoutesProps[] = [
   ...SUPPLIERS_ROUTES,
   ...STOCK_ROUTES,
   ...POS_ROUTES,
+  ...CUSTOMERS_ROUTES,
   {
     component: Test,
     url: "/test"

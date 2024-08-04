@@ -3,26 +3,39 @@ import Modal from "@/components/Modal";
 import DashboardLayout from "@/components/dashboard/Layout";
 import Table from "@/components/table/Table";
 import { useSetQueryParam } from "@/components/table/hooks/useSetQueryParam";
-import { useDeleteUserMutation, useFetchUsersQuery } from "@/hooks/request/useUserRequest";
+import { useGeneralMutation } from "@/hooks/request/useGeneralMutation";
+import { useGeneralQuery } from "@/hooks/request/useGeneralQuery";
+import { useOptimisticUpdates } from "@/hooks/request/useOptimisticUpdates";
+import { GetManyProps } from "@/hooks/types";
 import { ModalActionButtonProps, OptionsProps } from "@/interfaces";
-import { userTableFilters, usersTableSchema } from "@/tableSchema/users";
+import { CustomerProps } from "@/interfaces/customer";
+import { customerTableSchema } from "@/tableSchema/customers";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const CustomersListScreen = () => {
+  const { removeItemFromList } = useOptimisticUpdates();
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState<Record<string, any>>({});
   const { queryObject } = useSetQueryParam();
   const navigate = useNavigate();
-  const { data, isFetching } = useFetchUsersQuery(queryObject);
-  const { isPending, mutate } = useDeleteUserMutation(queryObject);
-  const [openModal, setOpenModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<Record<string, any>>({});
+  const { data, isFetching } = useGeneralQuery<GetManyProps<CustomerProps[]>>({
+    queryKey: ["customers", queryObject],
+    url: "/customers",
+    enabled: !!Object.keys(queryObject).length
+  });
+  const { isPending, mutate } = useGeneralMutation<CustomerProps>({
+    httpMethod: "delete",
+    mutationKey: ["deleteCustomer", selectedCustomer._id],
+    url: `/customers/${selectedCustomer?._id}`
+  });
+
   const searchSelectionOptions: OptionsProps[] = [
     { label: "All Fields", value: "" },
     { label: "First Name", value: "firstName" },
     { label: "Last Name", value: "lastName" },
-    { label: "Email", value: "email" },
-    { label: "Role", value: "role" }
+    { label: "Email", value: "email" }
   ];
   const rowActions = [
     {
@@ -33,16 +46,14 @@ const CustomersListScreen = () => {
       label: "Delete",
       action: (data: Record<string, any>) => {
         setOpenModal(true);
-        setSelectedUser(data);
+        setSelectedCustomer(data);
       }
     }
   ];
   const modalData = {
     showModal: openModal,
-    modalTitle: (name: string) => `Are you sure you want to delete  ${name}'s account`,
-    modalDescription: `Deleting the user will permanently remove their account,
-       associated data, and access rights. 
-      Please ensure that you have verified the user's identity and that this action aligns with your organization's policies`,
+    modalTitle: (name: string) => `Are you sure you want to delete  ${name}'s details`,
+    modalDescription: `Deleting the customer will permanently remove them from the system. Continue?`,
     actionButtons: [
       {
         title: "Cancel",
@@ -52,12 +63,13 @@ const CustomersListScreen = () => {
       {
         title: "Continue",
         action: async () => {
-          mutate(selectedUser.id, {
+          mutate(selectedCustomer.id, {
             onSuccess: () => {
               setOpenModal(false);
               toast.success("Success", {
-                description: "User deleted"
+                description: "Customer deleted"
               });
+              return removeItemFromList(["customers", queryObject], selectedCustomer.id);
             }
           });
         },
@@ -67,32 +79,31 @@ const CustomersListScreen = () => {
     ] as ModalActionButtonProps[]
   };
   const handleRowClick = (data: any) => {
-    navigate(`/users/${data.id}`);
+    navigate(`/customers/${data.id}`);
   };
 
   function handleEditRowActionClick(data: any) {
-    navigate(`/users/${data.id}`);
+    navigate(`/customers/${data.id}`);
   }
 
   return (
     <DashboardLayout
-      pageTitle="Users List"
-      actionButton={{ createButton: { name: "Create user", onClick: () => navigate("/users/create") } }}
+      pageTitle="Customers List"
+      actionButton={{ createButton: { name: "Create customer", onClick: () => navigate("/customers/create") } }}
     >
       <Modal
         showModal={modalData.showModal}
-        modalTitle={modalData.modalTitle(selectedUser.firstName)}
+        modalTitle={modalData.modalTitle(selectedCustomer.firstName)}
         modalDescription={modalData.modalDescription}
         actionButtons={modalData.actionButtons}
       />
       <Container className="border border-gray-50">
         <Table
-          columns={usersTableSchema}
+          columns={customerTableSchema}
           data={data?.data || []}
           isLoading={isFetching}
-          loadingText="Fetching user data"
+          loadingText="Fetching customer data"
           showExportButton
-          filters={userTableFilters}
           paginator={data?.paginator}
           actionButtons={rowActions}
           allowRowSelect
