@@ -160,6 +160,7 @@ const InvoiceEditFields: FC<InvoiceEditFieldsProps> = ({
             name="Oseikrom Hardware Enterprise"
             phone={{ number: "543814868", country: "GH", prefix: "233" }}
             type="from"
+            showEditAddress={false}
           />
           <div className="absolute md:border-r h-full bg-red-50 left-1/2"></div>
           <BillingAddress
@@ -168,6 +169,8 @@ const InvoiceEditFields: FC<InvoiceEditFieldsProps> = ({
             name={`${selectedCustomer?.firstName || "N/A"} ${selectedCustomer?.lastName || "N/A"}`}
             phone={selectedCustomer?.phone}
             type="to"
+            showEditAddress={!!selectedCustomer?._id}
+            editAddressURL={`/customers/${selectedCustomer?._id}/edit`}
           />
         </div>
 

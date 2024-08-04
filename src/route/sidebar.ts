@@ -209,7 +209,7 @@ export const menuSidebarRoutes = (userRole: string, userPermission: string): Men
         ]
       },
       {
-        title: "Customer",
+        title: "Customers",
         url: "/customers",
         icon: UserPlus,
         isDisabled: false,
