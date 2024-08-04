@@ -19,6 +19,7 @@ interface CustomerEditFieldsProps {
   isLoading?: boolean;
   pageTitle?: string;
   disabledButton?: boolean;
+  disableField?: boolean;
 }
 const CustomerEditFields: FC<CustomerEditFieldsProps> = ({
   handleFormFieldChange,
@@ -28,7 +29,8 @@ const CustomerEditFields: FC<CustomerEditFieldsProps> = ({
   isLoading,
   buttonTitle,
   pageTitle,
-  disabledButton
+  disabledButton,
+  disableField
 }) => {
   return (
     <DashboardLayout
@@ -47,7 +49,7 @@ const CustomerEditFields: FC<CustomerEditFieldsProps> = ({
               value={formFields?.firstName}
               isRequired
               errorMessage={errors?.firstName}
-              disabled={isLoading}
+              disabled={isLoading || disableField}
             />
             <InputField
               fieldKey="lastName"
@@ -56,7 +58,7 @@ const CustomerEditFields: FC<CustomerEditFieldsProps> = ({
               value={formFields?.lastName}
               isRequired
               errorMessage={errors?.lastName}
-              disabled={isLoading}
+              disabled={isLoading || disableField}
             />
             <InputField
               fieldKey="email"
@@ -65,7 +67,7 @@ const CustomerEditFields: FC<CustomerEditFieldsProps> = ({
               value={formFields?.email}
               isRequired
               errorMessage={errors?.email}
-              disabled={isLoading}
+              disabled={isLoading || disableField}
             />
             <PhoneInputField
               fieldKey="phone"
@@ -74,7 +76,7 @@ const CustomerEditFields: FC<CustomerEditFieldsProps> = ({
               errorMessage={errors?.phone}
               value={formFields?.phone}
               label="Phone"
-              disabled={isLoading}
+              disabled={isLoading || disableField}
             />
             <SelectField
               options={GENDER_OPTIONS}
@@ -85,12 +87,12 @@ const CustomerEditFields: FC<CustomerEditFieldsProps> = ({
               fieldKey={"gender"}
               selectValue={formFields?.gender}
               errorMessage={errors?.gender}
-              isDisabled={isLoading}
+              isDisabled={isLoading || disableField}
               key={formFields?.gender}
             />
             <DatePicker
               fieldKey="dateOfBirth"
-              disabled={isLoading}
+              disabled={isLoading || disableField}
               onChange={handleFormFieldChange}
               value={formFields?.dateOfBirth}
               label={"Date of birth"}
@@ -102,7 +104,7 @@ const CustomerEditFields: FC<CustomerEditFieldsProps> = ({
           values={formFields?.address}
           onChange={handleFormFieldChange}
           errors={errors as any}
-          disabled={isLoading}
+          disabled={isLoading || disableField}
         />
         <PrimaryButton
           text={buttonTitle}

@@ -74,7 +74,7 @@ const CreateCustomerScreen = () => {
       handleFormFieldChange={handleChange}
       onsubmitHandler={onsubmitHandler}
       disabledButton={isPending}
-      isLoading={isPending}
+      disableField={isPending}
       errors={errors as any}
       pageTitle="Create Customer"
     />

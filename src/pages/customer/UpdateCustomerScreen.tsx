@@ -18,7 +18,7 @@ const UpdateCustomerScreen = () => {
   const customerId = params.id;
   const buttonTitle = "Update Customer";
   const { addErrors, errors, resetError } = useError<any>();
-  const { data } = useGeneralQuery<CustomerProps>({
+  const { data, isFetching } = useGeneralQuery<CustomerProps>({
     queryKey: ["customer", customerId],
     url: `/customers/${customerId}`,
     enabled: true
@@ -96,7 +96,8 @@ const UpdateCustomerScreen = () => {
       handleFormFieldChange={handleFormFieldChange}
       onsubmitHandler={onsubmitHandler}
       errors={errors as Record<string, any>}
-      isLoading={isPending}
+      isLoading={isFetching}
+      disableField={isPending}
       disabledButton={!Object.keys(payload).length}
     />
   );
