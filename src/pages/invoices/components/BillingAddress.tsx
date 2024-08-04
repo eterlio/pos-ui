@@ -18,8 +18,14 @@ const BillingAddress: FC<BillingAddressProps> = ({ address, email, phone, type, 
       <h1 className="text-2x font-medium">{name}</h1>
       <span className="text-xs">{email}</span>
       <div className="my-7 text-sm">
-        <p>{address?.poBox}</p>
-        <p>{address?.state}</p>
+        {address?.city && (
+          <>
+            <p>
+              {address?.poBox}, {address?.state}
+            </p>
+            <p>{address?.city}, Ghana</p>
+          </>
+        )}
         <p>{formatPhoneToString(phone)}</p>
         {false && (
           <Link to="" className="font-bold text-primary my-3 flex items-center gap-x-1">

@@ -35,7 +35,7 @@ const TextAreaField: FC<TextAreaFieldProps> = ({
   return (
     <div>
       {label && (
-        <div className="my-1">
+        <div className="my-1.5">
           <InputLabel id={id} required={isRequired || false} label={label} />
         </div>
       )}

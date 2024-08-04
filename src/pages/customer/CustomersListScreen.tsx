@@ -7,6 +7,7 @@ import { useGeneralMutation } from "@/hooks/request/useGeneralMutation";
 import { useGeneralQuery } from "@/hooks/request/useGeneralQuery";
 import { useOptimisticUpdates } from "@/hooks/request/useOptimisticUpdates";
 import { GetManyProps } from "@/hooks/types";
+import { usePermission } from "@/hooks/usePermission";
 import { ModalActionButtonProps, OptionsProps } from "@/interfaces";
 import { CustomerProps } from "@/interfaces/customer";
 import { customerTableSchema } from "@/tableSchema/customers";
@@ -15,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const CustomersListScreen = () => {
+  const { canDeleteCustomers, canUpdateCustomers } = usePermission();
   const { removeItemFromList } = useOptimisticUpdates();
   const [openModal, setOpenModal] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState<Record<string, any>>({});
@@ -40,14 +42,16 @@ const CustomersListScreen = () => {
   const rowActions = [
     {
       label: "Edit",
-      action: handleEditRowActionClick
+      action: handleEditRowActionClick,
+      show: canUpdateCustomers
     },
     {
       label: "Delete",
       action: (data: Record<string, any>) => {
         setOpenModal(true);
         setSelectedCustomer(data);
-      }
+      },
+      show: canDeleteCustomers
     }
   ];
   const modalData = {
@@ -79,11 +83,15 @@ const CustomersListScreen = () => {
     ] as ModalActionButtonProps[]
   };
   const handleRowClick = (data: any) => {
-    navigate(`/customers/${data.id}`);
+    if (canUpdateCustomers) {
+      navigate(`/customers/${data.id}/edit`);
+    }
   };
 
   function handleEditRowActionClick(data: any) {
-    navigate(`/customers/${data.id}`);
+    if (canUpdateCustomers) {
+      navigate(`/customers/${data.id}/edit`);
+    }
   }
 
   return (
@@ -104,7 +112,7 @@ const CustomersListScreen = () => {
           isLoading={isFetching}
           loadingText="Fetching customer data"
           showExportButton
-          paginator={data?.paginator}
+          paginator={data?.paginator || null}
           actionButtons={rowActions}
           allowRowSelect
           handleRowClick={handleRowClick}
