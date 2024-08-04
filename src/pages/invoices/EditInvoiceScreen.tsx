@@ -70,6 +70,7 @@ const EditInvoiceScreen = () => {
       pageTitle="Edit invoice"
       disabledButton={isPending}
       formFields={formValues}
+      disableFields={isPending}
     />
   );
 };

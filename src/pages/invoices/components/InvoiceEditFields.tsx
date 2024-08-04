@@ -39,6 +39,7 @@ interface InvoiceEditFieldsProps {
   pageTitle: string;
   disabledButton?: boolean;
   pageDescription: string;
+  disableFields?: boolean;
 }
 const InvoiceEditFields: FC<InvoiceEditFieldsProps> = ({
   buttonTitle,
@@ -48,7 +49,8 @@ const InvoiceEditFields: FC<InvoiceEditFieldsProps> = ({
   pageDescription,
   pageTitle,
   disabledButton,
-  isLoading
+  isLoading,
+  disableFields
 }) => {
   const invoiceItemDefault = {
     _id: "",
@@ -149,17 +151,18 @@ const InvoiceEditFields: FC<InvoiceEditFieldsProps> = ({
               label="Customer"
               onChange={handleFormFieldChange}
               selectValue={formFields?.customerId}
-              isDisabled={!invoiceIsPaidOrExpired || isFetching || isLoading}
+              isDisabled={!invoiceIsPaidOrExpired || isFetching || isLoading || disableFields}
             />
           </div>
         </div>
         <div className="md:flex items-center justify-between relative">
           <BillingAddress
-            address={{ poBox: "P.O BOX 34, Agona Swdru", state: "Ekwamkurom" }}
+            address={{ poBox: "P.O BOX 34", state: "Ekwamkurom", city: "Agona Swdru" }}
             email="admin@oseikrom.com"
             name="Oseikrom Hardware Enterprise"
             phone={{ number: "543814868", country: "GH", prefix: "233" }}
             type="from"
+            showEditAddress={false}
           />
           <div className="absolute md:border-r h-full bg-red-50 left-1/2"></div>
           <BillingAddress
@@ -168,6 +171,8 @@ const InvoiceEditFields: FC<InvoiceEditFieldsProps> = ({
             name={`${selectedCustomer?.firstName || "N/A"} ${selectedCustomer?.lastName || "N/A"}`}
             phone={selectedCustomer?.phone}
             type="to"
+            showEditAddress={!!selectedCustomer?._id}
+            editAddressURL={`/customers/${selectedCustomer?._id}/edit`}
           />
         </div>
 
@@ -179,7 +184,7 @@ const InvoiceEditFields: FC<InvoiceEditFieldsProps> = ({
                 label="Invoice Date"
                 onChange={handleFormFieldChange}
                 value={formFields?.invoiceDate}
-                disabled={!invoiceIsPaidOrExpired || isFetching || isLoading}
+                disabled={!invoiceIsPaidOrExpired || isFetching || isLoading || disableFields}
               />
             </div>
             <div className="flex-1">
@@ -188,7 +193,7 @@ const InvoiceEditFields: FC<InvoiceEditFieldsProps> = ({
                 label="Invoice Due Date"
                 onChange={handleFormFieldChange}
                 value={formFields?.dueDate}
-                disabled={!invoiceIsPaidOrExpired || isFetching || isLoading}
+                disabled={!invoiceIsPaidOrExpired || isFetching || isLoading || disableFields}
               />
             </div>
           </div>
@@ -202,7 +207,7 @@ const InvoiceEditFields: FC<InvoiceEditFieldsProps> = ({
                 label="Is invoice recurring?"
                 handleFieldChange={handleFormFieldChange}
                 value={formFields?.isRecurring}
-                disabled={!invoiceIsPaidOrExpired || isFetching || isLoading}
+                disabled={!invoiceIsPaidOrExpired || isFetching || isLoading || disableFields}
               />
             </div>
             {formFields?.isRecurring && (
@@ -214,7 +219,7 @@ const InvoiceEditFields: FC<InvoiceEditFieldsProps> = ({
                     fieldKey="recurrence.frequency"
                     onChange={handleFormFieldChange}
                     selectValue={formFields?.recurrence?.frequency}
-                    isDisabled={!invoiceIsPaidOrExpired || isFetching || isLoading}
+                    isDisabled={!invoiceIsPaidOrExpired || isFetching || isLoading || disableFields}
                   />
                 </div>
                 <div className="flex-1">
@@ -223,7 +228,7 @@ const InvoiceEditFields: FC<InvoiceEditFieldsProps> = ({
                     label="Interval"
                     handleInputChange={handleFormFieldChange}
                     value={formFields?.recurrence?.interval}
-                    disabled={!invoiceIsPaidOrExpired || isFetching || isLoading}
+                    disabled={!invoiceIsPaidOrExpired || isFetching || isLoading || disableFields}
                   />
                 </div>
                 <div className="flex-1">
@@ -232,7 +237,7 @@ const InvoiceEditFields: FC<InvoiceEditFieldsProps> = ({
                     label="Cycle"
                     handleInputChange={handleFormFieldChange}
                     value={formFields?.recurrence?.cycle}
-                    disabled={!invoiceIsPaidOrExpired || isFetching || isLoading}
+                    disabled={!invoiceIsPaidOrExpired || isFetching || isLoading || disableFields}
                   />
                 </div>
               </>
@@ -262,7 +267,7 @@ const InvoiceEditFields: FC<InvoiceEditFieldsProps> = ({
               variant={"link"}
               className="font-bold"
               onClick={handleShowAddItemModal}
-              disabled={!invoiceIsPaidOrExpired || isFetching || isLoading}
+              disabled={!invoiceIsPaidOrExpired || isFetching || isLoading || disableFields}
             >
               <span>
                 <Plus size={16} />
@@ -280,7 +285,7 @@ const InvoiceEditFields: FC<InvoiceEditFieldsProps> = ({
                 label="Invoice has discount?"
                 handleFieldChange={handleFormFieldChange}
                 value={formFields?.hasDiscount}
-                disabled={invoiceSubTotal === 0 || !invoiceIsPaidOrExpired || isFetching || isLoading}
+                disabled={invoiceSubTotal === 0 || !invoiceIsPaidOrExpired || isFetching || isLoading || disableFields}
               />
             </div>
             {formFields?.hasDiscount && (
@@ -292,7 +297,7 @@ const InvoiceEditFields: FC<InvoiceEditFieldsProps> = ({
                     fieldKey="discount.type"
                     onChange={handleFormFieldChange}
                     selectValue={formFields?.discount?.type}
-                    isDisabled={!invoiceIsPaidOrExpired || isFetching || isLoading}
+                    isDisabled={!invoiceIsPaidOrExpired || isFetching || isLoading || disableFields}
                   />
                 </div>
                 <div className="flex-1">
@@ -302,7 +307,7 @@ const InvoiceEditFields: FC<InvoiceEditFieldsProps> = ({
                     label="Discount Value"
                     value={formFields?.discount?.value}
                     max={100}
-                    disabled={!invoiceIsPaidOrExpired || isFetching || isLoading}
+                    disabled={!invoiceIsPaidOrExpired || isFetching || isLoading || disableFields}
                   />
                 </div>
               </>
@@ -316,7 +321,7 @@ const InvoiceEditFields: FC<InvoiceEditFieldsProps> = ({
               handleInputChange={handleFormFieldChange}
               label={"Terms and conditions"}
               value={formFields?.termsAndCondition}
-              disabled={!invoiceIsPaidOrExpired || isFetching || isLoading}
+              disabled={!invoiceIsPaidOrExpired || isFetching || isLoading || disableFields}
             />
           </div>
           <div className="flex-1 w-full">
@@ -325,7 +330,7 @@ const InvoiceEditFields: FC<InvoiceEditFieldsProps> = ({
               handleInputChange={handleFormFieldChange}
               label={"Notes"}
               value={formFields?.note}
-              disabled={!invoiceIsPaidOrExpired || isFetching || isLoading}
+              disabled={!invoiceIsPaidOrExpired || isFetching || isLoading || disableFields}
             />
           </div>
         </div>
@@ -342,7 +347,7 @@ const InvoiceEditFields: FC<InvoiceEditFieldsProps> = ({
                   text={buttonTitle}
                   onClick={onsubmitHandler}
                   disabled={!enableInvoiceButton || isLoading || isFetching || isFetchingProducts || disabledButton}
-                  loading={isFetching || isFetchingProducts || isLoading}
+                  loading={isFetching || isFetchingProducts || isLoading || disableFields}
                 />
               </div>
             )}

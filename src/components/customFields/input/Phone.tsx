@@ -50,7 +50,7 @@ const PhoneInputField: FC<InputPhoneProps> = ({
   return (
     <div>
       {label && (
-        <div className="my-2">
+        <div className="my-1.5">
           <InputLabel id={id} required={isRequired || false} label={label} />
         </div>
       )}

@@ -55,6 +55,7 @@ const CreateInvoiceScreen = () => {
       pageTitle="New Invoice"
       disabledButton={isPending}
       formFields={formValues}
+      disableFields={isPending}
     />
   );
 };

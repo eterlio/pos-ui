@@ -38,7 +38,7 @@ const NumberField: FC<NumberFieldProps> = ({
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full my-1.5">
       {label && <InputLabel id={id} required={isRequired || false} label={label} />}
       <Input
         type="number"

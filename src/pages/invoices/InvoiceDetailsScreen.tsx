@@ -88,11 +88,12 @@ const InvoiceDetailsScreen = () => {
           <h1 className="text-xl font-medium border-b pb-2">Invoice Batch 2023</h1>
           <div className="md:flex items-center justify-between relative py-4">
             <BillingAddress
-              address={{ poBox: "P.O BOX 34, Agona Swdru", state: "Ekwamkurom" }}
+              address={{ poBox: "P.O BOX 34", state: "Ekwamkurom", city: "Agona Swdru" }}
               email="admin@oseikrom.com"
               name="Oseikrom Hardware Enterprise"
               phone={{ number: "543814868", country: "GH", prefix: "233" }}
               type="from"
+              showEditAddress={false}
             />
             <div className="absolute md:border-r h-full bg-red-50 left-1/2 mt-4"></div>
             <BillingAddress
@@ -101,6 +102,7 @@ const InvoiceDetailsScreen = () => {
               name={`${data?.customerData?.firstName || "N/A"} ${data?.customerData?.lastName || "N/A"}`}
               phone={data?.customerData?.phone}
               type="to"
+              showEditAddress={false}
             />
           </div>
 

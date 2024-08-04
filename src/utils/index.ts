@@ -159,21 +159,21 @@ export function formatDate(date: string, formatType: string) {
   return isValid(parseISO(date)) ? format(parseISO(date), formatType) : date;
 }
 
-export const computeInvoiceAmounts = (invoiceData: { items: InvoiceItem[]; discount?: Discount }) => {
-  const calculateDiscountAmount = function (totalItemAmount: number): number {
-    if (invoiceData?.discount) {
-      const invoiceValue = invoiceData?.discount.value || 0;
-      if (invoiceData?.discount.type === "fixed") {
-        return invoiceValue;
-      } else if (invoiceData?.discount.type === "percentage") {
-        return (invoiceValue / 100) * totalItemAmount;
-      }
+export const calculateDiscountAmount = function (totalItemAmount: number, discount?: Discount): number {
+  if (discount) {
+    const invoiceValue = discount.value || 0;
+    if (discount.type === "fixed") {
+      return invoiceValue;
+    } else if (discount.type === "percentage") {
+      return (invoiceValue / 100) * totalItemAmount;
     }
+  }
 
-    return 0;
-  };
+  return 0;
+};
+export const computeInvoiceAmounts = (invoiceData: { items: InvoiceItem[]; discount?: Discount }) => {
   const invoiceSubTotal = invoiceData.items.reduce((inc, item) => item.price * item.quantity + inc, 0);
-  const invoiceDiscountTotal = calculateDiscountAmount(invoiceSubTotal);
+  const invoiceDiscountTotal = calculateDiscountAmount(invoiceSubTotal, invoiceData?.discount);
   const invoiceTotal = invoiceSubTotal - invoiceDiscountTotal;
   return {
     invoiceSubTotal,

@@ -10,6 +10,7 @@ import { BANK_NAME_OPTIONS, TELECOM_NAME_OPTIONS, formatCurrency } from "@/helpe
 import { FC } from "react";
 import { OptionsProps } from "@/interfaces";
 import { MOP } from "@/interfaces/sales";
+import { calculateDiscountAmount } from "@/utils";
 
 interface PayNowProps {
   customers: OptionsProps[];
@@ -21,8 +22,10 @@ const PayNowModal: FC<PayNowProps> = ({ customers }) => {
     setState({ [data.key]: data.value });
   };
 
+  const calculateDiscount = calculateDiscountAmount(getItemTotalAmount(), getState().discount);
   const changeAmount = state.amountPaid - getItemTotalAmount() || 0;
-  const hasArrears = changeAmount < 0;
+  const discrepancy = Number(changeAmount.toFixed(2)) + Number(calculateDiscount.toFixed(2));
+  const hasArrears = discrepancy < 0;
 
   const handleTabChange = (mop: string) => {
     const modeOfPayment = mop as MOP;
@@ -168,7 +171,12 @@ const PayNowModal: FC<PayNowProps> = ({ customers }) => {
             />
           </TabsContent>
         </Tabs>
-        <OrderSummary totalItemAmount={getItemTotalAmount()} totalItems={getTotalItems()} title="" />
+        <OrderSummary
+          totalItemAmount={getItemTotalAmount()}
+          totalItems={getTotalItems()}
+          title=""
+          discount={getState().discount}
+        />
         <div className="flex items-center justify-between gap-x-3">
           <h1 className="font-bold text-sm flex-1">Amount paid:</h1>
           <p className="text-right flex-1">{formatCurrency({ value: state.amountPaid || 0 })}</p>
@@ -176,13 +184,13 @@ const PayNowModal: FC<PayNowProps> = ({ customers }) => {
         {!hasArrears && (
           <div className="flex items-center justify-between gap-x-3">
             <h1 className="font-bold text-sm flex-1">Change to give:</h1>
-            <p className="text-right flex-1">{formatCurrency({ value: changeAmount })}</p>
+            <p className="text-right flex-1">{formatCurrency({ value: discrepancy })}</p>
           </div>
         )}
         {hasArrears && (
           <div className="flex items-center justify-between gap-x-3">
             <h1 className="font-bold text-sm flex-1 text-red-500">Arrears</h1>
-            <p className="text-right flex-1">{formatCurrency({ value: changeAmount })}</p>
+            <p className="text-right flex-1">{formatCurrency({ value: discrepancy })}</p>
           </div>
         )}
       </div>
