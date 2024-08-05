@@ -26,7 +26,7 @@ const ResetPasswordScreen = () => {
 
   const handleForgotPassword = () => {
     const validator = new Validator<typeof initialData>({
-      formData: { password: "", confirmPassword: "" },
+      formData: formValues,
       rules: {
         password: "required|isPassword",
         confirmPassword: "required|sameAs:password"
@@ -34,6 +34,8 @@ const ResetPasswordScreen = () => {
     });
 
     validator.validate();
+
+    console.log(validator.errors());
 
     if (validator.failed()) {
       return addErrors(validator.getValidationErrorsByIndex());
@@ -46,12 +48,12 @@ const ResetPasswordScreen = () => {
     <div className="min-h-screen flex items-center justify-center">
       <div className="md:min-w-[450px] m-auto p-5 space-y-3">
         <div className="heading my-4 space-y-1">
-        <div className="flex items-center gap-3 mb-5">
-              <span className="w-10 h-10 border rounded-full bg-primary flex justify-center items-center">
-                <LockKeyhole className="text-white" size={18} />
-              </span>
-              <h1 className="text-xl font-medium">Reset Password</h1>
-            </div>
+          <div className="flex items-center gap-3 mb-5">
+            <span className="w-10 h-10 border rounded-full bg-primary flex justify-center items-center">
+              <LockKeyhole className="text-white" size={18} />
+            </span>
+            <h1 className="text-xl font-medium">Reset Password</h1>
+          </div>
           <p className="text-sm font-light">Enter your new password to reset the password</p>
         </div>
         <div>
