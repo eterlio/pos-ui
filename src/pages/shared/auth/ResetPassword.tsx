@@ -35,8 +35,6 @@ const ResetPasswordScreen = () => {
 
     validator.validate();
 
-    console.log(validator.errors());
-
     if (validator.failed()) {
       return addErrors(validator.getValidationErrorsByIndex());
     } else {
