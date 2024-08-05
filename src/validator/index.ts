@@ -2,6 +2,7 @@ import { get, has, isArray } from "lodash";
 
 class ValidatorCheck {
   required(fieldValue: string | number | any[]): boolean {
+    console.info({fieldValue})
     if (Array.isArray(fieldValue)) return fieldValue.length > 0;
     return Boolean(fieldValue);
   }
