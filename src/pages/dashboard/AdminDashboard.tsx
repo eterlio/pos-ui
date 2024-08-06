@@ -5,6 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ApexOptions } from "apexcharts";
 import { Coins } from "lucide-react";
 import Chart from "react-apexcharts";
+import SalesReport from "../sales/SalesReport";
 
 const Dashboard = () => {
   const state = {
@@ -449,9 +450,12 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="flex justify-between gap-5 space-y-10 md:space-y-0">
-        <div className="bg-white p-5 flex-1">Today's Sales</div>
-        <div className="bg-white p-5 flex-1">Total Debtors</div>
+      <div className="space-y-10">
+        <div className="bg-white p-5">
+          <h1>Today's Sales</h1>
+          <SalesReport isAdmin showSearch={false}/>
+        </div>
+        <div className="bg-white p-5">Total Debtors</div>
       </div>
     </DashboardLayout>
   );
